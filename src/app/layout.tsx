@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Baloo_Thambi_2 } from 'next/font/google';
 
 import './globals.css';
+import SessionWrapper from '@/components/sessionWrapper';
+
 import { ThemeProvider } from './themeProvider';
 
 const font = Baloo_Thambi_2({ weight: ['500'], subsets: ['latin'] });
@@ -17,17 +19,19 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en' suppressHydrationWarning>
-			<body className={font.className} suppressHydrationWarning>
-				<ThemeProvider
-					attribute='class'
-					defaultTheme='system'
-					enableSystem
-					disableTransitionOnChange
-				>
-					{children}
-				</ThemeProvider>
-			</body>
-		</html>
+		<SessionWrapper>
+			<html lang='en' suppressHydrationWarning>
+				<body className={font.className} suppressHydrationWarning>
+					<ThemeProvider
+						attribute='class'
+						defaultTheme='system'
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+					</ThemeProvider>
+				</body>
+			</html>
+		</SessionWrapper>
 	);
 }
