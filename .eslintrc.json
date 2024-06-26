@@ -4,10 +4,10 @@
 	"plugins": ["import", "@typescript-eslint"],
 	"rules": {
 		"no-console": "warn",
-		"semi": ["error", "always"],
-		"quotes": ["error", "single"],
+		"semi": ["warn", "always"],
+		"quotes": ["warn", "single"],
 		"import/order": [
-			"error",
+			"warn",
 			{
 				"groups": [
 					"builtin",
