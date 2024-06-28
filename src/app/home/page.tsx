@@ -1,20 +1,15 @@
 'use client';
 
-import { useSupabase } from '@/hooks';
+import { useUserStore } from '@/providers/user';
 
 export default function DashboardPage() {
-	const { user, supabase } = useSupabase();
+	const { user, isLoading, error } = useUserStore((state) => state);
 
 	return (
 		<div>
-			<h1>Welcome, {user?.email}</h1>
-			<button
-				onClick={() => {
-					supabase.auth.signOut();
-				}}
-			>
-				Log out
-			</button>
+			<div>{JSON.stringify(user)}</div>
+			<div>{JSON.stringify(error)}</div>
+			<div>{JSON.stringify(isLoading)}</div>
 		</div>
 	);
 }
