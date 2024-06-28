@@ -28,9 +28,9 @@ export default function AccountPage() {
 	const [tab, setTab] = useState(0);
 
 	const [userField, setUserField] = useState<UserField>({
-		name: '',
-		email: '',
-		image: '',
+		name: user?.name ?? '',
+		email: user?.email ?? '',
+		image: user?.image ?? '',
 	});
 
 	const handleUpdateUserProfile = async () => {
@@ -117,7 +117,7 @@ export default function AccountPage() {
 						<CardHeader>
 							<CardTitle>Email</CardTitle>
 							<CardDescription>
-								Email used to sign in and out this app.
+								You are not allowed to change your email address
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
@@ -130,6 +130,7 @@ export default function AccountPage() {
 										e.target.value
 									);
 								}}
+								disabled
 							/>
 						</CardContent>
 
