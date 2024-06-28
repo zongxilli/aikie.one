@@ -12,9 +12,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login } from '@/lib/authActions';
 
-import AuthProviderSignInButtons from './authProviderSignInButtons';
+import AuthProviderSignInButtons from '../../../../components/shared/socialNetworkLogin';
 
-export default function LoginForm() {
+export default function LogInForm() {
 	return (
 		<Card className='mx-auto max-w-sm'>
 			<CardHeader>
@@ -37,7 +37,7 @@ export default function LoginForm() {
 							/>
 						</div>
 						<div className='grid gap-2'>
-							<div className='flex items-center'>
+							{/* <div className='flex items-center'>
 								<Label htmlFor='password'>Password</Label>
 								<Link
 									href='#'
@@ -45,7 +45,7 @@ export default function LoginForm() {
 								>
 									Forgot your password?
 								</Link>
-							</div>
+							</div> */}
 							<Input
 								id='password'
 								name='password'
