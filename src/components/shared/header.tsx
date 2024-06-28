@@ -1,11 +1,6 @@
-import dynamic from 'next/dynamic';
-
 import Logo from './logo';
 import ThemeToggle from './themeToggle';
-
-const UserProfileButton = dynamic(() => import('./userProfileButton'), {
-	ssr: false,
-});
+import UserProfileButton from './userProfileButton';
 
 const Header = () => {
 	const renderLogo = () => <Logo />;
