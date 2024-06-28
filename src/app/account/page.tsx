@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { useUserProfile } from '@/hooks';
 import { updateUserProfile } from '@/lib/userActions';
+import { useUserStore } from '@/providers/user';
 
 import { UserProfile } from '../types/users';
 
@@ -23,7 +23,7 @@ type UserField = Omit<UserProfile, 'id'>;
 export default function AccountPage() {
 	const { toast } = useToast();
 
-	const userProfile = useUserProfile();
+	const { user } = useUserStore((state) => state);
 
 	const [tab, setTab] = useState(0);
 
@@ -35,9 +35,9 @@ export default function AccountPage() {
 
 	const handleUpdateUserProfile = async () => {
 		try {
-			if (userProfile?.id) {
+			if (user?.id) {
 				await updateUserProfile(
-					userProfile?.id,
+					user?.id,
 					userField.name,
 					userField.email,
 					userField.image
@@ -60,11 +60,11 @@ export default function AccountPage() {
 
 	useEffect(() => {
 		setUserField({
-			name: userProfile.name ?? '',
-			email: userProfile.email ?? '',
-			image: userProfile.image ?? '',
+			name: user?.name ?? '',
+			email: user?.email ?? '',
+			image: user?.image ?? '',
 		});
-	}, [userProfile]);
+	}, [user]);
 
 	const onGeneralFormChange = (field: keyof UserField, value: string) => {
 		setUserField((prevForm) => {
@@ -78,7 +78,7 @@ export default function AccountPage() {
 		<main className='container h-full flex flex-col gap-4 p-4 md:gap-8 md:p-10'>
 			<div className=''>
 				<h1 className='text-3xl font-semibold'>Settings</h1>
-				<h1 className='text-3xl font-semibold'>{userProfile?.name}</h1>
+				<h1 className='text-3xl font-semibold'>{user?.name}</h1>
 			</div>
 			<div className='w-full flex items-start justify-between gap-2 md:gap-6'>
 				<div className='w-20 md:w-40 flex flex-col text-sm text-muted-foreground'>
