@@ -34,8 +34,16 @@ export const UserStoreProvider = ({
 
 	// 新增: 使用 useEffect 在组件挂载时获取用户信息
 	useEffect(() => {
-		if (userId) {
+		const store = storeRef.current;
+
+		if (userId && store) {
 			storeRef.current?.getState().loadCurrentUser(userId);
+
+			const unsubscribe = store.getState().subscribeToUserChanges(userId);
+
+			return () => {
+				unsubscribe();
+			};
 		}
 	}, [userId]);
 
