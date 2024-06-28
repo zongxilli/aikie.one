@@ -19,21 +19,21 @@ const UserProfileButton = () => {
 
 	const renderPopoverContent = () => (
 		<PopoverContent className='flex flex-col gap-4'>
-			<div className='flex gap-4'>
-				<Avatar className='h-12 w-12'>
+			<div className='flex gap-4 outline'>
+				<Avatar className='flex-shrink-0 h-12 w-12'>
 					<AvatarImage src={user?.image || undefined} />
 					<AvatarFallback>
 						{user?.name?.slice(0, 2).toUpperCase() || 'U'}
 					</AvatarFallback>
 				</Avatar>
 
-				<div className='flex flex-col items-start justify-between'>
-					<p className='text-one-line cursor-default'>
+				<div className='flex-grow min-w-0 flex flex-col items-start justify-between'>
+					<div className='text-one-line cursor-default'>
 						{user?.name || 'User'}
-					</p>
-					<p className='text-one-line text-gray cursor-default text-sm'>
+					</div>
+					<div className='text-one-line text-gray cursor-default text-sm'>
 						{user?.email || 'No email'}
-					</p>
+					</div>
 				</div>
 			</div>
 
