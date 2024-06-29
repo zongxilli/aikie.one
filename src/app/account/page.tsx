@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 
-import General from './components/general';
 import Danger from './components/danger';
+import General from './components/general';
 
 export default function AccountPage() {
 	const [tab, setTab] = useState(0);
@@ -16,6 +16,7 @@ export default function AccountPage() {
 				<Button
 					className='flex justify-start'
 					variant='ghost'
+					selected={tab === 0}
 					onClick={() => setTab(0)}
 				>
 					General
@@ -23,6 +24,7 @@ export default function AccountPage() {
 				<Button
 					className='flex justify-start'
 					variant='ghost'
+					selected={tab === 1}
 					onClick={() => setTab(1)}
 				>
 					Danger
