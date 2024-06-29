@@ -9,6 +9,7 @@ import { UserStoreProvider } from '@/providers/user';
 import { createClient } from '../../utils/supabase/server';
 
 import { ThemeProvider } from './themeProvider';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const font = Baloo_Thambi_2({ weight: ['500'], subsets: ['latin'] });
 
@@ -38,8 +39,10 @@ export default async function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-						<Toaster />
-						{children}
+						<TooltipProvider>
+							<Toaster />
+							{children}
+						</TooltipProvider>
 					</ThemeProvider>
 				</UserStoreProvider>
 			</body>
