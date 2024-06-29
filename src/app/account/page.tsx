@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 import General from './components/general';
+import Danger from './components/danger';
 
 export default function AccountPage() {
 	const [tab, setTab] = useState(0);
@@ -36,7 +37,7 @@ export default function AccountPage() {
 				return <General />;
 
 			case 1:
-				return <div>placeholder</div>;
+				return <Danger />;
 		}
 	};
 

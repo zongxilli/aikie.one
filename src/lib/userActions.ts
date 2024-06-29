@@ -72,3 +72,15 @@ export async function updateUserImage(userId: string, file: File) {
 
 	return publicUrl;
 }
+
+export async function deleteUserAccount(userId: string) {
+	const supabase = createClient();
+
+	const { data, error } = await supabase.auth.admin.deleteUser(userId);
+
+	if (error) {
+		throw new Error(`Failed to delete user: ${error.message}`);
+	}
+
+	return data;
+}

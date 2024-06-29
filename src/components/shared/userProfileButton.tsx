@@ -19,7 +19,7 @@ const UserProfileButton = () => {
 
 	const renderPopoverContent = () => (
 		<PopoverContent className='flex flex-col gap-4'>
-			<div className='flex gap-4 outline'>
+			<div className='flex gap-4'>
 				<Avatar className='flex-shrink-0 h-12 w-12'>
 					<AvatarImage src={user?.image || undefined} />
 					<AvatarFallback>
