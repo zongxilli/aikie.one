@@ -87,16 +87,7 @@ const Danger = () => {
 						now.
 					</CardDescription>
 				</CardHeader>
-				<CardContent>
-					{/* <Button
-						variant='destructive'
-						onClick={() => setShowConfirmationModal(true)}
-					>
-						Delete
-					</Button> */}
-
-					{renderConfirmationModal()}
-				</CardContent>
+				<CardContent>{renderConfirmationModal()}</CardContent>
 			</Card>
 		</div>
 	);
