@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { Settings, TriangleAlert } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 
 import Danger from './components/danger';
@@ -12,21 +14,23 @@ export default function AccountPage() {
 
 	const renderSideBar = () => {
 		return (
-			<div className='w-20 md:w-40 flex flex-col text-sm text-muted-foreground'>
+			<div className='w-20 md:w-64 shrink-0 flex flex-col text-sm text-muted-foreground'>
 				<Button
-					className='flex justify-start'
+					className='flex justify-center items-center gap-4 px-1 md:px-6 md:justify-start'
 					variant='ghost'
 					selected={tab === 0}
 					onClick={() => setTab(0)}
 				>
+					<Settings className='w-4 h-4 hidden md:block' />
 					General
 				</Button>
 				<Button
-					className='flex justify-start'
+					className='flex justify-center items-center gap-4 px-1 md:px-6 md:justify-start'
 					variant='ghost'
 					selected={tab === 1}
 					onClick={() => setTab(1)}
 				>
+					<TriangleAlert className='w-4 h-4 hidden md:block' />
 					Danger
 				</Button>
 			</div>
