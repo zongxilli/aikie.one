@@ -14,7 +14,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { updateUserImage, updateUserProfile } from '@/lib/userActions';
+import { updateUserProfile } from '@/lib/userActions';
+import { updateUserImage } from '@/lib/userActionsClient';
 import { useUserStore } from '@/providers/user';
 
 import { UserProfile } from '../../types/users';

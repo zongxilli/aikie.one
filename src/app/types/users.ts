@@ -13,3 +13,7 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
 	email: '',
 	image: '',
 };
+
+export const USER_IMAGE_STORAGE_BUCKET = 'my-next';
+
+export const USER_IMAGE_STORAGE_BUCKET_FOLDER = 'user-images';

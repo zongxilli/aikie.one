@@ -1,8 +1,8 @@
-'use client';
+'use server';
 
 import { UserProfile } from '@/app/types/users';
 
-import { createClient } from '../../utils/supabase/client';
+import { createClient } from '../../utils/supabase/server';
 
 export async function getUserProfile(userId: string): Promise<UserProfile> {
 	const supabase = createClient();
@@ -36,41 +36,6 @@ export async function updateUserProfile(
 	}
 
 	return data;
-}
-
-export async function updateUserImage(userId: string, file: File) {
-	const supabase = createClient();
-
-	const fileName = `${userId}-${Date.now()}.jpg`;
-
-	const { error: uploadError } = await supabase.storage
-		.from('my-next/user-images')
-		.upload(fileName, file, {
-			cacheControl: '3600',
-			upsert: false,
-		});
-
-	if (uploadError) {
-		throw new Error(`Failed to upload avatar: ${uploadError.message}`);
-	}
-
-	const { data } = supabase.storage
-		.from('my-next/user-images')
-		.getPublicUrl(fileName);
-
-	const publicUrl = data.publicUrl;
-
-	// 更新用户头像 URL
-	const { error: updateError } = await supabase
-		.from('users')
-		.update({ image: publicUrl })
-		.eq('id', userId);
-
-	if (updateError) {
-		throw new Error(`Failed to update user avatar: ${updateError.message}`);
-	}
-
-	return publicUrl;
 }
 
 export async function deleteUserAccount(userId: string) {

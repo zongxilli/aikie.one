@@ -2,7 +2,7 @@
 
 import { useUserStore } from '@/providers/user';
 
-export default function DashboardPage() {
+export default function HomePage() {
 	const { user, isLoading, error } = useUserStore((state) => state);
 
 	return (
