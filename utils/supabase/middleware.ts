@@ -59,7 +59,7 @@ export async function updateSession(request: NextRequest) {
 	} = await supabase.auth.getUser();
 
 	// 定义需要保护的路由
-	const protectedRoutes = ['/home'];
+	const protectedRoutes = ['/home', '/account'];
 
 	// 检查当前路径是否需要保护
 	const isProtectedRoute = protectedRoutes.some((route) =>

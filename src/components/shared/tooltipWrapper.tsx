@@ -1,17 +1,19 @@
 import { PropsWithChildren, ReactNode } from 'react';
 
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 type Props = PropsWithChildren<{
 	tooltip: ReactNode | string;
+	position?: 'right' | 'top' | 'bottom' | 'left';
+	positionOffset?: number;
 }>;
 
-const TooltipWrapper = ({ tooltip, children }: Props) => {
+const TooltipWrapper = ({
+	tooltip,
+	position,
+	positionOffset = 0,
+	children,
+}: Props) => {
 	const renderTooltipContent = () => {
 		if (typeof tooltip === 'string') {
 			return <p>{tooltip}</p>;
@@ -21,12 +23,12 @@ const TooltipWrapper = ({ tooltip, children }: Props) => {
 	};
 
 	return (
-		<TooltipProvider>
-			<Tooltip>
-				<TooltipTrigger asChild>{children}</TooltipTrigger>
-				<TooltipContent>{renderTooltipContent()}</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
+		<Tooltip>
+			<TooltipTrigger asChild>{children}</TooltipTrigger>
+			<TooltipContent side={position} sideOffset={positionOffset}>
+				{renderTooltipContent()}
+			</TooltipContent>
+		</Tooltip>
 	);
 };
 

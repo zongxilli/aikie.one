@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import logo_outline from '@/../public/logo_outline.svg';
+import logo from '@/../public/logo.svg';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -30,7 +30,7 @@ export default function SignUpPage() {
 					<div className='absolute inset-0 bg-zinc-900' />
 					<div className='relative z-20 flex items-center gap-2 text-lg font-medium'>
 						<Image
-							src={logo_outline}
+							src={logo}
 							alt='logo'
 							width='20'
 							height='20'

@@ -17,11 +17,9 @@ const Header = () => {
 	);
 
 	return (
-		<div className='h-14 w-full flex justify-center items-center shadow'>
-			<div className='container  flex justify-between items-center'>
-				{renderLogo()}
-				{renderActionButtons()}
-			</div>
+		<div className='h-full w-full flex justify-between items-center'>
+			{renderLogo()}
+			{renderActionButtons()}
 		</div>
 	);
 };

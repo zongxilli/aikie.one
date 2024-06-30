@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 const UserProfileButton = () => {
 	const { supabase } = useSupabase();
 
-	const { user } = useUserStore((state) => state);
+	const { user, cleanup } = useUserStore((state) => state);
 
 	const renderPopoverContent = () => (
 		<PopoverContent className='flex flex-col gap-4'>
@@ -50,7 +50,10 @@ const UserProfileButton = () => {
 				<Button
 					variant='ghost'
 					className='w-full flex justify-start items-center gap-4'
-					onClick={() => supabase.auth.signOut()}
+					onClick={() => {
+						supabase.auth.signOut();
+						cleanup();
+					}}
 				>
 					<LogOut className='w-4 h-4' />
 					Sign out

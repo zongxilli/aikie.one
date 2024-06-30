@@ -4,7 +4,11 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+// import { createUserStore } from '@/stores/user';
+
 import { createClient } from '../../utils/supabase/server';
+
+// const userStore = createUserStore();
 
 export async function login(formData: FormData) {
 	const supabase = createClient();
@@ -16,11 +20,18 @@ export async function login(formData: FormData) {
 		password: formData.get('password') as string,
 	};
 
-	const { error } = await supabase.auth.signInWithPassword(data);
+	const {
+		// data: { user },
+		error,
+	} = await supabase.auth.signInWithPassword(data);
 
 	if (error) {
 		redirect('/error');
 	}
+
+	// if (user) {
+	// 	await userStore.getState().loadCurrentUser(user.id);
+	// }
 
 	revalidatePath('/', 'layout');
 	redirect('/');

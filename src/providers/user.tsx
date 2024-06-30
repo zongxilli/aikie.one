@@ -12,6 +12,8 @@ import { useStore } from 'zustand';
 
 import { type UserStore, createUserStore, initUserStore } from '@/stores/user';
 
+import { createClient } from '../../utils/supabase/client';
+
 export type UserStoreApi = ReturnType<typeof createUserStore>;
 
 export const UserStoreContext = createContext<UserStoreApi | undefined>(
@@ -24,28 +26,46 @@ export interface UserStoreProviderProps {
 }
 
 export const UserStoreProvider = ({
-	children,
 	userId,
+	children,
 }: UserStoreProviderProps) => {
+	const supabase = createClient();
 	const storeRef = useRef<UserStoreApi>();
 	if (!storeRef.current) {
 		storeRef.current = createUserStore(initUserStore());
 	}
 
-	// 新增: 使用 useEffect 在组件挂载时获取用户信息
 	useEffect(() => {
 		const store = storeRef.current;
 
-		if (userId && store) {
-			storeRef.current?.getState().loadCurrentUser(userId);
+		const fetchAndSubscribeUser = async () => {
+			let identification = userId;
 
-			const unsubscribe = store.getState().subscribeToUserChanges(userId);
+			if (!identification) {
+				const {
+					data: { user },
+				} = await supabase.auth.getUser();
 
-			return () => {
-				unsubscribe();
-			};
+				identification = user?.id;
+			}
+
+			if (identification !== undefined && store) {
+				console.log('user provider 开始加载和监听用户');
+				store.getState().loadCurrentUser(identification);
+				const unsubscribe = store
+					.getState()
+					.subscribeToUserChanges(identification);
+
+				return () => {
+					unsubscribe();
+				};
+			}
+		};
+
+		if (store) {
+			fetchAndSubscribeUser();
 		}
-	}, [userId]);
+	}, [supabase.auth, userId]);
 
 	return (
 		<UserStoreContext.Provider value={storeRef.current}>

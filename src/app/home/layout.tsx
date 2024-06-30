@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 
-import { Header } from '@/components/shared';
+import { Dashboard } from '@/components/shared';
 
 export default function HomeLayout({
 	children,
@@ -11,10 +11,7 @@ export default function HomeLayout({
 }>) {
 	return (
 		<main className='w-[100vw] h-[100dvh]'>
-			<Header />
-			<div className='w-full h-[calc(100dvh_-_3.5rem)] flex items-center justify-center'>
-				{children}
-			</div>
+			<Dashboard>{children}</Dashboard>
 		</main>
 	);
 }

@@ -16,6 +16,7 @@ export type UserActions = {
 	loadCurrentUser: (userId: string) => Promise<void>;
 	updateUser: (updatedUser: Partial<UserProfile>) => void;
 	subscribeToUserChanges: (userId: string) => () => void;
+	cleanup: () => void;
 };
 
 export type UserStore = UserState & UserActions;
@@ -83,6 +84,9 @@ export const createUserStore = (initState: UserState = defaultInitState) => {
 					return () => {
 						supabase.removeChannel(subscription);
 					};
+				},
+				cleanup: () => {
+					set(defaultInitState);
 				},
 			}),
 			{

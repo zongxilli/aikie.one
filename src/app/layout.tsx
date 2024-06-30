@@ -4,12 +4,12 @@ import { Baloo_Thambi_2 } from 'next/font/google';
 import './globals.css';
 
 import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { UserStoreProvider } from '@/providers/user';
 
 import { createClient } from '../../utils/supabase/server';
 
 import { ThemeProvider } from './themeProvider';
-import { TooltipProvider } from '@/components/ui/tooltip';
 
 const font = Baloo_Thambi_2({ weight: ['500'], subsets: ['latin'] });
 
@@ -33,17 +33,17 @@ export default async function RootLayout({
 		<html lang='en' suppressHydrationWarning>
 			<body className={font.className} suppressHydrationWarning>
 				<UserStoreProvider userId={user?.id}>
-					<ThemeProvider
-						attribute='class'
-						defaultTheme='system'
-						enableSystem
-						disableTransitionOnChange
-					>
-						<TooltipProvider>
+					<TooltipProvider>
+						<ThemeProvider
+							attribute='class'
+							defaultTheme='system'
+							enableSystem
+							disableTransitionOnChange
+						>
 							<Toaster />
 							{children}
-						</TooltipProvider>
-					</ThemeProvider>
+						</ThemeProvider>
+					</TooltipProvider>
 				</UserStoreProvider>
 			</body>
 		</html>
