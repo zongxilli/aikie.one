@@ -3,7 +3,7 @@
 import {
 	USER_IMAGE_STORAGE_BUCKET,
 	USER_IMAGE_STORAGE_BUCKET_FOLDER,
-} from '@/app/types/users';
+} from '@/types/users';
 
 import { createClient } from '../../utils/supabase/client';
 
@@ -13,7 +13,7 @@ export async function updateUserImage(userId: string, file: File) {
 	// 首先获取用户当前的头像 url
 	const { data: userData, error: userError } = await supabase
 		.from('users')
-		.select('image')
+		.select('avatar_url')
 		.eq('id', userId)
 		.single();
 
@@ -21,14 +21,14 @@ export async function updateUserImage(userId: string, file: File) {
 		throw new Error(`Failed to get user data: ${userError.message}`);
 	}
 
-	if (userData && userData.image) {
+	if (userData && userData.avatar_url) {
 		// 如果存在旧的头像，且是 Supabase 存储的图片，则尝试删除它
-		if (userData.image.includes('supabase.co/storage')) {
+		if (userData.avatar_url.includes('supabase.co/storage')) {
 			// 从完整 url 中提取文件路径
 			const fileName =
 				USER_IMAGE_STORAGE_BUCKET_FOLDER +
 				'/' +
-				userData.image.split('/').pop();
+				userData.avatar_url.split('/').pop();
 
 			const { error: deleteError } = await supabase.storage
 				.from(USER_IMAGE_STORAGE_BUCKET)
@@ -68,7 +68,7 @@ export async function updateUserImage(userId: string, file: File) {
 	// 更新用户头像 url
 	const { error: updateError } = await supabase
 		.from('users')
-		.update({ image: publicUrl })
+		.update({ avatar_url: publicUrl })
 		.eq('id', userId);
 
 	if (updateError) {

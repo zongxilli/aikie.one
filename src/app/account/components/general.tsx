@@ -18,9 +18,9 @@ import { updateUserProfile } from '@/lib/userActions';
 import { updateUserImage } from '@/lib/userActionsClient';
 import { useUserStore } from '@/providers/user';
 
-import { UserProfile } from '../../types/users';
+import { UserProfile } from '../../../types/users';
 
-type UserField = Omit<UserProfile, 'id' | 'image'>;
+type UserField = Omit<UserProfile, 'id' | 'avatar_url' | 'full_name'>;
 
 const General = () => {
 	const { toast } = useToast();
@@ -121,7 +121,9 @@ const General = () => {
 						</CardDescription>
 					</div>
 					<Avatar className='h-12 w-12'>
-						<AvatarImage src={imageFilePreviewUrl ?? user?.image} />
+						<AvatarImage
+							src={imageFilePreviewUrl ?? user?.avatar_url}
+						/>
 						<AvatarFallback>IMG</AvatarFallback>
 					</Avatar>
 				</CardHeader>

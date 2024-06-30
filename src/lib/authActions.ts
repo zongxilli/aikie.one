@@ -49,21 +49,24 @@ export async function signup(formData: FormData) {
 		password: formData.get('password') as string,
 		options: {
 			data: {
-				full_name: `${firstName + ' ' + lastName}`,
+				name: `${firstName + ' ' + lastName}`,
 				email: formData.get('email') as string,
+				full_name: `${firstName + ' ' + lastName}`, // for supabase authentication table to add it to display_name
 			},
 		},
 	};
 
-	const { error } = await supabase.auth.signUp(data);
+	const { data: signUpData, error } = await supabase.auth.signUp(data);
 
 	if (error) {
 		console.log(error);
 		redirect('/error');
 	}
 
-	revalidatePath('/', 'layout');
-	redirect('/');
+	return signUpData;
+
+	// revalidatePath('/', 'layout');
+	// redirect('/');
 }
 
 export async function signout() {
@@ -112,4 +115,26 @@ export async function signInWithGitHub() {
 	}
 
 	redirect(data.url);
+}
+
+export async function signInWithMagicLink(email: string) {
+	const supabase = createClient();
+
+	if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+		console.log('Invalid email format');
+		redirect('/error?message=Invalid email format');
+	}
+
+	const { error } = await supabase.auth.signInWithOtp({
+		email: email,
+		options: {
+			// 可以自定义邮件内容
+			emailRedirectTo: `${process.env.NEXTAUTH_URL}/home`,
+		},
+	});
+
+	if (error) {
+		console.log('Error sending magic link:', error);
+		redirect('/error?message=Error sending magic link');
+	}
 }

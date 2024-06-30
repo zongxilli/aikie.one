@@ -1,8 +1,8 @@
 import { devtools } from 'zustand/middleware';
 import { createStore } from 'zustand/vanilla';
 
-import { UserProfile } from '@/app/types/users';
 import { getUserProfile } from '@/lib/userActions';
+import { UserProfile } from '@/types/users';
 
 import { createClient } from '../../utils/supabase/client';
 

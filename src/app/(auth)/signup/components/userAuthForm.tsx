@@ -4,6 +4,7 @@ import { SocialNetworkLogin } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { toast } from '@/components/ui/use-toast';
 import { signup } from '@/lib/authActions';
 import { cn } from '@/lib/utils';
 
@@ -55,11 +56,25 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 			</>
 		);
 
-		const renderCreateAccountButton = () => (
-			<Button formAction={signup} type='submit' className='w-full'>
-				Create an account
-			</Button>
-		);
+		const renderCreateAccountButton = () => {
+			const handler = (form: FormData) => {
+				signup(form);
+
+				toast({
+					variant: 'success',
+					title: 'Email Confirmation Required',
+					description:
+						'A confirmation link has been sent to your email. Please check your inbox and click the link to complete your registration.',
+					duration: 10000, // 10 seconds
+				});
+			};
+
+			return (
+				<Button formAction={handler} type='submit' className='w-full'>
+					Create an account
+				</Button>
+			);
+		};
 
 		return (
 			<form action=''>

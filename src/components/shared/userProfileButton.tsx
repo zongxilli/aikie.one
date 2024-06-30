@@ -21,7 +21,7 @@ const UserProfileButton = () => {
 		<PopoverContent className='flex flex-col gap-4'>
 			<div className='flex gap-4'>
 				<Avatar className='flex-shrink-0 h-12 w-12'>
-					<AvatarImage src={user?.image || undefined} />
+					<AvatarImage src={user?.avatar_url || undefined} />
 					<AvatarFallback>
 						{user?.name?.slice(0, 2).toUpperCase() || 'U'}
 					</AvatarFallback>
@@ -67,7 +67,7 @@ const UserProfileButton = () => {
 			<PopoverTrigger>
 				<div className='border-gradient rounded-full'>
 					<Avatar className='h-7 w-7'>
-						<AvatarImage src={user?.image || undefined} />
+						<AvatarImage src={user?.avatar_url || undefined} />
 						<AvatarFallback>
 							{user?.name?.slice(0, 2).toUpperCase() || 'U'}
 						</AvatarFallback>

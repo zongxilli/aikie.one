@@ -1,6 +1,6 @@
 'use server';
 
-import { UserProfile } from '@/app/types/users';
+import { UserProfile } from '@/types/users';
 
 import { createClient } from '../../utils/supabase/server';
 

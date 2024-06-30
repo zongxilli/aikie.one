@@ -35,6 +35,9 @@
 		.bg-component {
 			background: #ffffff;
 		}
+		.component-success {
+			background: #e0e7ff;
+		}
 	}
 
 	.dark {
@@ -67,6 +70,9 @@
 		}
 		.bg-component {
 			background: #1d1d1d;
+		}
+		.component-success {
+			background: #6366f1;
 		}
 	}
 }
@@ -130,14 +136,4 @@ html {
 	white-space: nowrap;
 	overflow: hidden;
 	min-width: 0;
-}
-
-/* dashboard 的 sidebar styles */
-.sidebar-text {
-	opacity: 0;
-	transition: opacity 0.3s ease-in-out;
-}
-
-.sidebar-expanded .sidebar-text {
-	opacity: 1;
 }

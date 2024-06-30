@@ -12,9 +12,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login } from '@/lib/authActions';
 
-import AuthProviderSignInButtons from '../../../../components/shared/socialNetworkLogin';
+import SocialNetworkLogin from '../../../../components/shared/socialNetworkLogin';
 
 export default function LogInForm() {
+	const renderDivider = () => (
+		<div className='relative'>
+			<div className='absolute inset-0 flex items-center'>
+				<span className='w-full border-t' />
+			</div>
+			<div className='relative flex justify-center text-xs uppercase'>
+				<span className='bg-background px-2 text-muted-foreground'>
+					Or continue with
+				</span>
+			</div>
+		</div>
+	);
+
 	return (
 		<Card className='mx-auto max-w-sm'>
 			<CardHeader>
@@ -38,14 +51,14 @@ export default function LogInForm() {
 						</div>
 						<div className='grid gap-2'>
 							{/* <div className='flex items-center'>
-								<Label htmlFor='password'>Password</Label>
 								<Link
-									href='#'
-									className='ml-auto inline-block text-sm underline'
+								href='#'
+								className='ml-auto inline-block text-sm underline'
 								>
-									Forgot your password?
+								Forgot your password?
 								</Link>
-							</div> */}
+								</div> */}
+							<Label htmlFor='password'>Password</Label>
 							<Input
 								id='password'
 								name='password'
@@ -60,7 +73,10 @@ export default function LogInForm() {
 						>
 							Login
 						</Button>
-						<AuthProviderSignInButtons />
+
+						{renderDivider()}
+
+						<SocialNetworkLogin allowMagicLink />
 					</div>
 				</form>
 				<div className='mt-4 text-center text-sm'>
