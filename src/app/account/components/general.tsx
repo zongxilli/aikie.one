@@ -14,13 +14,15 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { updateUserProfile } from '@/lib/userActions';
+import { updateUserProfile } from '@/db/queries';
+import { UserProfile } from '@/db/schema';
 import { updateUserImage } from '@/lib/userActionsClient';
 import { useUserStore } from '@/providers/user';
 
-import { UserProfile } from '../../../types/users';
-
-type UserField = Omit<UserProfile, 'id' | 'avatar_url' | 'full_name'>;
+type UserField = Omit<
+	UserProfile,
+	'id' | 'avatar_url' | 'full_name' | 'created_at' | 'updated_at'
+>;
 
 const General = () => {
 	const { toast } = useToast();
@@ -110,6 +112,12 @@ const General = () => {
 		});
 	};
 
+	const getPreviewImage = () => {
+		if (imageFilePreviewUrl) return imageFilePreviewUrl;
+		if (user && user.avatar_url) return user.avatar_url;
+		return '';
+	};
+
 	return (
 		<div className='flex-grow flex flex-col gap-4'>
 			<Card>
@@ -121,9 +129,7 @@ const General = () => {
 						</CardDescription>
 					</div>
 					<Avatar className='h-12 w-12'>
-						<AvatarImage
-							src={imageFilePreviewUrl ?? user?.avatar_url}
-						/>
+						<AvatarImage src={getPreviewImage()} />
 						<AvatarFallback>IMG</AvatarFallback>
 					</Avatar>
 				</CardHeader>

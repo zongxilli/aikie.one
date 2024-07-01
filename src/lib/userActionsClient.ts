@@ -3,9 +3,9 @@
 import {
 	USER_IMAGE_STORAGE_BUCKET,
 	USER_IMAGE_STORAGE_BUCKET_FOLDER,
-} from '@/types/users';
+} from '@/db/schema';
 
-import { createClient } from '../../utils/supabase/client';
+import { createClient } from '../../supabase/client';
 
 export async function updateUserImage(userId: string, file: File) {
 	const supabase = createClient();
@@ -68,7 +68,7 @@ export async function updateUserImage(userId: string, file: File) {
 	// 更新用户头像 url
 	const { error: updateError } = await supabase
 		.from('users')
-		.update({ avatar_url: publicUrl })
+		.update({ avatar_url: publicUrl, updated_at: new Date() })
 		.eq('id', userId);
 
 	if (updateError) {

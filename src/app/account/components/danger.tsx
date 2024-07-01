@@ -20,7 +20,6 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { deleteUserAccount } from '@/lib/userActions';
 import { useUserStore } from '@/providers/user';
 
 const Danger = () => {
@@ -30,7 +29,7 @@ const Danger = () => {
 	const handleDeleteAccount = async () => {
 		try {
 			if (user?.id) {
-				await deleteUserAccount(user?.id);
+				// await deleteUserAccount(user?.id);
 
 				toast({
 					variant: 'success',

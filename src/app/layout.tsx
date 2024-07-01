@@ -7,7 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { UserStoreProvider } from '@/providers/user';
 
-import { createClient } from '../../utils/supabase/server';
+import { createClient } from '../../supabase/server';
 
 import { ThemeProvider } from './themeProvider';
 

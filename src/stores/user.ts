@@ -1,10 +1,10 @@
 import { devtools } from 'zustand/middleware';
 import { createStore } from 'zustand/vanilla';
 
-import { getUserProfile } from '@/lib/userActions';
-import { UserProfile } from '@/types/users';
+import { getUserProfile } from '@/db/queries';
+import { UserProfile } from '@/db/schema';
 
-import { createClient } from '../../utils/supabase/client';
+import { createClient } from '../../supabase/client';
 
 export type UserState = {
 	user: UserProfile | null;

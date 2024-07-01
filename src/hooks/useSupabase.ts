@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
-import { createClient } from '../../utils/supabase/client';
+import { createClient } from '../../supabase/client';
 
 export default function useSupabase() {
 	const [user, setUser] = useState<User | null>(null);

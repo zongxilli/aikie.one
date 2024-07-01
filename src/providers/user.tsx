@@ -12,7 +12,7 @@ import { useStore } from 'zustand';
 
 import { type UserStore, createUserStore, initUserStore } from '@/stores/user';
 
-import { createClient } from '../../utils/supabase/client';
+import { createClient } from '../../supabase/client';
 
 export type UserStoreApi = ReturnType<typeof createUserStore>;
 

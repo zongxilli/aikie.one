@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { signout } from '@/lib/authActions';
 
-import { createClient } from '../../../utils/supabase/client';
+import { createClient } from '../../../supabase/client';
 import { Button } from '../ui/button';
 
 const LoginButton = () => {
