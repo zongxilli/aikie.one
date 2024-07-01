@@ -129,7 +129,7 @@ export async function signInWithMagicLink(email: string) {
 		email: email,
 		options: {
 			// 可以自定义邮件内容
-			emailRedirectTo: `${process.env.NEXTAUTH_URL}/home`,
+			emailRedirectTo: `${process.env.NEXT_APP_URL}/home`,
 		},
 	});
 
