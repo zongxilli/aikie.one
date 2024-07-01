@@ -17,7 +17,7 @@ export async function getUserProfile(userId: string): Promise<UserProfile> {
 	}
 
 	return profile[0];
-} // 注释：使用正确导入的 UserProfile 类型和 users schema
+}
 
 export async function updateUserProfile(
 	userId: string,
@@ -35,4 +35,4 @@ export async function updateUserProfile(
 	}
 
 	return updatedUser[0];
-} // 注释：更新用户信息时同时更新 updated_at 字段
+}
