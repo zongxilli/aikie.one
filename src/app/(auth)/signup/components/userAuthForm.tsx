@@ -1,5 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
+import { z } from 'zod';
+
 import { SocialNetworkLogin } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,30 +12,112 @@ import { toast } from '@/components/ui/use-toast';
 import { signup } from '@/lib/authActions';
 import { cn } from '@/lib/utils';
 
+const signupSchema = z
+	.object({
+		firstName: z.string().min(1, 'First name is required'),
+		lastName: z.string().min(1, 'Last name is required'),
+		email: z.string().email('Invalid email address'),
+		password: z.string().min(8, 'Password must be at least 8 characters'),
+		confirmPassword: z.string(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Passwords do not match',
+		path: ['confirmPassword'],
+	});
+
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+	// State for form data and errors
+	const [formData, setFormData] = useState({
+		firstName: '',
+		lastName: '',
+		email: '',
+		password: '',
+		confirmPassword: '',
+	});
+	const [errors, setErrors] = useState<z.ZodIssue[]>([]);
+
+	// Handle input changes
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	// Handle form submission
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		try {
+			signupSchema.parse(formData);
+			const formDataToSend = new FormData();
+			formDataToSend.append('first-name', formData.firstName);
+			formDataToSend.append('last-name', formData.lastName);
+			formDataToSend.append('email', formData.email);
+			formDataToSend.append('password', formData.password);
+
+			signup(formDataToSend);
+
+			toast({
+				variant: 'success',
+				title: 'Email Confirmation Required',
+				description:
+					'A confirmation link has been sent to your email. Please check your inbox and click the link to complete your registration.',
+				duration: 10000,
+			});
+
+			setFormData({
+				firstName: '',
+				lastName: '',
+				email: '',
+				password: '',
+				confirmPassword: '',
+			});
+			setErrors([]);
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				setErrors(error.issues);
+			}
+		}
+	};
+
 	const renderUserInfoForm = () => {
 		const renderNameInputs = () => (
-			<div className='grid grid-cols-2 gap-4'>
+			<div className='flex items-start justify-between gap-4'>
 				<div className='grid gap-2'>
-					<Label htmlFor='first-name'>First name</Label>
+					<Label htmlFor='firstName'>First name</Label>
 					<Input
-						name='first-name'
-						id='first-name'
-						placeholder='Max'
-						required
+						name='firstName'
+						id='firstName'
+						placeholder='John'
+						value={formData.firstName}
+						onChange={handleChange}
 					/>
+					{errors.find((e) => e.path[0] === 'firstName') && (
+						<p className='text-red-500 text-sm'>
+							{
+								errors.find((e) => e.path[0] === 'firstName')!
+									.message
+							}
+						</p>
+					)}
 				</div>
 
 				<div className='grid gap-2'>
-					<Label htmlFor='last-name'>Last name</Label>
+					<Label htmlFor='lastName'>Last name</Label>
 					<Input
-						name='last-name'
-						id='last-name'
-						placeholder='Robinson'
-						required
+						name='lastName'
+						id='lastName'
+						placeholder='Doe'
+						value={formData.lastName}
+						onChange={handleChange}
 					/>
+					{errors.find((e) => e.path[0] === 'lastName') && (
+						<p className='text-red-500 text-sm'>
+							{
+								errors.find((e) => e.path[0] === 'lastName')!
+									.message
+							}
+						</p>
+					)}
 				</div>
 			</div>
 		);
@@ -45,39 +131,64 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 						id='email'
 						type='email'
 						placeholder='mail@example.com'
-						required
+						value={formData.email}
+						onChange={handleChange}
 					/>
+					{errors.find((e) => e.path[0] === 'email') && (
+						<p className='text-red-500 text-sm'>
+							{errors.find((e) => e.path[0] === 'email')!.message}
+						</p>
+					)}
 				</div>
 
 				<div className='grid gap-2'>
 					<Label htmlFor='password'>Password</Label>
-					<Input name='password' id='password' type='password' />
+					<Input
+						name='password'
+						id='password'
+						type='password'
+						value={formData.password}
+						onChange={handleChange}
+					/>
+					{errors.find((e) => e.path[0] === 'password') && (
+						<p className='text-red-500 text-sm'>
+							{
+								errors.find((e) => e.path[0] === 'password')!
+									.message
+							}
+						</p>
+					)}
+				</div>
+				<div className='grid gap-2'>
+					<Label htmlFor='confirmPassword'>Confirm Password</Label>
+					<Input
+						name='confirmPassword'
+						id='confirmPassword'
+						type='password'
+						value={formData.confirmPassword}
+						onChange={handleChange}
+					/>
+					{errors.find((e) => e.path[0] === 'confirmPassword') && (
+						<p className='text-red-500 text-sm'>
+							{
+								errors.find(
+									(e) => e.path[0] === 'confirmPassword'
+								)!.message
+							}
+						</p>
+					)}
 				</div>
 			</>
 		);
 
-		const renderCreateAccountButton = () => {
-			const handler = (form: FormData) => {
-				signup(form);
-
-				toast({
-					variant: 'success',
-					title: 'Email Confirmation Required',
-					description:
-						'A confirmation link has been sent to your email. Please check your inbox and click the link to complete your registration.',
-					duration: 10000, // 10 seconds
-				});
-			};
-
-			return (
-				<Button formAction={handler} type='submit' className='w-full'>
-					Create an account
-				</Button>
-			);
-		};
+		const renderCreateAccountButton = () => (
+			<Button type='submit' className='w-full'>
+				Create an account
+			</Button>
+		);
 
 		return (
-			<form action=''>
+			<form onSubmit={handleSubmit}>
 				<div className='grid gap-4'>
 					{renderNameInputs()}
 					{renderPasswordAndEmailForm()}

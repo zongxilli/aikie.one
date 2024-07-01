@@ -36,7 +36,6 @@ export default function SignUpPage() {
 							height='20'
 							className='w-10 h-10'
 						/>
-						Kenny
 					</div>
 					<div className='relative z-20 mt-auto'>
 						<blockquote className='space-y-2'>

@@ -73,7 +73,7 @@ const SocialNetworkLogin = ({ allowMagicLink = false }: Props) => {
 				<DialogTrigger asChild>
 					<Button variant='outline' className='w-full'>
 						<Link2 className='w-5 h-5 mr-2' />
-						Sign in using magic link
+						Sign in using one-time link
 					</Button>
 				</DialogTrigger>
 				<DialogContent className='sm:max-w-[425px]'>
