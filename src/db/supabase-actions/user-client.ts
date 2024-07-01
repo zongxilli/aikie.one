@@ -5,7 +5,7 @@ import {
 	USER_IMAGE_STORAGE_BUCKET_FOLDER,
 } from '@/db/schema';
 
-import { createClient } from '../../supabase/client';
+import { createClient } from '../../../supabase/client';
 
 export async function updateUserImage(userId: string, file: File) {
 	const supabase = createClient();

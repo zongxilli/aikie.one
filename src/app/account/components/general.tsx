@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { updateUserProfile } from '@/db/queries';
 import { UserProfile } from '@/db/schema';
-import { updateUserImage } from '@/lib/userActionsClient';
+import { updateUserImage } from '@/db/supabase-actions/user-client';
 import { useUserStore } from '@/providers/user';
 
 type UserField = Omit<

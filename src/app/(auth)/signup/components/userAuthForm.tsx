@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
-import { signup } from '@/lib/authActions';
+import { signup } from '@/db/supabase-actions/auth-server';
 import { cn } from '@/lib/utils';
 
 const signupSchema = z

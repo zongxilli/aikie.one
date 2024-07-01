@@ -23,7 +23,7 @@ import {
 	signInWithGoogle,
 	signInWithGitHub,
 	signInWithMagicLink,
-} from '@/lib/authActions';
+} from '@/db/supabase-actions/auth-server';
 
 import { useToast } from '../ui/use-toast';
 

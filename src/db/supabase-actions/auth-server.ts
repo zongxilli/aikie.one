@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 
 // import { createUserStore } from '@/stores/user';
 
-import { createClient } from '../../supabase/server';
+import { createClient } from '../../../supabase/server';
 
 // const userStore = createUserStore();
 

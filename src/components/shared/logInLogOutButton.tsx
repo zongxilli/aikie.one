@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { signout } from '@/lib/authActions';
+import { signout } from '@/db/supabase-actions/auth-server';
 
 import { createClient } from '../../../supabase/client';
 import { Button } from '../ui/button';
