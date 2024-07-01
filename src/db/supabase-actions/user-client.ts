@@ -68,7 +68,7 @@ export async function updateUserImage(userId: string, file: File) {
 	// 更新用户头像 url
 	const { error: updateError } = await supabase
 		.from('users')
-		.update({ avatar_url: publicUrl, updated_at: new Date() })
+		.update({ avatar_url: publicUrl })
 		.eq('id', userId);
 
 	if (updateError) {

@@ -8,6 +8,27 @@
       "when": 1719848998155,
       "tag": "0000_thin_genesis",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1719862273997,
+      "tag": "0001_foamy_miek",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1719863225238,
+      "tag": "0002_nostalgic_night_thrasher",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1719865855546,
+      "tag": "0003_serious_red_skull",
+      "breakpoints": true
     }
   ]
 }

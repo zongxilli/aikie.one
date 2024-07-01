@@ -1,29 +1,98 @@
-import { pgTable, text, varchar, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import {
+	pgTable,
+	text,
+	varchar,
+	timestamp,
+	uuid,
+	index,
+} from 'drizzle-orm/pg-core';
 
-export const users = pgTable('users', {
-	id: uuid('id').primaryKey().defaultRandom(),
-	name: varchar('name', { length: 255 }).notNull(),
-	email: varchar('email', { length: 255 }).notNull().unique(),
-	avatar_url: text('avatar_url'),
-	full_name: varchar('full_name', { length: 255 }).notNull(),
-	created_at: timestamp('created_at').defaultNow().notNull(),
-	updated_at: timestamp('updated_at').defaultNow().notNull(),
-});
+export const users = pgTable(
+	'users',
+	{
+		id: uuid('id').primaryKey().defaultRandom(),
+		name: varchar('name', { length: 255 }).notNull(),
+		email: varchar('email', { length: 255 }).notNull().unique(),
+		avatar_url: text('avatar_url'),
+		full_name: varchar('full_name', { length: 255 }).notNull(),
+		created_at: timestamp('created_at').defaultNow().notNull(),
+		updated_at: timestamp('updated_at').defaultNow().notNull(),
+	},
+	(table) => ({
+		emailIdx: index('users_email_idx').on(table.email),
+		nameIdx: index('users_name_idx').on(table.name),
+	})
+);
 
-export const USER_IMAGE_STORAGE_BUCKET = 'my-next';
-export const USER_IMAGE_STORAGE_BUCKET_FOLDER = 'user-images';
+export const chatSessions = pgTable(
+	'chat_sessions',
+	{
+		id: uuid('id').primaryKey().defaultRandom(),
+		user_id: uuid('user_id')
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		name: varchar('name', { length: 255 }).notNull(),
+		created_at: timestamp('created_at').defaultNow().notNull(),
+		updated_at: timestamp('updated_at').defaultNow().notNull(),
+	},
+	(table) => ({
+		userIdIdx: index('chat_sessions_user_id_idx').on(table.user_id),
+		createdAtIdx: index('chat_sessions_created_at_idx').on(
+			table.created_at
+		),
+	})
+);
 
+export const messages = pgTable(
+	'messages',
+	{
+		id: uuid('id').primaryKey().defaultRandom(),
+		session_id: uuid('session_id')
+			.notNull()
+			.references(() => chatSessions.id, { onDelete: 'cascade' }),
+		content: text('content').notNull(),
+		role: varchar('role', { length: 50 }).notNull(),
+		created_at: timestamp('created_at').defaultNow().notNull(),
+	},
+	(table) => ({
+		sessionIdIdx: index('messages_session_id_idx').on(table.session_id),
+		createdAtIdx: index('messages_created_at_idx').on(table.created_at),
+	})
+);
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+	chatSessions: many(chatSessions),
+}));
+
+export const chatSessionsRelations = relations(
+	chatSessions,
+	({ one, many }) => ({
+		user: one(users, {
+			fields: [chatSessions.user_id],
+			references: [users.id],
+		}),
+		messages: many(messages),
+	})
+);
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+	chatSession: one(chatSessions, {
+		fields: [messages.session_id],
+		references: [chatSessions.id],
+	}),
+}));
+
+// Types
 export type UserProfile = typeof users.$inferSelect;
 export type NewUserProfile = typeof users.$inferInsert;
 
-export type UserProfileFields = keyof UserProfile;
+export type ChatSession = typeof chatSessions.$inferSelect;
+export type NewChatSession = typeof chatSessions.$inferInsert;
 
-// export const DEFAULT_USER_PROFILE: Partial<UserProfile> = {
-// 	id: '',
-// 	name: '',
-// 	email: '',
-// 	avatar_url: '',
-// 	full_name: '',
-// 	created_at: new Date(),
-// 	updated_at: new Date(),
-// };
+export type Message = typeof messages.$inferSelect;
+export type NewMessage = typeof messages.$inferInsert;
+
+// Constants
+export const USER_IMAGE_STORAGE_BUCKET = 'my-next';
+export const USER_IMAGE_STORAGE_BUCKET_FOLDER = 'user-images';

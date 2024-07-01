@@ -26,7 +26,7 @@ export async function updateUserProfile(
 ) {
 	const updatedUser = await db
 		.update(users)
-		.set({ name, email, updated_at: new Date() })
+		.set({ name, email })
 		.where(eq(users.id, userId))
 		.returning();
 
