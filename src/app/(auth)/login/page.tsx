@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import logo from '@/../public/logo.svg';
 
-import SignInForm from './components/logInForm';
+import LogInForm from './components/loginForm';
 
 const LoginPage = () => {
 	return (
@@ -16,7 +16,7 @@ const LoginPage = () => {
 					className='w-10 h-10'
 				/>
 			</div>
-			<SignInForm />
+			<LogInForm />
 		</div>
 	);
 };
