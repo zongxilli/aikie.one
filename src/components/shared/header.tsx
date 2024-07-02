@@ -1,9 +1,30 @@
-import Logo from './logo';
+// import { usePathname } from 'next/navigation';
+
 import ThemeToggle from './themeToggle';
 import UserProfileButton from './userProfileButton';
 
+// const getTitleText = (pathname: string) => {
+// 	switch (pathname) {
+// 		case '/home':
+// 			return 'Dashboard';
+
+// 		case '/account':
+// 			return 'Account';
+
+// 		case '/chat':
+// 			return 'Chat with AI';
+
+// 		default:
+// 			return '';
+// 	}
+// };
+
 const Header = () => {
-	const renderLogo = () => <Logo />;
+	// const pathname = usePathname();
+
+	const renderTitle = () => {
+		return <div className='text-xl'></div>;
+	};
 
 	const renderThemeToggle = () => <ThemeToggle />;
 
@@ -18,7 +39,7 @@ const Header = () => {
 
 	return (
 		<div className='h-full w-full flex justify-between items-center'>
-			{renderLogo()}
+			{renderTitle()}
 			{renderActionButtons()}
 		</div>
 	);

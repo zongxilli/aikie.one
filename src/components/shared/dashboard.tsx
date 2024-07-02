@@ -2,7 +2,8 @@
 
 import { PropsWithChildren, useState } from 'react';
 
-import { Home, LucideIcon, UserRoundCog } from 'lucide-react';
+import clsx from 'clsx';
+import { Bot, Home, LucideIcon, UserRoundCog } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -12,7 +13,9 @@ import { Button } from '../ui/button';
 
 import Header from './header';
 
-const Dashboard = ({ children }: PropsWithChildren<{}>) => {
+type Props = PropsWithChildren<{ autoScroll?: boolean }>;
+
+const Dashboard = ({ children, autoScroll = false }: Props) => {
 	const pathname = usePathname();
 
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -63,6 +66,7 @@ const Dashboard = ({ children }: PropsWithChildren<{}>) => {
 						</Link>
 
 						{renderSideBarItem(Home, 'Dashboard', '/home')}
+						{renderSideBarItem(Bot, 'AI Chat', '/chat')}
 					</div>
 
 					{renderSideBarItem(
@@ -81,7 +85,12 @@ const Dashboard = ({ children }: PropsWithChildren<{}>) => {
 				<header className='flex-shrink-0 px-5 py-2 h-16'>
 					<Header />
 				</header>
-				<main className='flex-grow w-full overflow-auto flex flex-col '>
+				<main
+					className={clsx('flex-grow w-full flex', {
+						'flex-col overflow-auto': autoScroll,
+						'justify-center items-center': !autoScroll,
+					})}
+				>
 					{children}
 				</main>
 			</div>
