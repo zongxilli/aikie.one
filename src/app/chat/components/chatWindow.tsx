@@ -1,6 +1,14 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import {
+	Dispatch,
+	SetStateAction,
+	memo,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'react';
 
 import clsx from 'clsx';
 import { ArrowUp } from 'lucide-react';
@@ -20,6 +28,29 @@ import { ChatSession, Message } from '@/db/schema';
 import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
 import { usePrevious } from '@/hooks';
 import { useUserStore } from '@/providers/user';
+
+const MemoizedMessage = memo(({ message }: { message: Message }) => {
+	if (message.role === 'user') {
+		return (
+			<Card
+				className={clsx(
+					'mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
+				)}
+			>
+				<CardContent>{message.content}</CardContent>
+			</Card>
+		);
+	}
+	return (
+		<Card className={clsx('mb-4 max-w-[80%] mr-auto bg-secondary')}>
+			<CardContent>
+				<GPT4oResponseRenderer content={message.content} />
+			</CardContent>
+		</Card>
+	);
+});
+
+MemoizedMessage.displayName = 'MemoizedMessage';
 
 type Props = {
 	selectedSessionId: string | null;
@@ -44,6 +75,8 @@ const ChatWindow = ({
 	const [inputText, setInputText] = useState('');
 	const [isSending, setIsSending] = useState(false);
 
+	const prevSelectedSessionId = usePrevious(selectedSessionId);
+
 	// 有新的 message 就自动 scroll
 	useEffect(() => {
 		// Scroll to bottom when messages change
@@ -53,7 +86,6 @@ const ChatWindow = ({
 		}
 	}, [messages]);
 
-	const prevSelectedSessionId = usePrevious(selectedSessionId);
 	// 自动 focus input
 	useEffect(() => {
 		// 在组件挂载时或 selectedSessionId 变为 null 时聚焦
@@ -121,31 +153,6 @@ const ChatWindow = ({
 		);
 	};
 
-	const renderMessage = (message: Message) => {
-		if (message.role === 'user')
-			return (
-				<Card
-					key={message.id}
-					className={clsx(
-						'mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
-					)}
-				>
-					<CardContent>{message.content}</CardContent>
-				</Card>
-			);
-
-		return (
-			<Card
-				key={message.id}
-				className={clsx('mb-4 max-w-[80%] mr-auto bg-secondary')}
-			>
-				<CardContent>
-					<GPT4oResponseRenderer content={message.content} />
-				</CardContent>
-			</Card>
-		);
-	};
-
 	const renderChatHistory = () => {
 		if (selectedSessionId && isChatMessagesLoading) {
 			return <LoadingOverlay label='Loading chats...' />;
@@ -156,7 +163,9 @@ const ChatWindow = ({
 				ref={chatHistoryRef}
 				className='w-full h-[calc(100dvh_-_12rem)] max-w-[80rem] flex flex-col overflow-auto rounded-lg'
 			>
-				{messages.map(renderMessage)}
+				{messages.map((message) => (
+					<MemoizedMessage key={message.id} message={message} />
+				))}
 			</div>
 		);
 	};

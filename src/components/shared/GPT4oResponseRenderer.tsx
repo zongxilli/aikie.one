@@ -1,4 +1,5 @@
-import React from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface GPT4oResponseRendererProps {
 	content: string;
@@ -8,6 +9,12 @@ const GPT4oResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 	content,
 }) => {
 	const formatLine = (line: string) => {
+		// Handle inline code
+		line = line.replace(
+			/`([^`]+)`/g,
+			'<code class="bg-foreground/30 text-white px-1 py-0.5 rounded font-mono text-sm">$1</code>'
+		);
+
 		// Handle bold text
 		line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
@@ -22,18 +29,64 @@ const GPT4oResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 
 	const renderContent = () => {
 		let inList = false;
+		let inCodeBlock = false;
+		let codeContent = '';
+		let codeLanguage = '';
+
 		return content.split('\n').map((line, index) => {
+			// Handle code blocks
+			if (line.startsWith('```')) {
+				if (inCodeBlock) {
+					inCodeBlock = false;
+					const highlightedCode = (
+						<SyntaxHighlighter
+							language={codeLanguage}
+							style={tomorrow}
+							key={index}
+							className='rounded-md'
+						>
+							{codeContent.trim()}
+						</SyntaxHighlighter>
+					);
+					codeContent = '';
+					codeLanguage = '';
+					return highlightedCode;
+				} else {
+					inCodeBlock = true;
+					codeLanguage = line.slice(3).trim();
+					return null;
+				}
+			}
+
+			if (inCodeBlock) {
+				codeContent += line + '\n';
+				return null;
+			}
+
+			// Existing rendering logic
 			if (line.startsWith('###')) {
 				return (
 					<h3 key={index} className='text-xl font-bold mt-6 mb-3'>
-						{formatLine(line.replace('###', '').trim())}
+						<span
+							dangerouslySetInnerHTML={{
+								__html: formatLine(
+									line.replace('###', '').trim()
+								),
+							}}
+						/>
 					</h3>
 				);
 			}
 			if (line.startsWith('**') && line.endsWith('**')) {
 				return (
 					<h4 key={index} className='text-lg font-semibold mt-4 mb-2'>
-						{formatLine(line.replace(/^\*\*|\*\*$/g, ''))}
+						<span
+							dangerouslySetInnerHTML={{
+								__html: formatLine(
+									line.replace(/^\*\*|\*\*$/g, '')
+								),
+							}}
+						/>
 					</h4>
 				);
 			}
