@@ -6,6 +6,7 @@ import {
 	timestamp,
 	uuid,
 	index,
+	pgEnum,
 } from 'drizzle-orm/pg-core';
 
 export const users = pgTable(
@@ -44,6 +45,10 @@ export const chatSessions = pgTable(
 	})
 );
 
+// Enum
+export type MessageRole = 'user' | 'assistant';
+export const messageRolePG = pgEnum('role', ['user', 'assistant']);
+
 export const messages = pgTable(
 	'messages',
 	{
@@ -52,7 +57,7 @@ export const messages = pgTable(
 			.notNull()
 			.references(() => chatSessions.id, { onDelete: 'cascade' }),
 		content: text('content').notNull(),
-		role: varchar('role', { length: 50 }).notNull(),
+		role: messageRolePG('role').notNull(),
 		created_at: timestamp('created_at').defaultNow().notNull(),
 	},
 	(table) => ({
@@ -60,6 +65,7 @@ export const messages = pgTable(
 		createdAtIdx: index('messages_created_at_idx').on(table.created_at),
 	})
 );
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
 	chatSessions: many(chatSessions),
