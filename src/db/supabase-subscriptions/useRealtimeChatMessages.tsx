@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { createClient } from '../../../supabase/client';
 import { getSessionMessages } from '../queries-chat-messages';
-import { Message } from '../schema';
+import { Message, MessageRole } from '../schema';
 
 const supabase = createClient();
 
@@ -101,7 +101,7 @@ export function useRealtimeChatMessages(sessionId: string | null) {
 	}, [sessionId]);
 
 	// 添加一个辅助函数来按角色过滤消息
-	const getMessagesByRole = (role: string) => {
+	const getMessagesByRole = (role: MessageRole) => {
 		return messages.filter((message) => message.role === role);
 	};
 

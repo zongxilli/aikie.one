@@ -2,15 +2,17 @@
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
+import clsx from 'clsx';
 import { ArrowUp } from 'lucide-react';
 
 import { LoadingOverlay, LoadingWrapper } from '@/components/shared';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { createNewChatMessage } from '@/db/queries-chat-messages';
 import { createNewChatSession } from '@/db/queries-chat-sessions';
-import { ChatSession } from '@/db/schema';
+import { ChatSession, Message } from '@/db/schema';
 import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
 import { usePrevious } from '@/hooks';
 import { useUserStore } from '@/providers/user';
@@ -103,6 +105,21 @@ const ChatWindow = ({
 		);
 	};
 
+	const renderMessage = (message: Message) => (
+		<Card
+			key={message.id}
+			className={clsx(
+				'mb-4 max-w-[80%]',
+				message.role === 'user' ? 'ml-auto' : 'mr-auto',
+				message.role === 'user'
+					? 'bg-primary text-primary-foreground'
+					: 'bg-secondary'
+			)}
+		>
+			<CardContent>{message.content}</CardContent>
+		</Card>
+	);
+
 	const renderChatHistory = () => {
 		if (selectedSessionId && isChatMessagesLoading) {
 			return <LoadingOverlay label='Loading chats...' />;
@@ -110,9 +127,7 @@ const ChatWindow = ({
 
 		return (
 			<div className='w-full h-full max-w-[80rem] flex flex-col'>
-				{messages.map((message) => (
-					<p key={message.id}>{message.content}</p>
-				))}
+				{messages.map(renderMessage)}
 			</div>
 		);
 	};
