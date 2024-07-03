@@ -18,7 +18,7 @@ import {
 	createNewSession,
 	deleteChatSession,
 	updateChatSessionName,
-} from '@/db/queries-chat';
+} from '@/db/queries-chat-sessions';
 import { ChatSession } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 

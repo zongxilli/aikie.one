@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useUserStore } from '@/providers/user';
 
 import { createClient } from '../../../supabase/client';
-import { getUserChatSessions } from '../queries-chat';
+import { getUserChatSessions } from '../queries-chat-sessions';
 import { ChatSession } from '../schema';
 
 const supabase = createClient();
