@@ -58,10 +58,7 @@ export default function ChatPage() {
 
 	return (
 		<div className='w-full h-full p-4 box-border'>
-			<ResizablePanelGroup
-				direction='horizontal'
-				className='max-w-full max-h-full'
-			>
+			<ResizablePanelGroup direction='horizontal'>
 				<ResizablePanel
 					defaultSize={20}
 					minSize={15}

@@ -8,6 +8,8 @@ import { Message, messages } from '@/db/schema';
 
 const openai = new OpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
+	organization: process.env.OPENAI_ORGANIZATION_ID,
+	project: process.env.OPENAI_PROJECT_ID,
 });
 
 export async function getSessionMessages(
@@ -53,7 +55,7 @@ export async function createNewChatMessage(
 
 			// 准备 OpenAI API 请求
 			const chatCompletion = await openai.chat.completions.create({
-				model: 'gpt-3.5-turbo',
+				model: 'gpt-4o',
 				messages: [
 					...sessionHistory.map((msg) => ({
 						role: msg.role as 'user' | 'assistant', // 确保角色是 'user' 或 'assistant'
@@ -81,6 +83,7 @@ export async function createNewChatMessage(
 
 		return [userMessage];
 	} catch (error) {
+		console.log(error);
 		throw new Error('Failed to create new chat message');
 	}
 }

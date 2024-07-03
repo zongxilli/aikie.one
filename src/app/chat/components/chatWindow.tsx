@@ -5,7 +5,11 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { ArrowUp } from 'lucide-react';
 
-import { LoadingOverlay, LoadingWrapper } from '@/components/shared';
+import {
+	GPT4oResponseRenderer,
+	LoadingOverlay,
+	LoadingWrapper,
+} from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,10 +40,21 @@ const ChatWindow = ({
 	const { user } = useUserStore((state) => state);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const chatHistoryRef = useRef<HTMLDivElement>(null);
 	const [inputText, setInputText] = useState('');
 	const [isSending, setIsSending] = useState(false);
 
+	// 有新的 message 就自动 scroll
+	useEffect(() => {
+		// Scroll to bottom when messages change
+		if (chatHistoryRef.current) {
+			chatHistoryRef.current.scrollTop =
+				chatHistoryRef.current.scrollHeight;
+		}
+	}, [messages]);
+
 	const prevSelectedSessionId = usePrevious(selectedSessionId);
+	// 自动 focus input
 	useEffect(() => {
 		// 在组件挂载时或 selectedSessionId 变为 null 时聚焦
 		if (
@@ -50,6 +65,7 @@ const ChatWindow = ({
 		}
 	}, [selectedSessionId, prevSelectedSessionId]);
 
+	// input 自动变高
 	useEffect(() => {
 		const textarea = textareaRef.current;
 		if (textarea) {
@@ -105,20 +121,30 @@ const ChatWindow = ({
 		);
 	};
 
-	const renderMessage = (message: Message) => (
-		<Card
-			key={message.id}
-			className={clsx(
-				'mb-4 max-w-[80%]',
-				message.role === 'user' ? 'ml-auto' : 'mr-auto',
-				message.role === 'user'
-					? 'bg-primary text-primary-foreground'
-					: 'bg-secondary'
-			)}
-		>
-			<CardContent>{message.content}</CardContent>
-		</Card>
-	);
+	const renderMessage = (message: Message) => {
+		if (message.role === 'user')
+			return (
+				<Card
+					key={message.id}
+					className={clsx(
+						'mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
+					)}
+				>
+					<CardContent>{message.content}</CardContent>
+				</Card>
+			);
+
+		return (
+			<Card
+				key={message.id}
+				className={clsx('mb-4 max-w-[80%] mr-auto bg-secondary')}
+			>
+				<CardContent>
+					<GPT4oResponseRenderer content={message.content} />
+				</CardContent>
+			</Card>
+		);
+	};
 
 	const renderChatHistory = () => {
 		if (selectedSessionId && isChatMessagesLoading) {
@@ -126,7 +152,10 @@ const ChatWindow = ({
 		}
 
 		return (
-			<div className='w-full h-full max-w-[80rem] flex flex-col'>
+			<div
+				ref={chatHistoryRef}
+				className='w-full h-[calc(100dvh_-_12rem)] max-w-[80rem] flex flex-col overflow-auto rounded-lg'
+			>
 				{messages.map(renderMessage)}
 			</div>
 		);
@@ -158,7 +187,7 @@ const ChatWindow = ({
 	};
 
 	return (
-		<div className='w-full h-full p-4 box-border relative flex justify-center'>
+		<div className='w-full h-full p-4 box-border relative flex flex-col flex-start'>
 			{renderChatHistory()}
 			{renderChatInput()}
 		</div>
