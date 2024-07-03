@@ -1,5 +1,30 @@
+import { useState } from 'react';
+
+import { Check, Copy } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const CopyButton: React.FC<{ text: string }> = ({ text }) => {
+	const [copied, setCopied] = useState(false);
+
+	const handleCopy = async () => {
+		await navigator.clipboard.writeText(text);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 3000);
+	};
+
+	return (
+		<button
+			onClick={handleCopy}
+			className='absolute top-2 right-2 px-1 py-1 rounded bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors flex items-center'
+		>
+			{copied ? <Check size={14} /> : <Copy size={14} />}
+			<span className='ml-1 text-xs'>
+				{copied ? 'Copied!' : 'Copy code'}
+			</span>
+		</button>
+	);
+};
 
 interface GPT4oResponseRendererProps {
 	content: string;
@@ -39,14 +64,16 @@ const GPT4oResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 				if (inCodeBlock) {
 					inCodeBlock = false;
 					const highlightedCode = (
-						<SyntaxHighlighter
-							language={codeLanguage}
-							style={tomorrow}
-							key={index}
-							className='rounded-md'
-						>
-							{codeContent.trim()}
-						</SyntaxHighlighter>
+						<div key={index} className='relative'>
+							<SyntaxHighlighter
+								language={codeLanguage}
+								style={tomorrow}
+								className='rounded-md mt-4'
+							>
+								{codeContent.trim()}
+							</SyntaxHighlighter>
+							<CopyButton text={codeContent.trim()} />
+						</div>
 					);
 					codeContent = '';
 					codeLanguage = '';
@@ -63,7 +90,6 @@ const GPT4oResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 				return null;
 			}
 
-			// Existing rendering logic
 			if (line.startsWith('###')) {
 				return (
 					<h3 key={index} className='text-xl font-bold mt-6 mb-3'>

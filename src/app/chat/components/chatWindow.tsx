@@ -32,17 +32,19 @@ import { useUserStore } from '@/providers/user';
 const MemoizedMessage = memo(({ message }: { message: Message }) => {
 	if (message.role === 'user') {
 		return (
-			<Card
+			<div
 				className={clsx(
-					'mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
+					'rounded-full px-6 mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
 				)}
 			>
-				<CardContent>{message.content}</CardContent>
-			</Card>
+				<div className='min-h-12 flex items-center'>
+					{message.content}
+				</div>
+			</div>
 		);
 	}
 	return (
-		<Card className={clsx('mb-4 max-w-[80%] mr-auto bg-secondary')}>
+		<Card className={clsx('mb-4 w-full mr-auto bg-secondary')}>
 			<CardContent>
 				<GPT4oResponseRenderer content={message.content} />
 			</CardContent>
@@ -161,7 +163,7 @@ const ChatWindow = ({
 		return (
 			<div
 				ref={chatHistoryRef}
-				className='w-full h-[calc(100dvh_-_12rem)] max-w-[80rem] flex flex-col overflow-auto rounded-lg'
+				className='w-full h-[calc(100dvh_-_12rem)] max-w-[60rem] flex flex-col overflow-auto rounded-lg'
 			>
 				{messages.map((message) => (
 					<MemoizedMessage key={message.id} message={message} />
@@ -196,7 +198,7 @@ const ChatWindow = ({
 	};
 
 	return (
-		<div className='w-full h-full p-4 box-border relative flex flex-col flex-start'>
+		<div className='w-full h-full p-4 box-border relative flex flex-col items-center justify-start'>
 			{renderChatHistory()}
 			{renderChatInput()}
 		</div>
