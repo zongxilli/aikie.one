@@ -11,7 +11,7 @@ type Props = PropsWithChildren<{
 const TooltipWrapper = ({
 	tooltip,
 	position,
-	positionOffset = 0,
+	positionOffset = 5,
 	children,
 }: Props) => {
 	const renderTooltipContent = () => {

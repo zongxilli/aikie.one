@@ -1,6 +1,6 @@
 'use server';
 
-import { desc, eq, and } from 'drizzle-orm';
+import { desc, eq, and, like } from 'drizzle-orm';
 
 import { db } from '@/db/index';
 import { ChatSession, chatSessions } from '@/db/schema';
@@ -78,5 +78,54 @@ export async function updateChatSessionName(
 			success: false,
 			message: 'Failed to update chat session name.',
 		};
+	}
+}
+
+export async function generateUniqueName(userId: string): Promise<string> {
+	const baseName = 'Untitled conversation';
+	let name = baseName;
+	let counter = 0;
+
+	while (true) {
+		const existingSessions = await db
+			.select()
+			.from(chatSessions)
+			.where(
+				and(
+					eq(chatSessions.user_id, userId),
+					like(
+						chatSessions.name,
+						counter === 0 ? baseName : `${baseName} (${counter})`
+					)
+				)
+			);
+
+		if (existingSessions.length === 0) {
+			return name;
+		}
+
+		counter++;
+		name = `${baseName} (${counter})`;
+	}
+}
+
+export async function createNewSession(
+	userId: string
+): Promise<ChatSession | null> {
+	try {
+		const name = await generateUniqueName(userId);
+
+		const [newSession] = await db
+			.insert(chatSessions)
+			.values({
+				user_id: userId,
+				name: name,
+			})
+			.returning();
+
+		return newSession;
+	} catch (error) {
+		console.error('Error creating new chat session:', error);
+		return null;
 	}
 }
