@@ -45,20 +45,20 @@ const ChatSessions = ({ selectedSessionsId }: Props) => {
 			if (editingId === session.id) return null;
 
 			return (
-				<div className='items-center gap-2 hidden group-hover:flex group-[.selected]:flex'>
-					<TooltipWrapper tooltip='delete' positionOffset={5}>
-						<Trash
-							className='action-button w-4 h-4'
-							onClick={() =>
-								deleteChatSession(session.id, session.user_id)
-							}
-						/>
-					</TooltipWrapper>
+				<div className='items-center gap-3 hidden group-hover:flex group-[.selected]:flex'>
 					<TooltipWrapper tooltip='rename' positionOffset={5}>
 						<Pen
 							className='action-button w-4 h-4'
 							onClick={() =>
 								handleRename(session.id, session.name)
+							}
+						/>
+					</TooltipWrapper>
+					<TooltipWrapper tooltip='delete' positionOffset={5}>
+						<Trash
+							className='action-button w-4 h-4'
+							onClick={() =>
+								deleteChatSession(session.id, session.user_id)
 							}
 						/>
 					</TooltipWrapper>
