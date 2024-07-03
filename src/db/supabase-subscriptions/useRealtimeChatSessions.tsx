@@ -87,8 +87,8 @@ export function useRealtimeChatSessions() {
 						isMounted = false;
 						supabase.removeChannel(subscription);
 					};
-				} catch (err) {
-					console.error('Error in fetchAndSubscribe:', err);
+				} catch (error) {
+					console.error('Error in fetchAndSubscribe:', error);
 					if (isMounted) {
 						setError(
 							'Failed to fetch or subscribe to chat sessions'

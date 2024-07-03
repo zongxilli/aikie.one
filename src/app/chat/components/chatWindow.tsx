@@ -1,11 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+'use client';
+
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { ArrowUp } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { ChatSession } from '@/db/schema';
 
-const ChatWindow = () => {
+type Props = {
+	selectedSessionId: string | null;
+	setSelectedSessionId: Dispatch<SetStateAction<string | null>>;
+	sessions: ChatSession[];
+	isLoading: boolean;
+};
+
+const ChatWindow = ({
+	selectedSessionId,
+	setSelectedSessionId,
+	sessions,
+	isLoading,
+}: Props) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [inputText, setInputText] = useState('');
 
@@ -30,6 +45,7 @@ const ChatWindow = () => {
 				disabled={inputText === ''}
 				onClick={() => {
 					// TODO: send message to API
+					// TODO: if this is a first message with no session selected, we create a new session and select it
 				}}
 			>
 				<ArrowUp className='h-5 w-5' />
@@ -55,6 +71,7 @@ const ChatWindow = () => {
 						onChange={(e) => setInputText(e.target.value)}
 						value={inputText}
 						rows={1}
+						disabled={isLoading}
 					/>
 					{renderSendButton()}
 				</div>

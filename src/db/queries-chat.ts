@@ -109,9 +109,7 @@ export async function generateUniqueName(userId: string): Promise<string> {
 	}
 }
 
-export async function createNewSession(
-	userId: string
-): Promise<ChatSession | null> {
+export async function createNewSession(userId: string): Promise<ChatSession> {
 	try {
 		const name = await generateUniqueName(userId);
 
@@ -123,9 +121,18 @@ export async function createNewSession(
 			})
 			.returning();
 
+		if (!newSession) {
+			throw new Error('Failed to create new session');
+		}
+
 		return newSession;
 	} catch (error) {
-		console.error('Error creating new chat session:', error);
-		return null;
+		if (error instanceof Error) {
+			throw new Error(`Failed to create new session: ${error.message}`);
+		} else {
+			throw new Error(
+				'An unexpected error occurred while creating new session'
+			);
+		}
 	}
 }

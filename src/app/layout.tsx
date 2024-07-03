@@ -33,7 +33,7 @@ export default async function RootLayout({
 		<html lang='en' suppressHydrationWarning>
 			<body className={font.className} suppressHydrationWarning>
 				<UserStoreProvider userId={user?.id}>
-					<TooltipProvider>
+					<TooltipProvider delayDuration={200}>
 						<ThemeProvider
 							attribute='class'
 							defaultTheme='system'

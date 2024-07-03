@@ -1,26 +1,42 @@
-import React, { useState, useRef, useEffect } from 'react';
+'use client';
+
+import React, {
+	useState,
+	useRef,
+	useEffect,
+	Dispatch,
+	SetStateAction,
+} from 'react';
 
 import { ListPlus, Pen, Trash } from 'lucide-react';
 
 import { LoadingOverlay, TooltipWrapper } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import {
 	createNewSession,
 	deleteChatSession,
 	updateChatSessionName,
 } from '@/db/queries-chat';
 import { ChatSession } from '@/db/schema';
-import { useRealtimeChatSessions } from '@/db/supabase-subscriptions/useRealtimeChatSessions';
 import { useUserStore } from '@/providers/user';
 
 type Props = {
-	selectedSessionsId: string;
+	selectedSessionId: string | null;
+	setSelectedSessionId: Dispatch<SetStateAction<string | null>>;
+	sessions: ChatSession[];
+	isLoading: boolean;
 };
 
-const ChatSessions = ({ selectedSessionsId }: Props) => {
+const ChatSessions = ({
+	selectedSessionId,
+	setSelectedSessionId,
+	sessions,
+	isLoading,
+}: Props) => {
+	const { toast } = useToast();
 	const { user } = useUserStore((state) => state);
-	const { sessions, isLoading } = useRealtimeChatSessions();
 
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [editingName, setEditingName] = useState('');
@@ -56,17 +72,19 @@ const ChatSessions = ({ selectedSessionsId }: Props) => {
 					<TooltipWrapper tooltip='rename'>
 						<Pen
 							className='action-button w-4 h-4'
-							onClick={() =>
-								handleRename(session.id, session.name)
-							}
+							onClick={(e) => {
+								e.stopPropagation();
+								handleRename(session.id, session.name);
+							}}
 						/>
 					</TooltipWrapper>
 					<TooltipWrapper tooltip='delete'>
 						<Trash
 							className='action-button w-4 h-4'
-							onClick={() =>
-								deleteChatSession(session.id, session.user_id)
-							}
+							onClick={(e) => {
+								e.stopPropagation();
+								deleteChatSession(session.id, session.user_id);
+							}}
 						/>
 					</TooltipWrapper>
 				</div>
@@ -103,9 +121,12 @@ const ChatSessions = ({ selectedSessionsId }: Props) => {
 			sessions.map((session) => (
 				<Button
 					variant='ghost'
-					className='flex items-center justify-between gap-4 group'
+					className={`flex items-center justify-between gap-4 group ${
+						session.id === selectedSessionId ? 'selected' : ''
+					}`}
 					key={session.id}
-					selected={session.id === selectedSessionsId}
+					selected={session.id === selectedSessionId}
+					onClick={() => setSelectedSessionId(session.id)}
 				>
 					{renderSessionLabel(session)}
 					{renderSessionActionButtons(session)}
@@ -113,15 +134,29 @@ const ChatSessions = ({ selectedSessionsId }: Props) => {
 			));
 
 		const renderCreateNewSessionButton = () => {
+			const handleCreateNewSession = async () => {
+				if (user && user.id) {
+					try {
+						const newSession = await createNewSession(user?.id);
+
+						if (newSession) setSelectedSessionId(newSession.id);
+					} catch (err) {
+						toast({
+							variant: 'destructive',
+							title: 'An unexpected error occurred.',
+							description: 'Please try again later.',
+						});
+					}
+				}
+			};
+
 			return (
 				<TooltipWrapper tooltip='Start a new chat'>
 					<Button
 						variant='ghost'
 						size='icon'
 						className='ml-auto mb-4'
-						onClick={() => {
-							if (user && user.id) createNewSession(user?.id);
-						}}
+						onClick={handleCreateNewSession}
 					>
 						<ListPlus className='h-5 w-5' />
 					</Button>
