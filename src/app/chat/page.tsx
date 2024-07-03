@@ -63,7 +63,8 @@ export default function ChatPage() {
 				className='max-w-full max-h-full'
 			>
 				<ResizablePanel
-					defaultSize={30}
+					defaultSize={20}
+					minSize={15}
 					className='border rounded-lg bg-card'
 				>
 					{renderSessionsPanel()}
@@ -72,7 +73,8 @@ export default function ChatPage() {
 				{renderResizeBar()}
 
 				<ResizablePanel
-					defaultSize={70}
+					defaultSize={80}
+					minSize={30}
 					className='border rounded-lg bg-card'
 				>
 					{renderChatPanel()}
