@@ -117,9 +117,23 @@ html {
 
 /* typography */
 .text-one-line {
-	width: 100%;
+	/* width: 100%; */
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
 	min-width: 0;
+}
+
+.action-button {
+	transition-property: transform;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 150ms;
+}
+
+.action-button:hover {
+	transform: scale(1.1);
+}
+
+.action-button:active {
+	transform: scale(0.9);
 }

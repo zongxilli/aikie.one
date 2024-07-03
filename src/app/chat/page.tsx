@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/resizable';
 import { useUserStore } from '@/providers/user';
 
+import ChatSessions from './components/chatSessions';
 import ChatWindow from './components/chatWindow';
 
 export default function ChatPage() {
@@ -28,29 +29,7 @@ export default function ChatPage() {
 		);
 	};
 
-	const renderConfigPanel = () => {
-		return (
-			<ResizablePanelGroup direction='vertical'>
-				<ResizablePanel
-					defaultSize={40}
-					className='border rounded-lg bg-card'
-				>
-					<div className='flex h-full items-center justify-center p-6'>
-						<span className='font-semibold'>Two</span>
-					</div>
-				</ResizablePanel>
-				{renderResizeBar(true)}
-				<ResizablePanel
-					defaultSize={60}
-					className='border rounded-lg bg-card'
-				>
-					<div className='flex h-full items-center justify-center p-6'>
-						<span className='font-semibold'>Three</span>
-					</div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
-		);
-	};
+	const renderSessionsPanel = () => <ChatSessions />;
 
 	const renderChatPanel = () => <ChatWindow />;
 
@@ -60,14 +39,17 @@ export default function ChatPage() {
 				direction='horizontal'
 				className='max-w-full max-h-full'
 			>
-				<ResizablePanel defaultSize={40}>
-					{renderConfigPanel()}
+				<ResizablePanel
+					defaultSize={30}
+					className='border rounded-lg bg-card'
+				>
+					{renderSessionsPanel()}
 				</ResizablePanel>
 
 				{renderResizeBar()}
 
 				<ResizablePanel
-					defaultSize={60}
+					defaultSize={70}
 					className='border rounded-lg bg-card'
 				>
 					{renderChatPanel()}

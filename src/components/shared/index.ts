@@ -1,6 +1,7 @@
 import Dashboard from './dashboard';
 import Dashboard2 from './dashboard2';
 import Header from './header';
+import LoadingOverlay from './loadingOverlay';
 import LogInLogOutButton from './logInLogOutButton';
 import Logo from './logo';
 import SocialNetworkLogin from './socialNetworkLogin';
@@ -12,6 +13,7 @@ export {
 	Dashboard,
 	Dashboard2,
 	Header,
+	LoadingOverlay,
 	LogInLogOutButton,
 	Logo,
 	SocialNetworkLogin,
