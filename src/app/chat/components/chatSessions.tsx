@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import {
-	createNewSession,
+	createNewChatSession,
 	deleteChatSession,
 	updateChatSessionName,
 } from '@/db/queries-chat-sessions';
@@ -134,29 +134,13 @@ const ChatSessions = ({
 			));
 
 		const renderCreateNewSessionButton = () => {
-			const handleCreateNewSession = async () => {
-				if (user && user.id) {
-					try {
-						const newSession = await createNewSession(user?.id);
-
-						if (newSession) setSelectedSessionId(newSession.id);
-					} catch (err) {
-						toast({
-							variant: 'destructive',
-							title: 'An unexpected error occurred.',
-							description: 'Please try again later.',
-						});
-					}
-				}
-			};
-
 			return (
 				<TooltipWrapper tooltip='Start a new chat'>
 					<Button
 						variant='ghost'
 						size='icon'
 						className='ml-auto mb-4'
-						onClick={handleCreateNewSession}
+						onClick={() => setSelectedSessionId(null)}
 					>
 						<ListPlus className='h-5 w-5' />
 					</Button>

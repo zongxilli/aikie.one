@@ -105,11 +105,19 @@ export function useRealtimeChatMessages(sessionId: string | null) {
 		return messages.filter((message) => message.role === role);
 	};
 
+	if (sessionId === null)
+		return {
+			messages: [],
+			isLoading: false,
+			error: null,
+			userMessages: [],
+			assistantMessages: [],
+		};
+
 	return {
 		messages,
 		isLoading,
 		error,
-		getMessagesByRole, // 新增：返回按角色过滤消息的函数
 		userMessages: getMessagesByRole('user'), // 新增：用户消息
 		assistantMessages: getMessagesByRole('assistant'), // 新增：AI助手消息
 	};

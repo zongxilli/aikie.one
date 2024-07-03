@@ -17,7 +17,27 @@ export async function getSessionMessages(
 
 		return sessionMessages;
 	} catch (error) {
-		console.error('Failed to fetch chat messages:', error);
 		throw new Error('Failed to fetch chat messages');
+	}
+}
+
+export async function createNewChatMessage(
+	sessionId: string,
+	content: string,
+	role: 'user' | 'assistant' = 'user'
+): Promise<Message> {
+	try {
+		const [newMessage] = await db
+			.insert(messages)
+			.values({
+				session_id: sessionId,
+				content,
+				role,
+			})
+			.returning();
+
+		return newMessage;
+	} catch (error) {
+		throw new Error('Failed to create new chat message');
 	}
 }

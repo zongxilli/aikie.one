@@ -109,7 +109,9 @@ export async function generateUniqueName(userId: string): Promise<string> {
 	}
 }
 
-export async function createNewSession(userId: string): Promise<ChatSession> {
+export async function createNewChatSession(
+	userId: string
+): Promise<ChatSession> {
 	try {
 		const name = await generateUniqueName(userId);
 

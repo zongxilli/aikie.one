@@ -4,11 +4,16 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { ArrowUp } from 'lucide-react';
 
-import { LoadingOverlay } from '@/components/shared';
+import { LoadingOverlay, LoadingWrapper } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
+import { createNewChatMessage } from '@/db/queries-chat-messages';
+import { createNewChatSession } from '@/db/queries-chat-sessions';
 import { ChatSession } from '@/db/schema';
 import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
+import { usePrevious } from '@/hooks';
+import { useUserStore } from '@/providers/user';
 
 type Props = {
 	selectedSessionId: string | null;
@@ -23,11 +28,25 @@ const ChatWindow = ({
 	sessions,
 	isChatSessionsLoading,
 }: Props) => {
+	const { toast } = useToast();
 	const { messages, isLoading: isChatMessagesLoading } =
 		useRealtimeChatMessages(selectedSessionId);
+	const { user } = useUserStore((state) => state);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [inputText, setInputText] = useState('');
+	const [isSending, setIsSending] = useState(false);
+
+	const prevSelectedSessionId = usePrevious(selectedSessionId);
+	useEffect(() => {
+		// 在组件挂载时或 selectedSessionId 变为 null 时聚焦
+		if (
+			textareaRef.current &&
+			(selectedSessionId === null || prevSelectedSessionId !== null)
+		) {
+			textareaRef.current.focus();
+		}
+	}, [selectedSessionId, prevSelectedSessionId]);
 
 	useEffect(() => {
 		const textarea = textareaRef.current;
@@ -42,18 +61,44 @@ const ChatWindow = ({
 		}
 	}, []);
 
+	const handleSendMessage = async () => {
+		if (!inputText.trim() || isSending || !user?.id) return;
+
+		setIsSending(true);
+		try {
+			let sessionId = selectedSessionId;
+
+			// 创建一个新的会话，如果没有 selected session
+			if (!sessionId) {
+				const newSession = await createNewChatSession(user.id);
+				setSelectedSessionId(newSession.id);
+				sessionId = newSession.id;
+			}
+
+			await createNewChatMessage(sessionId, inputText.trim());
+			setInputText('');
+		} catch (error) {
+			toast({
+				variant: 'destructive',
+				title: 'An unexpected error occurred.',
+				description: 'Please try again later.',
+			});
+		} finally {
+			setIsSending(false);
+		}
+	};
+
 	const renderSendButton = () => {
 		return (
 			<Button
 				size='icon'
 				className='absolute right-4 bottom-1 h-8 w-8 rounded-full'
-				disabled={inputText === ''}
-				onClick={() => {
-					// TODO: send message to API
-					// TODO: if this is a first message with no session selected, we create a new session and select it
-				}}
+				disabled={inputText === '' || isSending}
+				onClick={handleSendMessage}
 			>
-				<ArrowUp className='h-5 w-5' />
+				<LoadingWrapper isLoading={isSending}>
+					<ArrowUp className='h-5 w-5' />
+				</LoadingWrapper>
 			</Button>
 		);
 	};
@@ -84,6 +129,12 @@ const ChatWindow = ({
 						value={inputText}
 						rows={1}
 						disabled={isChatSessionsLoading}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter' && !e.shiftKey) {
+								e.preventDefault();
+								handleSendMessage();
+							}
+						}}
 					/>
 					{renderSendButton()}
 				</div>
