@@ -46,11 +46,37 @@ export async function deleteChatSession(
 			};
 		}
 
-		// 执行删除操作
 		await db.delete(chatSessions).where(eq(chatSessions.id, sessionId));
 
 		return { success: true, message: 'Chat session successfully deleted.' };
 	} catch (error) {
 		return { success: false, message: 'Failed to delete chat session.' };
+	}
+}
+
+export async function updateChatSessionName(
+	sessionId: string,
+	userId: string,
+	newName: string
+) {
+	try {
+		await db
+			.update(chatSessions)
+			.set({ name: newName })
+			.where(
+				and(
+					eq(chatSessions.id, sessionId),
+					eq(chatSessions.user_id, userId)
+				)
+			);
+		return {
+			success: true,
+			message: 'Chat session name updated successfully.',
+		};
+	} catch (error) {
+		return {
+			success: false,
+			message: 'Failed to update chat session name.',
+		};
 	}
 }
