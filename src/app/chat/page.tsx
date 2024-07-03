@@ -50,7 +50,7 @@ export default function ChatPage() {
 	const renderChatPanel = () => (
 		<ChatWindow
 			sessions={sessions}
-			isLoading={isChatSessionsLoading}
+			isChatSessionsLoading={isChatSessionsLoading}
 			selectedSessionId={selectedSessionId}
 			setSelectedSessionId={setSelectedSessionId}
 		/>

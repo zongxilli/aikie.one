@@ -4,23 +4,28 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { ArrowUp } from 'lucide-react';
 
+import { LoadingOverlay } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ChatSession } from '@/db/schema';
+import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
 
 type Props = {
 	selectedSessionId: string | null;
 	setSelectedSessionId: Dispatch<SetStateAction<string | null>>;
 	sessions: ChatSession[];
-	isLoading: boolean;
+	isChatSessionsLoading: boolean;
 };
 
 const ChatWindow = ({
 	selectedSessionId,
 	setSelectedSessionId,
 	sessions,
-	isLoading,
+	isChatSessionsLoading,
 }: Props) => {
+	const { messages, isLoading: isChatMessagesLoading } =
+		useRealtimeChatMessages(selectedSessionId);
+
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [inputText, setInputText] = useState('');
 
@@ -54,14 +59,21 @@ const ChatWindow = ({
 	};
 
 	const renderChatHistory = () => {
+		if (selectedSessionId && isChatMessagesLoading) {
+			return <LoadingOverlay label='Loading chats...' />;
+		}
+
 		return (
-			<div className='w-full h-full max-w-[80rem] flex flex-col'></div>
+			<div className='w-full h-full max-w-[80rem] flex flex-col'>
+				{messages.map((message) => (
+					<p key={message.id}>{message.content}</p>
+				))}
+			</div>
 		);
 	};
 
-	return (
-		<div className='w-full h-full p-4 box-border relative flex justify-center'>
-			{renderChatHistory()}
+	const renderChatInput = () => {
+		return (
 			<div className='absolute bottom-2 left-[5%] w-[90%] flex justify-center'>
 				<div className='relative w-full max-w-[50rem] rounded-xl border'>
 					<Textarea
@@ -71,11 +83,18 @@ const ChatWindow = ({
 						onChange={(e) => setInputText(e.target.value)}
 						value={inputText}
 						rows={1}
-						disabled={isLoading}
+						disabled={isChatSessionsLoading}
 					/>
 					{renderSendButton()}
 				</div>
 			</div>
+		);
+	};
+
+	return (
+		<div className='w-full h-full p-4 box-border relative flex justify-center'>
+			{renderChatHistory()}
+			{renderChatInput()}
 		</div>
 	);
 };
