@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 import { Dashboard } from '@/components/shared';
 
-export default function QuizLayout({
+export default function HomeLayout({
 	children,
 }: Readonly<{
 	children: ReactNode;

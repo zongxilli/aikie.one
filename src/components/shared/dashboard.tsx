@@ -3,7 +3,7 @@
 import { PropsWithChildren, useState } from 'react';
 
 import clsx from 'clsx';
-import { Bot, Home, LucideIcon, UserRoundCog } from 'lucide-react';
+import { Bot, Home, ListChecks, LucideIcon, UserRoundCog } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -49,7 +49,7 @@ const Dashboard = ({ children, autoScroll = false }: Props) => {
 	const renderSideBar = () => {
 		return (
 			<aside
-				className={`fixed inset-y-0 left-0 z-10 flex flex-col border-r bg-background transition-all ease-in-out ${
+				className={`fixed inset-y-0 left-0 z-10 flex flex-col border-r transition-all ease-in-out bg-card ${
 					isExpanded ? 'w-64' : 'w-[3.5rem]'
 				}`}
 				onMouseEnter={() => setIsExpanded(true)}
@@ -67,6 +67,7 @@ const Dashboard = ({ children, autoScroll = false }: Props) => {
 
 						{renderSideBarItem(Home, 'Dashboard', '/home')}
 						{renderSideBarItem(Bot, 'AI Chat', '/chat')}
+						{renderSideBarItem(ListChecks, 'AI Test', '/quiz')}
 					</div>
 
 					{renderSideBarItem(
@@ -98,7 +99,7 @@ const Dashboard = ({ children, autoScroll = false }: Props) => {
 	};
 
 	return (
-		<div className='flex min-h-screen w-full'>
+		<div className='flex min-h-screen w-full bg-background'>
 			{renderSideBar()}
 			{renderContent()}
 		</div>

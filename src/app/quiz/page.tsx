@@ -9,9 +9,7 @@ import {
 } from '@/components/ui/resizable';
 import { useUserStore } from '@/providers/user';
 
-import ChatWindow from './components/chatWindow';
-
-export default function ChatPage() {
+export default function QuizPage() {
 	const { user, isLoading, error } = useUserStore((state) => state);
 
 	const renderResizeBar = (horizontal?: boolean) => {
@@ -52,8 +50,6 @@ export default function ChatPage() {
 		);
 	};
 
-	const renderChatPanel = () => <ChatWindow />;
-
 	return (
 		<div className='w-full h-full p-4 box-border'>
 			<ResizablePanelGroup
@@ -70,7 +66,7 @@ export default function ChatPage() {
 					defaultSize={60}
 					className='border rounded-lg bg-card'
 				>
-					{renderChatPanel()}
+					Main
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
