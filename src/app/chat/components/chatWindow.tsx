@@ -100,18 +100,17 @@ const ChatWindow = ({
 	}, [selectedSessionId, prevSelectedSessionId]);
 
 	// input 自动变高
-	useEffect(() => {
+	const adjustHeight = () => {
 		const textarea = textareaRef.current;
 		if (textarea) {
-			const adjustHeight = () => {
-				textarea.style.height = 'auto';
-				textarea.style.height = `${textarea.scrollHeight}px`;
-			};
+			textarea.style.height = 'auto';
 
-			textarea.addEventListener('input', adjustHeight);
-			return () => textarea.removeEventListener('input', adjustHeight);
+			textarea.style.height = `${textarea.scrollHeight}px`;
 		}
-	}, []);
+	};
+	useEffect(() => {
+		adjustHeight();
+	}, [inputText]);
 
 	const handleSendMessage = async () => {
 		if (!inputText.trim() || isSending || !user?.id) return;
