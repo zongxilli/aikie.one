@@ -1,6 +1,6 @@
 'use server';
 
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, and } from 'drizzle-orm';
 
 import { db } from '@/db/index';
 import { ChatSession, chatSessions } from '@/db/schema';
@@ -18,5 +18,39 @@ export async function getUserChatSessions(
 		return sessions;
 	} catch (error) {
 		throw new Error('Failed to fetch chat sessions');
+	}
+}
+
+export async function deleteChatSession(
+	sessionId: string,
+	userId: string
+): Promise<{ success: boolean; message: string }> {
+	try {
+		// 首先验证会话属于该用户
+		const session = await db
+			.select()
+			.from(chatSessions)
+			.where(
+				and(
+					eq(chatSessions.id, sessionId),
+					eq(chatSessions.user_id, userId)
+				)
+			)
+			.limit(1);
+
+		if (session.length === 0) {
+			return {
+				success: false,
+				message:
+					'Chat session not found or you do not have permission to delete it.',
+			};
+		}
+
+		// 执行删除操作
+		await db.delete(chatSessions).where(eq(chatSessions.id, sessionId));
+
+		return { success: true, message: 'Chat session successfully deleted.' };
+	} catch (error) {
+		return { success: false, message: 'Failed to delete chat session.' };
 	}
 }
