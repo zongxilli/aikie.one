@@ -18,7 +18,7 @@ export const getClaudeResponse = async (
 
 		const response = await anthropic.messages.create({
 			model: 'claude-3-5-sonnet-20240620',
-			max_tokens: 1000,
+			max_tokens: 2000,
 			temperature: 0.7, // 调整温度以改变响应的创造性
 			system: 'You are a software engineer', // 修改系统提示
 			messages: [

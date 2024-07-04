@@ -16,7 +16,7 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
 	return (
 		<button
 			onClick={handleCopy}
-			className='absolute top-2 right-2 px-1 py-1 rounded bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors flex items-center'
+			className='px-1 py-1 rounded bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors flex items-center'
 		>
 			{copied ? <Check size={14} /> : <Copy size={14} />}
 			<span className='ml-1 text-xs'>
@@ -63,18 +63,18 @@ const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 			const highlightedCode = (
 				<div className='relative'>
 					{codeLanguage && (
-						<div className='absolute top-0 left-0 bg-gray-700 text-gray-200 px-2 py-1 text-xs rounded-tl'>
-							{codeLanguage.replace(/^`+/, '')}
+						<div className='absolute w-full h-8 top-[-2rem] left-0 bg-gray-700 text-gray-200 text-xs rounded-tl-lg rounded-tr-lg px-3 flex items-center justify-between'>
+							<div>{codeLanguage.replace(/^`+/, '')}</div>
+							<CopyButton text={codeContent.trim()} />
 						</div>
 					)}
 					<SyntaxHighlighter
 						language={codeLanguage.replace(/^`+/, '') || 'text'}
 						style={tomorrow}
-						className='rounded-md mt-4'
+						className='rounded-bl-lg rounded-br-lg'
 					>
 						{codeContent.trim()}
 					</SyntaxHighlighter>
-					<CopyButton text={codeContent.trim()} />
 				</div>
 			);
 			codeContent = '';
@@ -90,11 +90,17 @@ const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 					const codeBlock = renderCodeBlock();
 					if (inList) {
 						listItems.push(
-							<li key={`code-${index}`}>{codeBlock}</li>
+							<li key={`code-${index}`} className='pt-6'>
+								{codeBlock}
+							</li>
 						);
 						return null;
 					}
-					return <div key={`code-${index}`}>{codeBlock}</div>;
+					return (
+						<div key={`code-${index}`} className='pt-6'>
+							{codeBlock}
+						</div>
+					);
 				} else {
 					inCodeBlock = true;
 					codeLanguage = line.slice(3).trim(); // 移除开头的 ```
