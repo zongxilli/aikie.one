@@ -5,7 +5,7 @@ import { asc, eq } from 'drizzle-orm';
 import { db } from '@/db/index';
 import { Message, messages } from '@/db/schema';
 
-import { getClaudeResponse } from './claude/api';
+import { getClaudeResponse } from './anthropic/api';
 import { getOpenAIResponsive } from './openAI/api';
 
 export async function getSessionMessages(
