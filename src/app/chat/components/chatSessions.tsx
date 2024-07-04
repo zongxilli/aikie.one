@@ -142,7 +142,7 @@ const ChatSessions = ({
 					</div>
 					<div className='grid gap-3'>
 						<div className='flex items-center gap-1'>
-							<Label htmlFor='content'>Content</Label>
+							<Label htmlFor='prompt'>Prompt</Label>
 							<TooltipWrapper
 								tooltip={<System />}
 								position='right'
@@ -151,7 +151,7 @@ const ChatSessions = ({
 							</TooltipWrapper>
 						</div>
 						<Textarea
-							id='content'
+							id='prompt'
 							onChange={(e) => {
 								setModelConfig((config) => ({
 									...config,
