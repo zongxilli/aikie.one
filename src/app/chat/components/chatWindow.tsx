@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { ArrowUp } from 'lucide-react';
 
 import {
-	GPT4oResponseRenderer,
+	AIResponseRenderer,
 	LoadingOverlay,
 	LoadingWrapper,
 } from '@/components/shared';
@@ -34,7 +34,7 @@ const MemoizedMessage = memo(({ message }: { message: Message }) => {
 		return (
 			<div
 				className={clsx(
-					'rounded-full px-6 mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
+					'rounded-lg px-6 py-4 mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
 				)}
 			>
 				<div className='min-h-12 flex items-center'>
@@ -46,7 +46,7 @@ const MemoizedMessage = memo(({ message }: { message: Message }) => {
 	return (
 		<Card className={clsx('mb-4 w-full mr-auto bg-secondary')}>
 			<CardContent>
-				<GPT4oResponseRenderer content={message.content} />
+				<AIResponseRenderer content={message.content} />
 			</CardContent>
 		</Card>
 	);

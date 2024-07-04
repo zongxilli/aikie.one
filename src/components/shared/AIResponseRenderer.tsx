@@ -30,7 +30,7 @@ interface GPT4oResponseRendererProps {
 	content: string;
 }
 
-const GPT4oResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
+const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 	content,
 }) => {
 	const formatLine = (line: string) => {
@@ -158,4 +158,4 @@ const GPT4oResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 	return <div className='gpt-response p-6 rounded-lg'>{renderContent()}</div>;
 };
 
-export default GPT4oResponseRenderer;
+export default AIResponseRenderer;

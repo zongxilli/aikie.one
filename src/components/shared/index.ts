@@ -1,6 +1,6 @@
+import AIResponseRenderer from './AIResponseRenderer';
 import Dashboard from './dashboard';
 import Dashboard2 from './dashboard2';
-import GPT4oResponseRenderer from './GPT4oResponseRenderer';
 import Header from './header';
 import LoadingOverlay from './loadingOverlay';
 import LoadingWrapper from './LoadingWrapper';
@@ -14,7 +14,7 @@ import UserProfileButton from './userProfileButton';
 export {
 	Dashboard,
 	Dashboard2,
-	GPT4oResponseRenderer,
+	AIResponseRenderer,
 	Header,
 	LoadingOverlay,
 	LoadingWrapper,
