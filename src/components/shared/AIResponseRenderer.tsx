@@ -97,7 +97,7 @@ const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 						return null;
 					}
 					return (
-						<div key={`code-${index}`} className='pt-6'>
+						<div key={`code-${index}`} className='pt-3'>
 							{codeBlock}
 						</div>
 					);
