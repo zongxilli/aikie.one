@@ -47,7 +47,7 @@ export const chatSessions = pgTable(
 
 // Enum
 export type MessageRole = 'user' | 'assistant';
-export const messageRolePG = pgEnum('role', ['user', 'assistant']);
+export const messageRolePG = pgEnum('role_enum', ['user', 'assistant']);
 
 export const messages = pgTable(
 	'messages',
