@@ -28,6 +28,7 @@ import { ChatSession, Message } from '@/db/schema';
 import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
 import { usePrevious } from '@/hooks';
 import { useUserStore } from '@/providers/user';
+
 import { ModelConfig } from '../page';
 
 const MemoizedMessage = memo(({ message }: { message: Message }) => {

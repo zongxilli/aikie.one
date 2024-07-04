@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/resizable';
 import { useRealtimeChatSessions } from '@/db/supabase-subscriptions/useRealtimeChatSessions';
 import { useUserStore } from '@/providers/user';
+import { AIProvider } from '@/types/AI';
 
 import ChatSessions from './components/chatSessions';
 import ChatWindow from './components/chatWindow';
-import { AIProvider } from '@/types/AI';
 
 export type ModelConfig = {
 	provider: AIProvider;

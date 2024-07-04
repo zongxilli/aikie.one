@@ -4,10 +4,10 @@ import { asc, eq } from 'drizzle-orm';
 
 import { db } from '@/db/index';
 import { Message, messages } from '@/db/schema';
+import { AIProvider } from '@/types/AI';
 
 import { getClaudeResponse } from './anthropic/api';
 import { getOpenAIResponsive } from './openAI/api';
-import { AIProvider } from '@/types/AI';
 
 export async function getSessionMessages(
 	sessionId: string

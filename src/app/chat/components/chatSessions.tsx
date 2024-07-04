@@ -37,6 +37,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import {
@@ -47,10 +48,12 @@ import {
 import { ChatSession } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 import { AIProvider, getAIModel } from '@/types/AI';
-import { Slider } from '@/components/ui/slider';
-import Temperature from './tooltips/temperature';
-import System from './tooltips/system';
+
 import { ModelConfig } from '../page';
+
+import System from './tooltips/system';
+import Temperature from './tooltips/temperature';
+
 
 type Props = {
 	selectedSessionId: string | null;
