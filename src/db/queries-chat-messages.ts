@@ -51,21 +51,13 @@ export async function createNewChatMessage(
 		const sessionHistory = await getSessionMessages(sessionId);
 
 		if (api === AIProvider.anthropic) {
-			await getClaudeResponse(
-				sessionId,
-				sessionHistory,
-				temperature,
-				system
-			);
+			// removed await
+			getClaudeResponse(sessionId, sessionHistory, temperature, system);
 		}
 		// open AI
 		else {
-			await getOpenAIResponsive(
-				sessionId,
-				sessionHistory,
-				temperature,
-				system
-			);
+			// removed await
+			getOpenAIResponsive(sessionId, sessionHistory, temperature, system);
 		}
 
 		return [userMessage];
