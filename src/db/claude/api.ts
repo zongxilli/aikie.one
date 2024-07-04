@@ -1,3 +1,5 @@
+'use server';
+
 import Anthropic from '@anthropic-ai/sdk';
 
 import { db } from '@/db/index';
@@ -32,30 +34,11 @@ export const getClaudeResponse = async (
 			],
 		});
 
-		// example response
-		// {
-		//   id: 'msg_01YS4NngSjApWBR4zSE9yXJv',
-		//   type: 'message',
-		//   role: 'assistant',
-		//   model: 'claude-3-5-sonnet-20240620',
-		//   content: [
-		//     {
-		//       type: 'text',
-		//       text: 'React 和 Vue 都是流行的前端JavaScript框架,它们有一些相似之处,但也存在一些重要区别。以下是它们的主要区别:\n' +
-		//         '\n' +
-		//         '1. 模板语法:\n' +
-		//         '   - React 使用 JSX,将 HTML 直接写在 JavaScript 中。\n' +
-		//     }
-		//   ],
-		//   stop_reason: 'end_turn',
-		//   stop_sequence: null,
-		//   usage: { input_tokens: 21, output_tokens: 617 }
-		// }
-
 		if (response.content[0] && 'text' in response.content[0]) {
 			const aiResponse = response.content[0].text;
 
 			// 插入 AI 回复到数据库
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const [aiMessage] = await db
 				.insert(messages)
 				.values({

@@ -1,18 +1,12 @@
 'use server';
 
 import { asc, eq } from 'drizzle-orm';
-import OpenAI from 'openai';
 
 import { db } from '@/db/index';
 import { Message, messages } from '@/db/schema';
 
 import { getClaudeResponse } from './claude/api';
-
-const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
-	organization: process.env.OPENAI_ORGANIZATION_ID,
-	project: process.env.OPENAI_PROJECT_ID,
-});
+import { getOpenAIResponsive } from './openAI/api';
 
 export async function getSessionMessages(
 	sessionId: string
@@ -34,7 +28,7 @@ export async function createNewChatMessage(
 	sessionId: string,
 	content: string,
 	role: 'user' | 'assistant' = 'user',
-	api: 'anthropic' | 'openai' = 'anthropic'
+	api: 'anthropic' | 'openai' = 'openai'
 ): Promise<Message[]> {
 	try {
 		if (!sessionId || !content) {
@@ -61,37 +55,12 @@ export async function createNewChatMessage(
 			}
 			// open AI
 			else {
-				// 准备 OpenAI API 请求
-				const chatCompletion = await openai.chat.completions.create({
-					model: 'gpt-4o',
-					messages: [
-						...sessionHistory.map((msg) => ({
-							role: msg.role as 'user' | 'assistant', // 确保角色是 'user' 或 'assistant'
-							content: msg.content as string,
-						})),
-						{ role: 'user', content: content as string },
-					],
-				});
-
-				// 获取 AI 回复
-				const aiResponse = chatCompletion.choices[0].message.content;
-
-				// 插入 AI 回复到数据库
-				const [aiMessage] = await db
-					.insert(messages)
-					.values({
-						session_id: sessionId as string,
-						content: aiResponse as string,
-						role: 'assistant',
-					})
-					.returning();
-				return [userMessage, aiMessage];
+				await getOpenAIResponsive(sessionId, sessionHistory, content);
 			}
 		}
 
 		return [userMessage];
 	} catch (error) {
-		console.log(error);
 		throw new Error('Failed to create new chat message');
 	}
 }
