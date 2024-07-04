@@ -26,9 +26,10 @@ export const getOpenAIResponsive = async (
 		const chatCompletion = await openai.chat.completions.create({
 			model: 'gpt-4o',
 			temperature: temperature,
+			// top_p: 0.1, // 较低的值会限制词汇选择，可能加快生成
 			messages: [
 				...sessionHistory.map((msg) => ({
-					role: msg.role as 'user' | 'assistant', // 确保角色是 'user' 或 'assistant'
+					role: msg.role as 'user' | 'assistant',
 					content: msg.content as string,
 				})),
 				{ role: 'user', content: prompt },

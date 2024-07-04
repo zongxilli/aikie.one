@@ -24,6 +24,7 @@ export const getClaudeResponse = async (
 			model: 'claude-3-5-sonnet-20240620',
 			max_tokens: 2000,
 			temperature: temperature,
+			// top_p: 0.1, // 较低的值会限制词汇选择，可能加快生成
 			system: system,
 			messages: [
 				{
