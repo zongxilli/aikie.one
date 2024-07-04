@@ -8,40 +8,16 @@ import React, {
 	SetStateAction,
 } from 'react';
 
-import {
-	Bird,
-	CircleHelp,
-	ListPlus,
-	Pen,
-	Rabbit,
-	Trash,
-	Turtle,
-} from 'lucide-react';
+import { CircleHelp, ListPlus, Pen, Trash } from 'lucide-react';
 
 import { LoadingOverlay, Switch, TooltipWrapper } from '@/components/shared';
 import { Button } from '@/components/ui/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import {
-	createNewChatSession,
 	deleteChatSession,
 	updateChatSessionName,
 } from '@/db/queries-chat-sessions';
@@ -53,7 +29,6 @@ import { ModelConfig } from '../page';
 
 import System from './tooltips/system';
 import Temperature from './tooltips/temperature';
-
 
 type Props = {
 	selectedSessionId: string | null;
@@ -122,7 +97,13 @@ const ChatSessions = ({
 							<div className='flex items-center gap-1'>
 								Temperature:
 								<TooltipWrapper
-									tooltip={<Temperature />}
+									tooltip={
+										<Temperature
+											temperature={
+												modelConfig.temperature
+											}
+										/>
+									}
 									position='right'
 								>
 									<CircleHelp className='w-4 h-4 cursor-pointer' />
