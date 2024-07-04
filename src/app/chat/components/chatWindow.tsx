@@ -80,13 +80,20 @@ const ChatWindow = ({
 	const prevSelectedSessionId = usePrevious(selectedSessionId);
 
 	// 有新的 message 就自动 scroll
+	const scrollToBottom = useCallback(
+		(behavior: ScrollBehavior = 'smooth') => {
+			if (chatHistoryRef.current) {
+				const lastChild = chatHistoryRef.current.lastElementChild;
+				if (lastChild) {
+					lastChild.scrollIntoView({ behavior, block: 'end' });
+				}
+			}
+		},
+		[]
+	);
 	useEffect(() => {
-		// Scroll to bottom when messages change
-		if (chatHistoryRef.current) {
-			chatHistoryRef.current.scrollTop =
-				chatHistoryRef.current.scrollHeight;
-		}
-	}, [messages]);
+		scrollToBottom();
+	}, [messages, scrollToBottom]);
 
 	// 自动 focus input
 	useEffect(() => {
