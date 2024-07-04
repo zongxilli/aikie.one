@@ -220,6 +220,7 @@ const ChatSessions = ({
 				</div>
 			);
 		};
+
 		const renderTopBar = () => {
 			return (
 				<div className='flex-shrink-0 w-full flex items-center justify-between'>
