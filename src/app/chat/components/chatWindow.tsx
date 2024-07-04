@@ -28,6 +28,7 @@ import { ChatSession, Message } from '@/db/schema';
 import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
 import { usePrevious } from '@/hooks';
 import { useUserStore } from '@/providers/user';
+import { ModelConfig } from '../page';
 
 const MemoizedMessage = memo(({ message }: { message: Message }) => {
 	if (message.role === 'user') {
@@ -59,6 +60,8 @@ type Props = {
 	setSelectedSessionId: Dispatch<SetStateAction<string | null>>;
 	sessions: ChatSession[];
 	isChatSessionsLoading: boolean;
+	modelConfig: ModelConfig;
+	setModelConfig: Dispatch<SetStateAction<ModelConfig>>;
 };
 
 const ChatWindow = ({
@@ -66,6 +69,8 @@ const ChatWindow = ({
 	setSelectedSessionId,
 	sessions,
 	isChatSessionsLoading,
+	modelConfig,
+	setModelConfig,
 }: Props) => {
 	const { toast } = useToast();
 	const { messages, isLoading: isChatMessagesLoading } =
@@ -133,7 +138,13 @@ const ChatWindow = ({
 				sessionId = newSession.id;
 			}
 
-			await createNewChatMessage(sessionId, inputText.trim());
+			await createNewChatMessage(
+				sessionId,
+				inputText.trim(),
+				modelConfig.provider,
+				modelConfig.temperature,
+				modelConfig.system
+			);
 			setInputText('');
 		} catch (error) {
 			toast({

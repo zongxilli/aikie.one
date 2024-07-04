@@ -7,6 +7,7 @@ import LoadingWrapper from './LoadingWrapper';
 import LogInLogOutButton from './logInLogOutButton';
 import Logo from './logo';
 import SocialNetworkLogin from './socialNetworkLogin';
+import Switch from './switch';
 import ThemeToggle from './themeToggle';
 import TooltipWrapper from './tooltipWrapper';
 import UserProfileButton from './userProfileButton';
@@ -21,6 +22,7 @@ export {
 	LogInLogOutButton,
 	Logo,
 	SocialNetworkLogin,
+	Switch,
 	ThemeToggle,
 	TooltipWrapper,
 	UserProfileButton,

@@ -8,11 +8,36 @@ import React, {
 	SetStateAction,
 } from 'react';
 
-import { ListPlus, Pen, Trash } from 'lucide-react';
+import {
+	Bird,
+	CircleHelp,
+	ListPlus,
+	Pen,
+	Rabbit,
+	Trash,
+	Turtle,
+} from 'lucide-react';
 
-import { LoadingOverlay, TooltipWrapper } from '@/components/shared';
+import { LoadingOverlay, Switch, TooltipWrapper } from '@/components/shared';
 import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import {
 	createNewChatSession,
@@ -21,12 +46,19 @@ import {
 } from '@/db/queries-chat-sessions';
 import { ChatSession } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
+import { AIProvider, getAIModel } from '@/types/AI';
+import { Slider } from '@/components/ui/slider';
+import Temperature from './tooltips/temperature';
+import System from './tooltips/system';
+import { ModelConfig } from '../page';
 
 type Props = {
 	selectedSessionId: string | null;
 	setSelectedSessionId: Dispatch<SetStateAction<string | null>>;
 	sessions: ChatSession[];
 	isLoading: boolean;
+	modelConfig: ModelConfig;
+	setModelConfig: Dispatch<SetStateAction<ModelConfig>>;
 };
 
 const ChatSessions = ({
@@ -34,12 +66,17 @@ const ChatSessions = ({
 	setSelectedSessionId,
 	sessions,
 	isLoading,
+	modelConfig,
+	setModelConfig,
 }: Props) => {
 	const { toast } = useToast();
 	const { user } = useUserStore((state) => state);
 
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [editingName, setEditingName] = useState('');
+	// const [provider, setProvider] = useState<AIProvider>(AIProvider.openAI);
+	// const [temperature, setTemperature] = useState(0.7);
+
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -63,6 +100,66 @@ const ChatSessions = ({
 	const renderContent = () => {
 		if (isLoading)
 			return <LoadingOverlay label='Loading conversations...' />;
+
+		const renderModelConfigs = () => {
+			const handleTemperatureChange = (value: number[]) => {
+				setModelConfig((config) => ({
+					...config,
+					temperature: value[0] / 100,
+				}));
+			};
+
+			return (
+				<fieldset className='flex-shrink-0 flex flex-col gap-6 px-1'>
+					<div className='w-full flex flex-col gap-2'>
+						<label
+							htmlFor='temperature-slider'
+							className='text-sm font-medium mb-2 flex items-center justify-between'
+						>
+							<div className='flex items-center gap-1'>
+								Temperature:
+								<TooltipWrapper
+									tooltip={<Temperature />}
+									position='right'
+								>
+									<CircleHelp className='w-4 h-4 cursor-pointer' />
+								</TooltipWrapper>
+							</div>
+							<div>{modelConfig.temperature.toFixed(2)}</div>
+						</label>
+						<Slider
+							id='temperature-slider'
+							min={0}
+							max={100}
+							step={1}
+							value={[modelConfig.temperature * 100]}
+							onValueChange={handleTemperatureChange}
+							className='w-full cursor-pointer'
+						/>
+					</div>
+					<div className='grid gap-3'>
+						<div className='flex items-center gap-1'>
+							<Label htmlFor='content'>Content</Label>
+							<TooltipWrapper
+								tooltip={<System />}
+								position='right'
+							>
+								<CircleHelp className='w-4 h-4 cursor-pointer' />
+							</TooltipWrapper>
+						</div>
+						<Textarea
+							id='content'
+							onChange={(e) => {
+								setModelConfig((config) => ({
+									...config,
+									system: e.target.value,
+								}));
+							}}
+						/>
+					</div>
+				</fieldset>
+			);
+		};
 
 		const renderSessionActionButtons = (session: ChatSession) => {
 			if (editingId === session.id) return null;
@@ -117,47 +214,72 @@ const ChatSessions = ({
 			);
 		};
 
-		const renderSessions = () =>
-			sessions.map((session) => (
-				<Button
-					variant='ghost'
-					className={`flex items-center justify-between gap-4 group ${
-						session.id === selectedSessionId ? 'selected' : ''
-					}`}
-					key={session.id}
-					selected={session.id === selectedSessionId}
-					onClick={() => setSelectedSessionId(session.id)}
-				>
-					{renderSessionLabel(session)}
-					{renderSessionActionButtons(session)}
-				</Button>
-			));
-
-		const renderCreateNewSessionButton = () => {
+		const renderSessions = () => {
 			return (
-				<TooltipWrapper tooltip='Start a new chat'>
-					<Button
-						variant='ghost'
-						size='icon'
-						className='ml-auto mb-4'
-						onClick={() => setSelectedSessionId(null)}
-					>
-						<ListPlus className='h-5 w-5' />
-					</Button>
-				</TooltipWrapper>
+				<div className='flex flex-col flex-grow overflow-auto'>
+					{sessions.map((session) => (
+						<Button
+							variant='ghost'
+							className={`flex items-center justify-between gap-4 group ${
+								session.id === selectedSessionId
+									? 'selected'
+									: ''
+							}`}
+							key={session.id}
+							selected={session.id === selectedSessionId}
+							onClick={() => setSelectedSessionId(session.id)}
+						>
+							{renderSessionLabel(session)}
+							{renderSessionActionButtons(session)}
+						</Button>
+					))}
+				</div>
+			);
+		};
+		const renderTopBar = () => {
+			return (
+				<div className='flex-shrink-0 w-full flex items-center justify-between'>
+					<Switch
+						option1={{
+							value: AIProvider.openAI,
+							label: getAIModel(AIProvider.openAI),
+						}}
+						option2={{
+							value: AIProvider.anthropic,
+							label: getAIModel(AIProvider.anthropic),
+						}}
+						onChange={(option: AIProvider) => {
+							setModelConfig((config) => ({
+								...config,
+								provider: option,
+							}));
+						}}
+					/>
+
+					<TooltipWrapper tooltip='Start a new chat'>
+						<Button
+							variant='ghost'
+							size='icon'
+							onClick={() => setSelectedSessionId(null)}
+						>
+							<ListPlus className='h-5 w-5' />
+						</Button>
+					</TooltipWrapper>
+				</div>
 			);
 		};
 
 		return (
-			<div className='w-full h-full flex flex-col'>
-				{renderCreateNewSessionButton()}
+			<div className='w-full h-[calc(100dvh_-_8rem)] flex flex-col gap-4'>
+				{renderTopBar()}
+				{renderModelConfigs()}
 				{renderSessions()}
 			</div>
 		);
 	};
 
 	return (
-		<div className='w-full h-full p-4 box-border outline'>
+		<div className='w-full h-full p-4 box-border'>
 			<div className='w-full h-full flex flex-col'>{renderContent()}</div>
 		</div>
 	);

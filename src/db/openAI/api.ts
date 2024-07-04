@@ -14,22 +14,24 @@ const openai = new OpenAI({
 export const getOpenAIResponsive = async (
 	sessionId: string,
 	sessionHistory: Message[],
-	content: string
+	temperature: number,
+	prompt: string
 ) => {
 	try {
-		if (!sessionId || !content) {
+		if (!sessionId) {
 			throw new Error('Session ID and content are required');
 		}
 
 		// 准备 OpenAI API 请求
 		const chatCompletion = await openai.chat.completions.create({
 			model: 'gpt-4o',
+			temperature: temperature,
 			messages: [
 				...sessionHistory.map((msg) => ({
 					role: msg.role as 'user' | 'assistant', // 确保角色是 'user' 或 'assistant'
 					content: msg.content as string,
 				})),
-				{ role: 'user', content: content as string },
+				{ role: 'user', content: prompt },
 			],
 		});
 

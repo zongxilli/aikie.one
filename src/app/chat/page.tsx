@@ -14,6 +14,13 @@ import { useUserStore } from '@/providers/user';
 
 import ChatSessions from './components/chatSessions';
 import ChatWindow from './components/chatWindow';
+import { AIProvider } from '@/types/AI';
+
+export type ModelConfig = {
+	provider: AIProvider;
+	temperature: number;
+	system: string;
+};
 
 export default function ChatPage() {
 	const { user } = useUserStore((state) => state);
@@ -23,6 +30,11 @@ export default function ChatPage() {
 	const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
 		null
 	);
+	const [modelConfig, setModelConfig] = useState<ModelConfig>({
+		provider: AIProvider.openAI,
+		temperature: 0.7,
+		system: '',
+	});
 
 	const renderResizeBar = (horizontal?: boolean) => {
 		return (
@@ -44,6 +56,8 @@ export default function ChatPage() {
 			isLoading={isChatSessionsLoading}
 			selectedSessionId={selectedSessionId}
 			setSelectedSessionId={setSelectedSessionId}
+			modelConfig={modelConfig}
+			setModelConfig={setModelConfig}
 		/>
 	);
 
@@ -53,6 +67,8 @@ export default function ChatPage() {
 			isChatSessionsLoading={isChatSessionsLoading}
 			selectedSessionId={selectedSessionId}
 			setSelectedSessionId={setSelectedSessionId}
+			modelConfig={modelConfig}
+			setModelConfig={setModelConfig}
 		/>
 	);
 

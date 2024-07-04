@@ -25,7 +25,11 @@ const TooltipWrapper = ({
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>{children}</TooltipTrigger>
-			<TooltipContent side={position} sideOffset={positionOffset}>
+			<TooltipContent
+				className='z-50'
+				side={position}
+				sideOffset={positionOffset}
+			>
 				{renderTooltipContent()}
 			</TooltipContent>
 		</Tooltip>

@@ -7,6 +7,7 @@ import { Message, messages } from '@/db/schema';
 
 import { getClaudeResponse } from './anthropic/api';
 import { getOpenAIResponsive } from './openAI/api';
+import { AIProvider } from '@/types/AI';
 
 export async function getSessionMessages(
 	sessionId: string
@@ -27,8 +28,9 @@ export async function getSessionMessages(
 export async function createNewChatMessage(
 	sessionId: string,
 	content: string,
-	role: 'user' | 'assistant' = 'user',
-	api: 'anthropic' | 'openai' = 'openai'
+	api: AIProvider,
+	temperature: number,
+	system: string
 ): Promise<Message[]> {
 	try {
 		if (!sessionId || !content) {
@@ -41,22 +43,29 @@ export async function createNewChatMessage(
 			.values({
 				session_id: sessionId as string,
 				content: content as string,
-				role: role as 'user' | 'assistant',
+				role: 'user',
 			})
 			.returning();
 
-		// 如果是用户消息，则获取 AI 回复
-		if (role === 'user') {
-			// 获取会话历史
-			const sessionHistory = await getSessionMessages(sessionId);
+		// 获取会话历史
+		const sessionHistory = await getSessionMessages(sessionId);
 
-			if (api === 'anthropic') {
-				await getClaudeResponse(sessionId, sessionHistory);
-			}
-			// open AI
-			else {
-				await getOpenAIResponsive(sessionId, sessionHistory, content);
-			}
+		if (api === AIProvider.anthropic) {
+			await getClaudeResponse(
+				sessionId,
+				sessionHistory,
+				temperature,
+				system
+			);
+		}
+		// open AI
+		else {
+			await getOpenAIResponsive(
+				sessionId,
+				sessionHistory,
+				temperature,
+				system
+			);
 		}
 
 		return [userMessage];

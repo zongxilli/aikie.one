@@ -11,7 +11,9 @@ const anthropic = new Anthropic({
 
 export const getClaudeResponse = async (
 	sessionId: string,
-	sessionHistory: Message[]
+	sessionHistory: Message[],
+	temperature: number,
+	system: string
 ) => {
 	try {
 		if (!sessionId) {
@@ -21,8 +23,8 @@ export const getClaudeResponse = async (
 		const response = await anthropic.messages.create({
 			model: 'claude-3-5-sonnet-20240620',
 			max_tokens: 2000,
-			temperature: 0.7, // 调整温度以改变响应的创造性
-			system: 'You are a software engineer', // 修改系统提示
+			temperature: temperature,
+			system: system,
 			messages: [
 				{
 					role: 'user',
