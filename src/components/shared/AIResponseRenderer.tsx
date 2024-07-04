@@ -57,30 +57,47 @@ const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 		let inCodeBlock = false;
 		let codeContent = '';
 		let codeLanguage = '';
+		let listItems: React.ReactNode[] = [];
+
+		const renderCodeBlock = () => {
+			const highlightedCode = (
+				<div className='relative'>
+					{codeLanguage && (
+						<div className='absolute top-0 left-0 bg-gray-700 text-gray-200 px-2 py-1 text-xs rounded-tl'>
+							{codeLanguage.replace(/^`+/, '')}
+						</div>
+					)}
+					<SyntaxHighlighter
+						language={codeLanguage.replace(/^`+/, '') || 'text'}
+						style={tomorrow}
+						className='rounded-md mt-4'
+					>
+						{codeContent.trim()}
+					</SyntaxHighlighter>
+					<CopyButton text={codeContent.trim()} />
+				</div>
+			);
+			codeContent = '';
+			codeLanguage = '';
+			return highlightedCode;
+		};
 
 		return content.split('\n').map((line, index) => {
-			// Handle code blocks
-			if (line.startsWith('```')) {
+			// 处理代码块
+			if (line.trim().startsWith('```')) {
 				if (inCodeBlock) {
 					inCodeBlock = false;
-					const highlightedCode = (
-						<div key={index} className='relative'>
-							<SyntaxHighlighter
-								language={codeLanguage}
-								style={tomorrow}
-								className='rounded-md mt-4'
-							>
-								{codeContent.trim()}
-							</SyntaxHighlighter>
-							<CopyButton text={codeContent.trim()} />
-						</div>
-					);
-					codeContent = '';
-					codeLanguage = '';
-					return highlightedCode;
+					const codeBlock = renderCodeBlock();
+					if (inList) {
+						listItems.push(
+							<li key={`code-${index}`}>{codeBlock}</li>
+						);
+						return null;
+					}
+					return <div key={`code-${index}`}>{codeBlock}</div>;
 				} else {
 					inCodeBlock = true;
-					codeLanguage = line.slice(3).trim();
+					codeLanguage = line.slice(3).trim(); // 移除开头的 ```
 					return null;
 				}
 			}
@@ -90,6 +107,49 @@ const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 				return null;
 			}
 
+			// 处理列表项
+			if (line.trim().startsWith('-')) {
+				if (!inList) {
+					inList = true;
+					listItems = [];
+				}
+				listItems.push(
+					<li
+						key={`list-${index}`}
+						dangerouslySetInnerHTML={{
+							__html: formatLine(line.replace('-', '').trim()),
+						}}
+					/>
+				);
+				return null;
+			}
+
+			// 如果不是列表项且之前在列表中，渲染列表
+			if (inList && !line.trim().startsWith('-')) {
+				inList = false;
+				const list = (
+					<ul key={`ul-${index}`} className='list-disc pl-6 mb-4'>
+						{listItems}
+					</ul>
+				);
+				listItems = [];
+				if (line.trim() === '') {
+					return list;
+				} else {
+					return [
+						list,
+						<p
+							key={`p-${index}`}
+							className='mb-3'
+							dangerouslySetInnerHTML={{
+								__html: formatLine(line),
+							}}
+						/>,
+					];
+				}
+			}
+
+			// 处理其他情况（标题、段落等）
 			if (line.startsWith('###')) {
 				return (
 					<h3 key={index} className='text-xl font-bold mt-6 mb-3'>
@@ -116,35 +176,9 @@ const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 					</h4>
 				);
 			}
-			if (line.startsWith('-')) {
-				if (!inList) {
-					inList = true;
-					return (
-						<ul key={index} className='list-disc pl-6 mb-4'>
-							<li
-								dangerouslySetInnerHTML={{
-									__html: formatLine(
-										line.replace('-', '').trim()
-									),
-								}}
-							/>
-						</ul>
-					);
-				}
-				return (
-					<li
-						key={index}
-						dangerouslySetInnerHTML={{
-							__html: formatLine(line.replace('-', '').trim()),
-						}}
-					/>
-				);
-			}
 			if (line.trim() === '') {
-				inList = false;
 				return <br key={index} />;
 			}
-			inList = false;
 			return (
 				<p
 					key={index}
