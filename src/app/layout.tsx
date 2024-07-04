@@ -1,6 +1,6 @@
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Baloo_Thambi_2 } from 'next/font/google';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import './globals.css';
 
