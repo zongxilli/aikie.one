@@ -68,7 +68,7 @@ export async function createNewChatMessage(
 			// 	system
 			// );
 			console.log('call open ai 了');
-			fetch(process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!, {
+			await fetch(process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
