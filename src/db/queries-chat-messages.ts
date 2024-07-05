@@ -68,18 +68,21 @@ export async function createNewChatMessage(
 			// 	system
 			// );
 			console.log('call open ai 了');
-			await fetch(process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					sessionId,
-					sessionHistory,
-					temperature,
-					system,
-				}),
-			});
+			await fetch(
+				'https://qk5q4vq9md.execute-api.eu-central-1.amazonaws.com/default/openai-api-handler-production',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						sessionId,
+						sessionHistory,
+						temperature,
+						system,
+					}),
+				}
+			);
 		}
 
 		return [userMessage];
