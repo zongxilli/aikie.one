@@ -139,16 +139,14 @@ const ChatWindow = ({
 				sessionId = newSession.id;
 			}
 
-			// removed await
-			createNewChatMessage(
+			setInputText('');
+			await createNewChatMessage(
 				sessionId,
 				inputText.trim(),
 				modelConfig.provider,
 				modelConfig.temperature,
 				modelConfig.system
 			);
-
-			setInputText('');
 		} catch (error) {
 			toast({
 				variant: 'destructive',
