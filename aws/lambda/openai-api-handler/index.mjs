@@ -1,11 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 
-const supabase = createClient(
-	process.env.NEXT_PUBLIC_SUPABASE_URL,
-	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
 const openai = new OpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
 	organization: process.env.OPENAI_ORGANIZATION_ID,
@@ -14,9 +9,24 @@ const openai = new OpenAI({
 
 export const handler = async (event) => {
 	try {
-		const { sessionId, sessionHistory, temperature, system } = JSON.parse(
-			event.body
-		);
+		const { sessionId, sessionHistory, temperature, system, stage } =
+			JSON.parse(event.body);
+
+		let supabase;
+
+		if (stage === 'production') {
+			supabase = createClient(
+				process.env.NEXT_PUBLIC_SUPABASE_URL_PRODUCTION,
+				process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_PRODUCTION
+			);
+		} 
+		// development
+		else {
+			supabase = createClient(
+				process.env.NEXT_PUBLIC_SUPABASE_URL,
+				process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+			);
+		}
 
 		const chatCompletion = await openai.chat.completions.create({
 			model: 'gpt-4o',

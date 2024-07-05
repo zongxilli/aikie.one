@@ -75,6 +75,7 @@ export async function createNewChatMessage(
 					sessionHistory,
 					temperature,
 					system,
+					stage: process.env.NEXT_APP_STAGE,
 				}
 			);
 		}
