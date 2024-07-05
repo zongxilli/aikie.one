@@ -8,6 +8,7 @@ import { AIProvider } from '@/types/AI';
 
 import { getClaudeResponse } from './anthropic/api';
 import { getOpenAIResponsive } from './openAI/api';
+import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 export async function getSessionMessages(
 	sessionId: string
@@ -67,18 +68,21 @@ export async function createNewChatMessage(
 			// 	temperature,
 			// 	system
 			// );
-			fetch(process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					sessionId,
-					sessionHistory,
-					temperature,
-					system,
-				}),
-			});
+			await fetchWithTimeout(
+				process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						sessionId,
+						sessionHistory,
+						temperature,
+						system,
+					}),
+				}
+			);
 		}
 
 		return [userMessage];
