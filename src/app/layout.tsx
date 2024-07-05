@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
-import { Baloo_Thambi_2 } from 'next/font/google';
+import { Noto_Sans_SC } from 'next/font/google';
 
 import './globals.css';
 
@@ -13,7 +13,7 @@ import { createClient } from '../../supabase/server';
 
 import { ThemeProvider } from './themeProvider';
 
-const font = Baloo_Thambi_2({ weight: ['500'], subsets: ['latin'] });
+const font = Noto_Sans_SC({ weight: ['500'], subsets: ['latin'] });
 
 export const metadata: Metadata = {
 	title: 'AIkie',

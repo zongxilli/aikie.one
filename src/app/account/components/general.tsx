@@ -10,7 +10,6 @@ import {
 	CardDescription,
 	CardFooter,
 	CardHeader,
-	CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
@@ -123,7 +122,7 @@ const General = () => {
 			<Card>
 				<CardHeader className='flex flex-row items-start justify-between'>
 					<div className='flex flex-col items-start gap-2'>
-						<CardTitle>Avatar</CardTitle>
+						<div className='text-xl font-semibold mb-1'>Avatar</div>
 						<CardDescription>
 							Your avatar as displayed in the application.
 						</CardDescription>
@@ -149,7 +148,7 @@ const General = () => {
 
 			<Card>
 				<CardHeader>
-					<CardTitle>Name</CardTitle>
+					<div className='text-xl font-semibold mb-1'>Name</div>
 					<CardDescription>
 						Your user name used to identify you in this app.
 					</CardDescription>
@@ -164,7 +163,7 @@ const General = () => {
 					/>
 				</CardContent>
 				<CardHeader>
-					<CardTitle>Email</CardTitle>
+					<div className='text-xl font-semibold mb-1'>Email</div>
 					<CardDescription>
 						You are not allowed to change your email address.
 					</CardDescription>

@@ -17,7 +17,6 @@ import {
 	CardContent,
 	CardDescription,
 	CardHeader,
-	CardTitle,
 } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import { useUserStore } from '@/providers/user';
@@ -80,7 +79,9 @@ const Danger = () => {
 		<div className='flex-grow flex flex-col gap-4'>
 			<Card>
 				<CardHeader>
-					<CardTitle>Delete your account</CardTitle>
+					<div className='text-xl font-semibold mb-1'>
+						Delete your account
+					</div>
 					<CardDescription>
 						Sorry, we do not support deleting your account right
 						now.
