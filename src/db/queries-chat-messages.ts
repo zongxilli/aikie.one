@@ -4,11 +4,11 @@ import { asc, eq } from 'drizzle-orm';
 
 import { db } from '@/db/index';
 import { Message, messages } from '@/db/schema';
+import { callLambdaWithoutWaiting } from '@/lib/callLambdaWithoutWaiting';
 import { AIProvider } from '@/types/AI';
 
 import { getClaudeResponse } from './anthropic/api';
 import { getOpenAIResponsive } from './openAI/api';
-import { fetchWithTimeout } from '@/lib/fetchWithTimeout';
 
 export async function getSessionMessages(
 	sessionId: string
@@ -68,19 +68,13 @@ export async function createNewChatMessage(
 			// 	temperature,
 			// 	system
 			// );
-			await fetchWithTimeout(
+			callLambdaWithoutWaiting(
 				process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!,
 				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						sessionId,
-						sessionHistory,
-						temperature,
-						system,
-					}),
+					sessionId,
+					sessionHistory,
+					temperature,
+					system,
 				}
 			);
 		}
