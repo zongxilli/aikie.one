@@ -58,6 +58,7 @@ export async function createNewChatMessage(
 				system
 			);
 		}
+
 		// open AI
 		else {
 			// await getOpenAIResponsive(
