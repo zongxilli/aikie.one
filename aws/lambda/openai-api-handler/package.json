@@ -1,0 +1,9 @@
+{
+  "name": "openai-api-handler",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.21.0",
+    "openai": "^4.0.0"
+  }
+}
