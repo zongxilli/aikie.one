@@ -29,6 +29,7 @@ export const handler = async (event) => {
 				})),
 				{ role: 'user', content: system },
 			],
+			max_tokens: 1000,
 		});
 
 		const aiResponse = chatCompletion.choices[0].message.content;
