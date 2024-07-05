@@ -15,7 +15,7 @@ export const getOpenAIResponsive = async (
 	sessionId: string,
 	sessionHistory: Message[],
 	temperature: number,
-	prompt: string
+	system: string
 ) => {
 	try {
 		if (!sessionId) {
@@ -32,7 +32,7 @@ export const getOpenAIResponsive = async (
 					role: msg.role as 'user' | 'assistant',
 					content: msg.content as string,
 				})),
-				{ role: 'user', content: prompt },
+				{ role: 'user', content: system },
 			],
 		});
 

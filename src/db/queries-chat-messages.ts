@@ -60,12 +60,24 @@ export async function createNewChatMessage(
 		}
 		// open AI
 		else {
-			await getOpenAIResponsive(
-				sessionId,
-				sessionHistory,
-				temperature,
-				system
-			);
+			// await getOpenAIResponsive(
+			// 	sessionId,
+			// 	sessionHistory,
+			// 	temperature,
+			// 	system
+			// );
+			fetch(process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					sessionId,
+					sessionHistory,
+					temperature,
+					system,
+				}),
+			});
 		}
 
 		return [userMessage];
