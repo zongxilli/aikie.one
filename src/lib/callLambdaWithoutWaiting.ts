@@ -7,21 +7,30 @@ export const callLambdaWithoutWaiting = (url: string, data: any) => {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				'Cache-Control': 'no-cache', // 确保请求不会被缓存
 			},
 			body: JSON.stringify(data),
 		},
 		8000
 	)
 		.then((response) => {
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+			if (response.ok) {
+				return response.json();
+			} else {
+				console.log(`Non-OK response status: ${response.status}`);
+				return null;
 			}
-			return response.json();
 		})
 		.then((data) => {
-			console.log('Lambda call successful:', data);
+			if (data) {
+				console.log('Lambda call successful:', data);
+			}
 		})
 		.catch((error) => {
-			console.error('Error calling Lambda:', error);
+			if (error.name === 'AbortError') {
+				console.log('Lambda call timed out, but continuing execution');
+			} else {
+				console.log('Error calling Lambda:', error);
+			}
 		});
 };
