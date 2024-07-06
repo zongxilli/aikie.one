@@ -22,7 +22,7 @@ export const getClaudeResponse = async (
 
 		const response = await anthropic.messages.create({
 			model: 'claude-3-5-sonnet-20240620',
-			max_tokens: 500,
+			max_tokens: 700,
 			temperature: temperature,
 			// top_p: 0.1, // 较低的值会限制词汇选择，可能加快生成
 			system: system,
