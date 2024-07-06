@@ -1,12 +1,12 @@
 {
 	"functions": {
-		"db/queries-chat-messages.ts": {
+		"src/db/queries-chat-messages.ts": {
 			"maxDuration": 30
 		},
-		"db/anthropic/api.ts": {
+		"src/db/anthropic/api.ts": {
 			"maxDuration": 30
 		},
-		"db/openAI/api.ts": {
+		"src/db/openAI/api.ts": {
 			"maxDuration": 30
 		}
 	}
