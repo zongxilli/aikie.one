@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Option<T> {
 	value: T;
@@ -10,19 +10,29 @@ interface Option<T> {
 interface SwitchProps<T> {
 	option1: Option<T>;
 	option2: Option<T>;
+	value?: T;
 	onChange?: (selectedOption: T) => void;
 }
 
 const Switch = <T extends string | number>({
 	option1,
 	option2,
+	value,
 	onChange,
 }: SwitchProps<T>) => {
-	const [isOption1, setIsOption1] = useState(true);
+	const [isOption1, setIsOption1] = useState(() => {
+		return value === undefined ? true : value === option1.value;
+	});
+
+	useEffect(() => {
+		if (value !== undefined) {
+			setIsOption1(value === option1.value);
+		}
+	}, [value, option1.value]);
 
 	const toggleSwitch = () => {
 		setIsOption1((prev) => !prev);
-		onChange?.(isOption1 ? option2.value : option1.value);
+		onChange?.(!isOption1 ? option1.value : option2.value);
 	};
 
 	return (

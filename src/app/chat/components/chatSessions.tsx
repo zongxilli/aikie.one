@@ -115,7 +115,7 @@ const ChatSessions = ({
 							id='temperature-slider'
 							min={0}
 							max={100}
-							step={1}
+							step={5}
 							value={[modelConfig.temperature * 100]}
 							onValueChange={handleTemperatureChange}
 							className='w-full cursor-pointer'
@@ -225,6 +225,7 @@ const ChatSessions = ({
 			return (
 				<div className='flex-shrink-0 w-full flex items-center justify-between'>
 					<Switch
+						value={modelConfig.provider}
 						option1={{
 							value: AIProvider.openAI,
 							label: getAIModel(AIProvider.openAI),
