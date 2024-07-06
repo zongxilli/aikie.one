@@ -34,6 +34,7 @@ export const getOpenAIResponsive = async (
 				})),
 				{ role: 'user', content: system },
 			],
+			max_tokens: 500,
 		});
 
 		// 获取 AI 回复
