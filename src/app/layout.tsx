@@ -1,5 +1,5 @@
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+// import { Analytics } from '@vercel/analytics/react';
+// import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Noto_Sans_SC } from 'next/font/google';
 
@@ -42,8 +42,8 @@ export default async function RootLayout({
 							enableSystem
 							disableTransitionOnChange
 						>
-							<SpeedInsights />
-							<Analytics />
+							{/* <SpeedInsights /> */}
+							{/* <Analytics /> */}
 							<Toaster />
 							{children}
 						</ThemeProvider>
