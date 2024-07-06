@@ -5,6 +5,7 @@ export const callLambdaWithoutWaiting = (url: string, data: any) => {
 		url,
 		{
 			method: 'POST',
+			cache: 'no-cache',
 			headers: {
 				'Content-Type': 'application/json',
 				'Cache-Control': 'no-cache', // 确保请求不会被缓存
