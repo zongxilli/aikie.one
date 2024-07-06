@@ -48,26 +48,23 @@ export async function createNewChatMessage(
 			})
 			.returning();
 
-		// 获取会话历史
 		const sessionHistory = await getSessionMessages(sessionId);
 
 		if (api === AIProvider.anthropic) {
-			await getClaudeResponse(
-				sessionId,
-				sessionHistory,
-				temperature,
-				system
+			callLambdaWithoutWaiting(
+				process.env.LAMBDA_ANTHROPIC_HANDLER_FUNCTION_URL!,
+				{
+					sessionId,
+					sessionHistory,
+					temperature,
+					system,
+					stage: process.env.NEXT_APP_STAGE,
+				}
 			);
 		}
 
 		// open AI
 		else {
-			// await getOpenAIResponsive(
-			// 	sessionId,
-			// 	sessionHistory,
-			// 	temperature,
-			// 	system
-			// );
 			callLambdaWithoutWaiting(
 				process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!,
 				{
