@@ -7,9 +7,6 @@ import { Message, messages } from '@/db/schema';
 import { callLambdaWithoutWaiting } from '@/lib/callLambdaWithoutWaiting';
 import { AIProvider } from '@/types/AI';
 
-import { getClaudeResponse } from './anthropic/api';
-import { getOpenAIResponsive } from './openAI/api';
-
 export async function getSessionMessages(
 	sessionId: string
 ): Promise<Message[]> {
@@ -50,6 +47,7 @@ export async function createNewChatMessage(
 
 		const sessionHistory = await getSessionMessages(sessionId);
 
+		// claude 3.5 sonnet
 		if (api === AIProvider.anthropic) {
 			callLambdaWithoutWaiting(
 				process.env.LAMBDA_ANTHROPIC_HANDLER_FUNCTION_URL!,
@@ -63,7 +61,7 @@ export async function createNewChatMessage(
 			);
 		}
 
-		// open AI
+		// chat GPT 4o
 		else {
 			callLambdaWithoutWaiting(
 				process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!,

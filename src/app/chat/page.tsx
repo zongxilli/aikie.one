@@ -31,8 +31,8 @@ export default function ChatPage() {
 		null
 	);
 	const [modelConfig, setModelConfig] = useState<ModelConfig>({
-		provider: AIProvider.openAI,
-		temperature: 0.7,
+		provider: AIProvider.anthropic,
+		temperature: 0.4,
 		system: '',
 	});
 
