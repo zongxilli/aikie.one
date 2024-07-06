@@ -225,6 +225,7 @@ const ChatSessions = ({
 			return (
 				<div className='flex-shrink-0 w-full flex items-center justify-between'>
 					<Switch
+						disabled
 						value={modelConfig.provider}
 						option1={{
 							value: AIProvider.openAI,

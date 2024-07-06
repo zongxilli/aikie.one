@@ -12,6 +12,7 @@ interface SwitchProps<T> {
 	option2: Option<T>;
 	value?: T;
 	onChange?: (selectedOption: T) => void;
+	disabled?: boolean;
 }
 
 const Switch = <T extends string | number>({
@@ -19,6 +20,7 @@ const Switch = <T extends string | number>({
 	option2,
 	value,
 	onChange,
+	disabled = false,
 }: SwitchProps<T>) => {
 	const [isOption1, setIsOption1] = useState(() => {
 		return value === undefined ? true : value === option1.value;
@@ -31,26 +33,34 @@ const Switch = <T extends string | number>({
 	}, [value, option1.value]);
 
 	const toggleSwitch = () => {
-		setIsOption1((prev) => !prev);
-		onChange?.(!isOption1 ? option1.value : option2.value);
+		if (!disabled) {
+			setIsOption1((prev) => !prev);
+			onChange?.(!isOption1 ? option1.value : option2.value);
+		}
 	};
 
 	return (
 		<div
-			className='flex items-center justify-center bg-secondary rounded-full p-0.5 cursor-pointer w-44 h-9 relative'
+			className={`flex items-center justify-center bg-secondary rounded-full p-0.5 w-44 h-9 relative ${
+				disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+			}`}
 			onClick={toggleSwitch}
+			role='switch'
+			aria-checked={isOption1}
+			aria-readonly={disabled}
+			tabIndex={disabled ? -1 : 0}
 		>
 			<div
-				className={`absolute top-[3px] left-[3px] bg-primary rounded-full w-[calc(50%-3px)] h-[calc(100%-6px)] transition-all duration-300 ease-in-out ${
+				className={`absolute top-[3px] left-[3px] rounded-full w-[calc(50%-3px)] h-[calc(100%-6px)] transition-all duration-300 ease-in-out ${
 					isOption1 ? 'translate-x-0' : 'translate-x-full'
-				}`}
+				} ${disabled ? 'bg-gray-400' : 'bg-primary'}`}
 			/>
 			<span
 				className={`z-10 w-1/2 text-center text-sm transition-colors duration-300 ${
 					isOption1
 						? 'text-primary-foreground'
 						: 'text-secondary-foreground'
-				}`}
+				} ${disabled ? 'text-gray-500' : ''}`}
 			>
 				{option1.label}
 			</span>
@@ -59,7 +69,7 @@ const Switch = <T extends string | number>({
 					!isOption1
 						? 'text-primary-foreground'
 						: 'text-secondary-foreground'
-				}`}
+				} ${disabled ? 'text-gray-500' : ''}`}
 			>
 				{option2.label}
 			</span>
