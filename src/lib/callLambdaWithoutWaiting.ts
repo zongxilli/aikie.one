@@ -29,6 +29,7 @@ export const fetchWithTimeout = async (
 
 export const callLambdaWithoutWaiting = (url: string, data: any) => {
 	console.log('callLambdaWithoutWaiting 函数');
+	console.log({ data });
 
 	fetchWithTimeout(
 		url,
