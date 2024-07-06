@@ -19,7 +19,7 @@ export const handler = async (event) => {
 				process.env.NEXT_PUBLIC_SUPABASE_URL_PRODUCTION,
 				process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_PRODUCTION
 			);
-		} 
+		}
 		// development
 		else {
 			supabase = createClient(
@@ -28,7 +28,7 @@ export const handler = async (event) => {
 			);
 		}
 
-		const chatCompletion = await openai.chat.completions.create({
+		const body = {
 			model: 'gpt-4o',
 			temperature: temperature,
 			// top_p: 0.1, // 较低的值会限制词汇选择，可能加快生成
@@ -37,10 +37,15 @@ export const handler = async (event) => {
 					role: msg.role,
 					content: msg.content,
 				})),
-				{ role: 'user', content: system },
 			],
 			max_tokens: 1000,
-		});
+		};
+
+		if (system !== '') {
+			body.messages.push({ role: 'user', content: system });
+		}
+
+		const chatCompletion = await openai.chat.completions.create(body);
 
 		const aiResponse = chatCompletion.choices[0].message.content;
 
