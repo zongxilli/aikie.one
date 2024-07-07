@@ -145,7 +145,7 @@ const ChatWindow = ({
 
 			setInputText('');
 
-			const response = await fetch('/api/messages', {
+			const response = await fetch('/api/chat/send-message', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -28,6 +28,8 @@ export async function POST(request: Request) {
 		);
 	}
 
+	console.log('send-message called');
+
 	try {
 		// 插入用户消息
 		const [userMessage] = await db
@@ -41,7 +43,7 @@ export async function POST(request: Request) {
 
 		// 处理 AI 响应
 		const processChatPromise = fetch(
-			new URL('/api/process-chat', request.url),
+			new URL('/api/chat/generate-ai-response', request.url),
 			{
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },

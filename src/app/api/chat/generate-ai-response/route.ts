@@ -11,6 +11,8 @@ export const dynamic = 'force-dynamic'; // 确保路由是动态的
 export async function POST(request: Request) {
 	const { sessionId, api, temperature, system } = await request.json();
 
+	console.log('generate-ai-response called');
+
 	try {
 		const sessionHistory = await getSessionMessages(sessionId);
 
