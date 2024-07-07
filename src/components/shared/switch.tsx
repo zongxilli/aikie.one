@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 
 interface Option<T> {
 	value: T;
-	label: string;
+	label: string | ReactNode;
 }
 
 interface SwitchProps<T> {
@@ -41,7 +41,7 @@ const Switch = <T extends string | number>({
 
 	return (
 		<div
-			className={`flex items-center justify-center bg-secondary rounded-full p-0.5 w-44 h-9 relative ${
+			className={`flex items-center justify-center bg-secondary rounded-full p-0.5 w-40 h-9 relative ${
 				disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
 			}`}
 			onClick={toggleSwitch}
@@ -56,7 +56,7 @@ const Switch = <T extends string | number>({
 				} ${disabled ? 'bg-gray-400' : 'bg-primary'}`}
 			/>
 			<span
-				className={`z-10 w-1/2 text-center text-sm transition-colors duration-300 ${
+				className={`z-10 w-1/2 text-center text-sm font-medium transition-colors duration-300 flex items-center justify-center ${
 					isOption1
 						? 'text-primary-foreground'
 						: 'text-secondary-foreground'
@@ -65,7 +65,7 @@ const Switch = <T extends string | number>({
 				{option1.label}
 			</span>
 			<span
-				className={`z-10 w-1/2 text-center text-sm transition-colors duration-300 ${
+				className={`z-10 w-1/2 text-center text-sm font-medium transition-colors duration-300 flex items-center justify-center ${
 					!isOption1
 						? 'text-primary-foreground'
 						: 'text-secondary-foreground'

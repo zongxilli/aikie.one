@@ -12,6 +12,7 @@ import {
 
 import clsx from 'clsx';
 import { ArrowUp } from 'lucide-react';
+import Image from 'next/image';
 
 import {
 	AIResponseRenderer,
@@ -22,21 +23,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import { createNewChatMessage } from '@/db/queries-chat-messages';
-import {
-	createNewChatSession,
-	generateSessionName,
-} from '@/db/queries-chat-sessions';
+import { createNewChatSession } from '@/db/queries-chat-sessions';
 import { ChatSession, Message } from '@/db/schema';
 import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
 import { usePrevious } from '@/hooks';
 import { useUserStore } from '@/providers/user';
-
-import { ModelConfig } from '../page';
-import Image from 'next/image';
 import { AIProvider } from '@/types/AI';
-import claude from '../../../../public/claude.svg';
+
 import chatgpt from '../../../../public/chatgpt.svg';
+import claude from '../../../../public/claude.svg';
+import { ModelConfig } from '../page';
 
 const MemoizedMessage = memo(({ message }: { message: Message }) => {
 	if (message.role === 'user') {

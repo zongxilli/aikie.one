@@ -29,6 +29,7 @@ import { ModelConfig } from '../page';
 
 import System from './tooltips/system';
 import Temperature from './tooltips/temperature';
+import AIModelsTooltip from './tooltips/model';
 
 type Props = {
 	selectedSessionId: string | null;
@@ -93,7 +94,7 @@ const ChatSessions = ({
 							className='text-sm font-medium mb-2 flex items-center justify-between'
 						>
 							<div className='flex items-center gap-1'>
-								Temperature:
+								Temperature
 								<TooltipWrapper
 									tooltip={
 										<Temperature
@@ -228,23 +229,28 @@ const ChatSessions = ({
 		const renderTopBar = () => {
 			return (
 				<div className='flex-shrink-0 w-full flex items-center justify-between'>
-					<Switch
-						value={modelConfig.provider}
-						option1={{
-							value: AIProvider.openAI,
-							label: getAIModel(AIProvider.openAI),
-						}}
-						option2={{
-							value: AIProvider.anthropic,
-							label: getAIModel(AIProvider.anthropic),
-						}}
-						onChange={(option: AIProvider) => {
-							setModelConfig((config) => ({
-								...config,
-								provider: option,
-							}));
-						}}
-					/>
+					<div className='flex items-center gap-1'>
+						<Switch
+							value={modelConfig.provider}
+							option1={{
+								value: AIProvider.openAI,
+								label: getAIModel(AIProvider.openAI),
+							}}
+							option2={{
+								value: AIProvider.anthropic,
+								label: getAIModel(AIProvider.anthropic),
+							}}
+							onChange={(option: AIProvider) => {
+								setModelConfig((config) => ({
+									...config,
+									provider: option,
+								}));
+							}}
+						/>
+						<TooltipWrapper tooltip={<AIModelsTooltip />}>
+							<CircleHelp className='w-4 h-4 cursor-pointer' />
+						</TooltipWrapper>
+					</div>
 
 					<TooltipWrapper tooltip='Start a new chat'>
 						<Button

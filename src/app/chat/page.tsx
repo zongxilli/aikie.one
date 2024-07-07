@@ -76,7 +76,7 @@ export default function ChatPage() {
 				<ResizablePanel
 					defaultSize={20}
 					minSize={15}
-					className='border rounded-lg bg-card'
+					className='border rounded-lg bg-card min-w-[16rem]'
 				>
 					{renderSessionsPanel()}
 				</ResizablePanel>
@@ -86,7 +86,7 @@ export default function ChatPage() {
 				<ResizablePanel
 					defaultSize={80}
 					minSize={30}
-					className='border rounded-lg bg-card'
+					className='border rounded-lg bg-card min-w-[20rem]'
 				>
 					{renderChatPanel()}
 				</ResizablePanel>
