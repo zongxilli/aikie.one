@@ -3,7 +3,11 @@
 import { desc, eq, and, like } from 'drizzle-orm';
 
 import { db } from '@/db/index';
-import { ChatSession, chatSessions } from '@/db/schema';
+import { ChatSession, Message, chatSessions } from '@/db/schema';
+import { AIProvider } from '@/types/AI';
+
+import { getSessionNameFromClaude } from './anthropic/api';
+import { getSessionNameFromOpenAI } from './openAI/api';
 
 export async function getUserChatSessions(
 	userId: string
@@ -137,4 +141,26 @@ export async function createNewChatSession(
 			);
 		}
 	}
+}
+
+export async function generateSessionName(
+	api: AIProvider,
+	sessionHistory: Message[]
+): Promise<string> {
+	let newName: string;
+
+	if (api === AIProvider.anthropic) {
+		const response = await getSessionNameFromClaude(sessionHistory);
+
+		newName = response;
+	} else {
+		const response = await getSessionNameFromOpenAI(sessionHistory);
+
+		newName = response;
+	}
+
+	return newName
+		.replace(/^["']|["']$/g, '')
+		.trim()
+		.substring(0, 100);
 }

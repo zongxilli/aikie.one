@@ -10,7 +10,6 @@ import {
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { useRealtimeChatSessions } from '@/db/supabase-subscriptions/useRealtimeChatSessions';
-import { useUserStore } from '@/providers/user';
 import { AIProvider } from '@/types/AI';
 
 import ChatSessions from './components/chatSessions';
@@ -23,7 +22,6 @@ export type ModelConfig = {
 };
 
 export default function ChatPage() {
-	const { user } = useUserStore((state) => state);
 	const { sessions, isLoading: isChatSessionsLoading } =
 		useRealtimeChatSessions();
 

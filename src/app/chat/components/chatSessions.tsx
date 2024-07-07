@@ -52,8 +52,6 @@ const ChatSessions = ({
 
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [editingName, setEditingName] = useState('');
-	// const [provider, setProvider] = useState<AIProvider>(AIProvider.openAI);
-	// const [temperature, setTemperature] = useState(0.7);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -225,7 +223,6 @@ const ChatSessions = ({
 			return (
 				<div className='flex-shrink-0 w-full flex items-center justify-between'>
 					<Switch
-						disabled
 						value={modelConfig.provider}
 						option1={{
 							value: AIProvider.openAI,

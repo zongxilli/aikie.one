@@ -19,19 +19,22 @@ export async function POST(request: Request) {
 				sessionId,
 				sessionHistory,
 				temperature,
-				system
+				system,
+				true
 			);
 		} else {
 			await getOpenAIResponsive(
 				sessionId,
 				sessionHistory,
 				temperature,
-				system
+				system,
+				true
 			);
 		}
 
 		return NextResponse.json({ message: 'Processing completed' });
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.error('Error in processChat:', error);
 		return NextResponse.json(
 			{ message: 'An error occurred while processing the chat' },

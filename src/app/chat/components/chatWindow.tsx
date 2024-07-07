@@ -23,7 +23,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { createNewChatMessage } from '@/db/queries-chat-messages';
-import { createNewChatSession } from '@/db/queries-chat-sessions';
+import {
+	createNewChatSession,
+	generateSessionName,
+} from '@/db/queries-chat-sessions';
 import { ChatSession, Message } from '@/db/schema';
 import { useRealtimeChatMessages } from '@/db/supabase-subscriptions/useRealtimeChatMessages';
 import { usePrevious } from '@/hooks';
@@ -131,8 +134,10 @@ const ChatWindow = ({
 		setIsSending(true);
 		try {
 			let sessionId = selectedSessionId;
+			let isNewSession = false;
 
 			if (!sessionId) {
+				isNewSession = true;
 				const newSession = await createNewChatSession(user.id);
 				setSelectedSessionId(newSession.id);
 				sessionId = newSession.id;
@@ -151,6 +156,8 @@ const ChatWindow = ({
 					api: modelConfig.provider,
 					temperature: modelConfig.temperature,
 					system: modelConfig.system,
+					isNewSession,
+					userId: user.id,
 				}),
 			});
 
