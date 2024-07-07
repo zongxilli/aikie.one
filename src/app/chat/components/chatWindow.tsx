@@ -33,6 +33,10 @@ import { usePrevious } from '@/hooks';
 import { useUserStore } from '@/providers/user';
 
 import { ModelConfig } from '../page';
+import Image from 'next/image';
+import { AIProvider } from '@/types/AI';
+import claude from '../../../../public/claude.svg';
+import chatgpt from '../../../../public/chatgpt.svg';
 
 const MemoizedMessage = memo(({ message }: { message: Message }) => {
 	if (message.role === 'user') {
@@ -191,6 +195,29 @@ const ChatWindow = ({
 	};
 
 	const renderChatHistory = () => {
+		if (!selectedSessionId) {
+			return (
+				<div className='w-full h-full flex flex-col items-center justify-center gap-4'>
+					<Image
+						src={
+							modelConfig.provider === AIProvider.anthropic
+								? claude
+								: chatgpt
+						}
+						alt='ai provider icon'
+						className='w-10 h-10 mb-3'
+					/>
+					<h2 className='text-2xl font-bold mb-2'>
+						Welcome to Your AI Chat Assistant
+					</h2>
+					<p className='text-muted-foreground mb-6'>
+						Select a conversation or start a new one to begin
+						chatting.
+					</p>
+				</div>
+			);
+		}
+
 		if (selectedSessionId && isChatMessagesLoading) {
 			return <LoadingOverlay label='Loading chats...' />;
 		}
