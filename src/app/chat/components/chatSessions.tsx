@@ -160,9 +160,15 @@ const ChatSessions = ({
 					<TooltipWrapper tooltip='delete'>
 						<Trash
 							className='action-button w-4 h-4'
-							onClick={(e) => {
+							onClick={async (e) => {
 								e.stopPropagation();
-								deleteChatSession(session.id, session.user_id);
+								if (selectedSessionId === session.id)
+									setSelectedSessionId(null);
+
+								await deleteChatSession(
+									session.id,
+									session.user_id
+								);
 							}}
 						/>
 					</TooltipWrapper>
