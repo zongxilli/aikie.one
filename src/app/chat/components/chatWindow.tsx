@@ -37,22 +37,20 @@ import { ModelConfig } from '../page';
 const MemoizedMessage = memo(({ message }: { message: Message }) => {
 	if (message.role === 'user') {
 		return (
-			<div
+			<Card
 				className={clsx(
-					'rounded-lg px-6 py-4 mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
+					'rounded-[2rem] px-6 py-4 mb-4 max-w-[80%] ml-auto bg-primary text-primary-foreground'
 				)}
 			>
-				<div className='min-h-12 flex items-center'>
-					{message.content}
-				</div>
-			</div>
+				{message.content}
+			</Card>
 		);
 	}
 	return (
-		<Card className={clsx('mb-4 w-full mr-auto bg-secondary')}>
-			<CardContent>
-				<AIResponseRenderer content={message.content} />
-			</CardContent>
+		<Card
+			className={clsx('mb-4 p-2 box-border w-full mr-auto bg-secondary')}
+		>
+			<AIResponseRenderer content={message.content} />
 		</Card>
 	);
 });
@@ -236,7 +234,7 @@ const ChatWindow = ({
 				<div className='relative w-full max-w-[50rem] rounded-xl border'>
 					<Textarea
 						ref={textareaRef}
-						className='px-10 box-border min-h-10 max-h-64 resize-none overflow-y-auto'
+						className='px-10 box-border min-h-10 max-h-64 resize-none overflow-y-auto text-base'
 						placeholder='Type a message...'
 						onChange={(e) => setInputText(e.target.value)}
 						value={inputText}
