@@ -64,9 +64,11 @@ export async function updateChatSessionName(
 	newName: string
 ) {
 	try {
+		const uniqueName = await generateUniqueName(userId, newName);
+
 		await db
 			.update(chatSessions)
-			.set({ name: newName })
+			.set({ name: uniqueName })
 			.where(
 				and(
 					eq(chatSessions.id, sessionId),
@@ -85,8 +87,10 @@ export async function updateChatSessionName(
 	}
 }
 
-export async function generateUniqueName(userId: string): Promise<string> {
-	const baseName = 'Untitled conversation';
+export async function generateUniqueName(
+	userId: string,
+	baseName: string
+): Promise<string> {
 	let name = baseName;
 	let counter = 0;
 
@@ -117,7 +121,7 @@ export async function createNewChatSession(
 	userId: string
 ): Promise<ChatSession> {
 	try {
-		const name = await generateUniqueName(userId);
+		const name = 'Untitled conversation';
 
 		const [newSession] = await db
 			.insert(chatSessions)
