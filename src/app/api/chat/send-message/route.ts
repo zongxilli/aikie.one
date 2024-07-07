@@ -28,8 +28,6 @@ export async function POST(request: Request) {
 		);
 	}
 
-	console.log('send-message called');
-
 	try {
 		// 插入用户消息
 		const [userMessage] = await db

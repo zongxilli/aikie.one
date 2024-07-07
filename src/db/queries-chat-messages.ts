@@ -55,7 +55,8 @@ export async function createNewChatMessage(
 				sessionId,
 				sessionHistory,
 				temperature,
-				system
+				system,
+				true
 			);
 			// callLambdaWithoutWaiting(
 			// 	process.env.LAMBDA_ANTHROPIC_HANDLER_FUNCTION_URL!,
@@ -75,7 +76,8 @@ export async function createNewChatMessage(
 				sessionId,
 				sessionHistory,
 				temperature,
-				system
+				system,
+				true
 			);
 			// callLambdaWithoutWaiting(
 			// 	process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!,

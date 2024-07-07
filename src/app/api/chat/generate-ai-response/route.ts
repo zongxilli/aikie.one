@@ -11,8 +11,6 @@ export const dynamic = 'force-dynamic'; // 确保路由是动态的
 export async function POST(request: Request) {
 	const { sessionId, api, temperature, system } = await request.json();
 
-	console.log('generate-ai-response called');
-
 	try {
 		const sessionHistory = await getSessionMessages(sessionId);
 
@@ -34,12 +32,12 @@ export async function POST(request: Request) {
 			);
 		}
 
-		return NextResponse.json({ message: 'Processing completed' });
+		return NextResponse.json({ message: 'AI response generated' });
 	} catch (error) {
 		// eslint-disable-next-line no-console
-		console.error('Error in processChat:', error);
+		console.error('Error in generate-ai-response:', error);
 		return NextResponse.json(
-			{ message: 'An error occurred while processing the chat' },
+			{ message: 'An error occurred while generating ai response' },
 			{ status: 500 }
 		);
 	}
