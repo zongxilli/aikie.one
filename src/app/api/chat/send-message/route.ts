@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 			.returning();
 
 		// 处理 AI 响应
-		const processChatPromise = fetch(
+		const generateAIResponsePromise = fetch(
 			new URL('/api/chat/generate-ai-response', request.url),
 			{
 				method: 'POST',
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
 			: Promise.resolve();
 
 		// 并行执行任务
-		await Promise.all([processChatPromise, generateNamePromise]);
+		await Promise.all([generateAIResponsePromise, generateNamePromise]);
 
 		return NextResponse.json(
 			{
