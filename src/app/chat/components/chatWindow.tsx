@@ -125,39 +125,6 @@ const ChatWindow = ({
 		adjustHeight();
 	}, [inputText]);
 
-	// const handleSendMessage = async () => {
-	// 	if (!inputText.trim() || isSending || !user?.id) return;
-
-	// 	setIsSending(true);
-	// 	try {
-	// 		let sessionId = selectedSessionId;
-
-	// 		// 创建一个新的会话，如果没有 selected session
-	// 		if (!sessionId) {
-	// 			const newSession = await createNewChatSession(user.id);
-	// 			setSelectedSessionId(newSession.id);
-	// 			sessionId = newSession.id;
-	// 		}
-
-	// 		setInputText('');
-	// 		await createNewChatMessage(
-	// 			sessionId,
-	// 			inputText.trim(),
-	// 			modelConfig.provider,
-	// 			modelConfig.temperature,
-	// 			modelConfig.system
-	// 		);
-	// 	} catch (error) {
-	// 		toast({
-	// 			variant: 'destructive',
-	// 			title: 'An unexpected error occurred.',
-	// 			description: 'Please try again later.',
-	// 		});
-	// 	} finally {
-	// 		setIsSending(false);
-	// 	}
-	// };
-
 	const handleSendMessage = async () => {
 		if (!inputText.trim() || isSending || !user?.id) return;
 
@@ -165,7 +132,6 @@ const ChatWindow = ({
 		try {
 			let sessionId = selectedSessionId;
 
-			// 创建一个新的会话，如果没有 selected session
 			if (!sessionId) {
 				const newSession = await createNewChatSession(user.id);
 				setSelectedSessionId(newSession.id);
@@ -174,7 +140,6 @@ const ChatWindow = ({
 
 			setInputText('');
 
-			// 使用新的 API 路由发送消息
 			const response = await fetch('/api/messages', {
 				method: 'POST',
 				headers: {
@@ -192,9 +157,6 @@ const ChatWindow = ({
 			if (!response.ok) {
 				throw new Error('Failed to send message');
 			}
-
-			// 消息发送成功，后端会处理 AI 响应
-			// 实时更新将通过 Supabase 订阅自动处理
 		} catch (error) {
 			toast({
 				variant: 'destructive',
