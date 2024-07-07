@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Check, Copy } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { nightOwl } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const CopyButton: React.FC<{ text: string }> = ({ text }) => {
 	const [copied, setCopied] = useState(false);
@@ -70,7 +70,7 @@ const AIResponseRenderer: React.FC<GPT4oResponseRendererProps> = ({
 					)}
 					<SyntaxHighlighter
 						language={codeLanguage.replace(/^`+/, '') || 'text'}
-						style={tomorrow}
+						style={nightOwl}
 						className='rounded-bl-lg rounded-br-lg'
 					>
 						{codeContent.trim()}
