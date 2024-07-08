@@ -27,9 +27,9 @@ import { AIProvider, getAIModel } from '@/types/AI';
 
 import { ModelConfig } from '../page';
 
+import AIModelsTooltip from './tooltips/model';
 import System from './tooltips/system';
 import Temperature from './tooltips/temperature';
-import AIModelsTooltip from './tooltips/model';
 
 type Props = {
 	selectedSessionId: string | null;

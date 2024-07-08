@@ -37,7 +37,7 @@ const AIModelsTooltip = () => {
 	];
 
 	return (
-		<div className='w-96 max-w-[95vw] p-4 bg-white dark:bg-gray-800 space-y-6'>
+		<div className='w-96 max-w-[95vw] space-y-6'>
 			<h2 className='text-lg font-bold text-center mb-4'>
 				AI Model Comparison
 			</h2>

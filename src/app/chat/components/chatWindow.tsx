@@ -20,7 +20,7 @@ import {
 	LoadingWrapper,
 } from '@/components/shared';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { createNewChatSession } from '@/db/queries-chat-sessions';

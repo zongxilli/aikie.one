@@ -26,7 +26,7 @@ const TooltipWrapper = ({
 		<Tooltip>
 			<TooltipTrigger asChild>{children}</TooltipTrigger>
 			<TooltipContent
-				className='z-50'
+				className='z-50 dark:bg-gray-700'
 				side={position}
 				sideOffset={positionOffset}
 			>
