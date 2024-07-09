@@ -67,9 +67,13 @@ const ChatSessions = ({
 		setEditingName(currentName);
 	};
 
-	const handleRenameSubmit = async (sessionId: string, userId: string) => {
-		if (editingName.trim() !== '') {
-			await updateChatSessionName(sessionId, userId, editingName.trim());
+	const handleRenameSubmit = async (session: ChatSession) => {
+		if (editingName !== session.name && editingName.trim() !== '') {
+			await updateChatSessionName(
+				session.id,
+				session.user_id,
+				editingName.trim()
+			);
 		}
 		setEditingId(null);
 	};
@@ -184,12 +188,10 @@ const ChatSessions = ({
 						ref={inputRef}
 						value={editingName}
 						onChange={(e) => setEditingName(e.target.value)}
-						onBlur={() =>
-							handleRenameSubmit(session.id, session.user_id)
-						}
+						onBlur={() => handleRenameSubmit(session)}
 						onKeyDown={(e) => {
 							if (e.key === 'Enter') {
-								handleRenameSubmit(session.id, session.user_id);
+								handleRenameSubmit(session);
 							}
 						}}
 						className='flex-grow h-full outline'
