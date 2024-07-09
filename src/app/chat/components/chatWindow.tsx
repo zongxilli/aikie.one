@@ -99,7 +99,9 @@ const ChatWindow = ({
 		[]
 	);
 	useEffect(() => {
-		scrollToBottom();
+		setTimeout(() => {
+			scrollToBottom();
+		}, 200);
 	}, [messages, scrollToBottom]);
 
 	// 自动 focus input
