@@ -54,17 +54,20 @@ export function useRealtimeChatSessions() {
 											break;
 										case 'UPDATE':
 											console.log('监听Sessions: UPDATE');
-											setSessions((current) =>
-												current.map((session) =>
-													session.id ===
-													payload.new.id
-														? {
-																...session,
-																...payload.new,
-														  }
-														: session
-												)
-											);
+											setSessions((current) => {
+												const updatedSession =
+													payload.new as ChatSession;
+												const updatedSessions =
+													current.filter(
+														(session) =>
+															session.id !==
+															updatedSession.id
+													);
+												return [
+													updatedSession,
+													...updatedSessions,
+												];
+											});
 											break;
 										case 'DELETE':
 											console.log('监听Sessions: DELETE');

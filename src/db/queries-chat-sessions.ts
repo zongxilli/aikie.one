@@ -17,7 +17,7 @@ export async function getUserChatSessions(
 			.select()
 			.from(chatSessions)
 			.where(eq(chatSessions.user_id, userId))
-			.orderBy(desc(chatSessions.created_at));
+			.orderBy(desc(chatSessions.updated_at));
 
 		return sessions;
 	} catch (error) {

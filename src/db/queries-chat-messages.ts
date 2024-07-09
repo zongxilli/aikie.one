@@ -4,8 +4,8 @@ import { asc, eq } from 'drizzle-orm';
 
 import { db } from '@/db/index';
 import { Message, messages } from '@/db/schema';
-import { callLambdaWithoutWaiting } from '@/lib/callLambdaWithoutWaiting';
 import { AIProvider } from '@/types/AI';
+
 import { getClaudeResponse } from './anthropic/api';
 import { getOpenAIResponsive } from './openAI/api';
 
@@ -58,16 +58,6 @@ export async function createNewChatMessage(
 				system,
 				true
 			);
-			// callLambdaWithoutWaiting(
-			// 	process.env.LAMBDA_ANTHROPIC_HANDLER_FUNCTION_URL!,
-			// 	{
-			// 		sessionId,
-			// 		sessionHistory,
-			// 		temperature,
-			// 		system,
-			// 		stage: process.env.NEXT_APP_STAGE,
-			// 	}
-			// );
 		}
 
 		// chat GPT 4o
@@ -79,16 +69,6 @@ export async function createNewChatMessage(
 				system,
 				true
 			);
-			// callLambdaWithoutWaiting(
-			// 	process.env.LAMBDA_OPENAI_HANDLER_FUNCTION_URL!,
-			// 	{
-			// 		sessionId,
-			// 		sessionHistory,
-			// 		temperature,
-			// 		system,
-			// 		stage: process.env.NEXT_APP_STAGE,
-			// 	}
-			// );
 		}
 
 		return [userMessage];
