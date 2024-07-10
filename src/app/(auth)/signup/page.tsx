@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import logo from '@/../public/logo.svg';
 import appBg from '@/../public/app-bg.jpg';
+import logo from '@/../public/logo.svg';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default function SignUpPage() {
 	return (
 		<>
-			<div className='container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
+			<div className='container relative h-screen flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
 				<Link
 					href='/login'
 					className={cn(
