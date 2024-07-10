@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import logo from '@/../public/logo.svg';
+import appBg from '@/../public/app-bg.jpg';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -27,7 +28,15 @@ export default function SignUpPage() {
 					Login
 				</Link>
 				<div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
-					<div className='absolute inset-0 bg-zinc-900' />
+					<Image
+						src={appBg}
+						alt='Signup background'
+						fill
+						sizes='auto'
+						style={{ objectFit: 'cover' }}
+						quality={100}
+						priority
+					/>
 					<div className='relative z-20 flex items-center gap-2 text-lg font-medium'>
 						<Image
 							src={logo}
@@ -40,9 +49,10 @@ export default function SignUpPage() {
 					<div className='relative z-20 mt-auto'>
 						<blockquote className='space-y-2'>
 							<p className='text-lg'>
-								&ldquo;Built with NextJS on Supabase&rdquo;
+								&ldquo;Unlock the superpower of Artificial
+								intelligence (AI)&rdquo;
 							</p>
-							<footer className='text-sm'>Zongxi Li</footer>
+							<footer className='text-sm'>By AIkie</footer>
 						</blockquote>
 					</div>
 				</div>
