@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/resizable';
 import { useUserStore } from '@/providers/user';
 
+import UploadSection from './components/uploadSection';
+
 export default function QuizPage() {
 	const { user, isLoading, error } = useUserStore((state) => state);
 
@@ -26,47 +28,25 @@ export default function QuizPage() {
 		);
 	};
 
-	const renderConfigPanel = () => {
-		return (
-			<ResizablePanelGroup direction='vertical'>
-				<ResizablePanel
-					defaultSize={40}
-					className='border rounded-lg bg-card'
-				>
-					<div className='flex h-full items-center justify-center p-6'>
-						<span className='font-semibold'>Two</span>
-					</div>
-				</ResizablePanel>
-				{renderResizeBar(true)}
-				<ResizablePanel
-					defaultSize={60}
-					className='border rounded-lg bg-card'
-				>
-					<div className='flex h-full items-center justify-center p-6'>
-						<span className='font-semibold'>Three</span>
-					</div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
-		);
-	};
-
 	return (
 		<div className='w-full h-full p-4 box-border'>
-			<ResizablePanelGroup
-				direction='horizontal'
-				className='max-w-full max-h-full'
-			>
-				<ResizablePanel defaultSize={40}>
-					{renderConfigPanel()}
+			<ResizablePanelGroup direction='horizontal'>
+				<ResizablePanel
+					defaultSize={35}
+					minSize={25}
+					className='border rounded-lg bg-card min-w-[16rem]'
+				>
+					<UploadSection />
 				</ResizablePanel>
 
 				{renderResizeBar()}
 
 				<ResizablePanel
-					defaultSize={60}
-					className='border rounded-lg bg-card'
+					defaultSize={65}
+					minSize={30}
+					className='border rounded-lg bg-card min-w-[20rem]'
 				>
-					Main
+					Two
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>

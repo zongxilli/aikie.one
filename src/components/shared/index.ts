@@ -1,6 +1,7 @@
 import AIResponseRenderer from './AIResponseRenderer';
 import Dashboard from './dashboard';
 import Dashboard2 from './dashboard2';
+import FileUpload from './fileUpload';
 import Header from './header';
 import LoadingOverlay from './loadingOverlay';
 import LoadingWrapper from './LoadingWrapper';
@@ -16,6 +17,7 @@ export {
 	Dashboard,
 	Dashboard2,
 	AIResponseRenderer,
+	FileUpload,
 	Header,
 	LoadingOverlay,
 	LoadingWrapper,
