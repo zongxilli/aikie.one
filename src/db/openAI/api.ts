@@ -33,7 +33,7 @@ export const getOpenAIResponsive = async (
 					role: msg.role as 'user' | 'assistant',
 					content: msg.content as string,
 				})),
-				{ role: 'user', content: system },
+				{ role: 'system', content: system },
 			],
 			max_tokens: 2000,
 		});
