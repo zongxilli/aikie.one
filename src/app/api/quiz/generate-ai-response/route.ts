@@ -4,8 +4,8 @@ import { ChatOpenAI } from '@langchain/openai';
 import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from '@/db/index'; // 导入您的 Drizzle 数据库实例
-import { quizzes, NewQuiz } from '@/db/schema'; // 导入 quizzes 表和 NewQuiz 类型
+import { db } from '@/db/index';
+import { quizzes, NewQuiz } from '@/db/schema';
 
 export const config = {
 	api: {
@@ -168,8 +168,7 @@ export async function POST(req: NextRequest) {
 			],
 		});
 
-		const result: any = await runnable.invoke([message]);
-		console.log('Generated quiz:', result);
+		const result = (await runnable.invoke([message])) as { quiz: NewQuiz };
 
 		// 分配分数
 		const questions = result.quiz.questions;
