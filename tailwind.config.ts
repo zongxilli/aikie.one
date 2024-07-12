@@ -99,6 +99,10 @@ const config = {
 				'8xl': ['5.75rem', { lineHeight: '1' }],
 				'9xl': ['7.75rem', { lineHeight: '1' }],
 			},
+			gridTemplateColumns: {
+				'card-auto-fill-minmax':
+					'repeat(auto-fill, minmax(20rem, 1fr))',
+			},
 		},
 	},
 	plugins: [require('tailwindcss-animate')],

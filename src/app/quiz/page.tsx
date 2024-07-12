@@ -10,6 +10,7 @@ import {
 import { useUserStore } from '@/providers/user';
 
 import UploadSection from './components/uploadSection';
+import QuizzesSection from './components/quizzesSection';
 
 export default function QuizPage() {
 	const { user, isLoading, error } = useUserStore((state) => state);
@@ -46,7 +47,7 @@ export default function QuizPage() {
 					minSize={30}
 					className='border rounded-lg bg-card min-w-[20rem]'
 				>
-					Two
+					<QuizzesSection />
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>

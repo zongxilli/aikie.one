@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/db/index';
 import { quizzes, NewQuiz } from '@/db/schema';
+import { createNewQuiz } from '@/db/queries-quizzes';
 
 export const config = {
 	api: {
@@ -215,8 +216,8 @@ export async function POST(req: NextRequest) {
 		}
 
 		// 准备要插入数据库的 quiz 数据
-		const newQuiz: NewQuiz = {
-			user_id: userId,
+		const newQuiz: Omit<NewQuiz, 'user_id'> = {
+			// user_id: userId,
 			name: result.quiz.name,
 			description: result.quiz.description,
 			questions: result.quiz.questions,
@@ -224,10 +225,12 @@ export async function POST(req: NextRequest) {
 		};
 
 		// 将 quiz 插入数据库
-		const [insertedQuiz] = await db
-			.insert(quizzes)
-			.values(newQuiz)
-			.returning();
+		// const [insertedQuiz] = await db
+		// .insert(quizzes)
+		// .values(newQuiz)
+		// .returning();
+
+		const insertedQuiz = await createNewQuiz(userId, newQuiz);
 
 		// 返回生成的 quiz 和数据库 ID
 		return NextResponse.json(

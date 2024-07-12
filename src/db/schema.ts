@@ -79,7 +79,7 @@ export const quizzes = pgTable(
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		name: varchar('name', { length: 255 }).notNull(),
-		description: text('description'),
+		description: text('description').notNull(),
 		questions: jsonb('questions').$type<QuizQuestions>().notNull(),
 		total_points: integer('total_points').notNull(),
 		created_at: timestamp('created_at').defaultNow().notNull(),
