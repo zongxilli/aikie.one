@@ -43,6 +43,13 @@
       "when": 1720756175058,
       "tag": "0005_next_wilson_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1720764991700,
+      "tag": "0006_light_iron_man",
+      "breakpoints": true
     }
   ]
 }
