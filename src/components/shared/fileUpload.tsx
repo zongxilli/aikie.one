@@ -201,6 +201,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 					onClick={() => {
 						onFilesUpload(files.filter((file) => !file.error));
 					}}
+					disabled={files.length === 0}
 				>
 					{filesUploadLabel}
 				</Button>
