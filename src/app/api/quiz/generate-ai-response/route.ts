@@ -13,6 +13,7 @@ export const config = {
 export async function POST(req: NextRequest) {
 	const body = await req.formData();
 	const file = body.get('file');
+	const questionCount = parseInt(body.get('questionCount') as string) || 10; // 默认生成10道题
 
 	if (!file || !(file instanceof Blob)) {
 		return NextResponse.json(
@@ -39,8 +40,25 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
-		const prompt =
-			'Given the text which is a summary of the document, generate a quiz based on the text. Return JSON only that contains a quiz object with fields: name, description and questions. The questions is an array of objects with fields: questionText, answers. The answers is an array of objects with fields: answerText, isCorrect.';
+		const prompt = `
+        Given the text which is a summary of the document, generate an engaging and comprehensive quiz based on the content. The quiz should follow this structure:
+
+        1. Create a quiz object with fields: name, description, and questions.
+
+        2. Generate exactly ${questionCount} questions. The questions should be a mix of multiple-choice (with 4 options) and single-choice questions. Each question should have:
+           - The question text
+           - Question type ('MultipleChoice' or 'SingleChoice')
+           - Difficulty level ('Easy', 'Medium', or 'Hard')
+           - An explanation of the correct answer
+           - 4 possible answers for both multiple-choice and single-choice questions
+           - At least one hint (maximum 3 hints)
+
+        3. Ensure that the questions cover a range of topics from the text and vary in difficulty.
+
+        4. Make the quiz engaging by using a mix of straightforward and thought-provoking questions.
+
+        Return the result as a JSON object.
+        `;
 
 		if (!process.env.OPENAI_API_KEY) {
 			return NextResponse.json(
@@ -72,6 +90,18 @@ export async function POST(req: NextRequest) {
 									type: 'object',
 									properties: {
 										questionText: { type: 'string' },
+										type: {
+											type: 'string',
+											enum: [
+												'MultipleChoice',
+												'SingleChoice',
+											],
+										},
+										difficulty: {
+											type: 'string',
+											enum: ['Easy', 'Medium', 'Hard'],
+										},
+										explanation: { type: 'string' },
 										answers: {
 											type: 'array',
 											items: {
@@ -85,8 +115,24 @@ export async function POST(req: NextRequest) {
 													},
 												},
 											},
+											minItems: 4,
+											maxItems: 4,
+										},
+										hints: {
+											type: 'array',
+											items: { type: 'string' },
+											minItems: 1,
+											maxItems: 3,
 										},
 									},
+									required: [
+										'questionText',
+										'type',
+										'difficulty',
+										'explanation',
+										'answers',
+										'hints',
+									],
 								},
 							},
 						},
@@ -113,6 +159,53 @@ export async function POST(req: NextRequest) {
 
 		const result: any = await runnable.invoke([message]);
 		console.log('Generated quiz:', result);
+
+		// 分配分数
+		const questions = result.quiz.questions;
+		const difficultyCount = {
+			Easy: questions.filter((q) => q.difficulty === 'Easy').length,
+			Medium: questions.filter((q) => q.difficulty === 'Medium').length,
+			Hard: questions.filter((q) => q.difficulty === 'Hard').length,
+		};
+
+		const totalQuestions = questions.length;
+		const baseScore = {
+			Easy: 5,
+			Medium: 8,
+			Hard: 12,
+		};
+
+		// 计算初始总分
+		let totalPoints =
+			difficultyCount.Easy * baseScore.Easy +
+			difficultyCount.Medium * baseScore.Medium +
+			difficultyCount.Hard * baseScore.Hard;
+
+		// 如果总分不等于100，调整分数
+		const scaleFactor = 100 / totalPoints;
+
+		questions.forEach((question) => {
+			question.points = Math.round(
+				baseScore[question.difficulty] * scaleFactor
+			);
+			// 为多选题额外加1分
+			if (question.type === 'MultipleChoice') {
+				question.points += 1;
+			}
+		});
+
+		// 确保总分为100
+		const finalTotalPoints = questions.reduce(
+			(sum, q) => sum + q.points,
+			0
+		);
+		if (finalTotalPoints !== 100) {
+			const diff = 100 - finalTotalPoints;
+			// 将差值添加到最后一个问题上
+			questions[questions.length - 1].points += diff;
+		}
+
+		console.log(result);
 
 		return NextResponse.json(result, { status: 200 });
 	} catch (e: any) {

@@ -7,7 +7,11 @@ import {
 	uuid,
 	index,
 	pgEnum,
+	integer,
+	jsonb,
 } from 'drizzle-orm/pg-core';
+
+import { QuizQuestions } from '@/types/quiz';
 
 export const users = pgTable(
 	'users',
@@ -66,9 +70,32 @@ export const messages = pgTable(
 	})
 );
 
+// Quiz table
+export const quizzes = pgTable(
+	'quizzes',
+	{
+		id: uuid('id').primaryKey().defaultRandom(),
+		user_id: uuid('user_id')
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		name: varchar('name', { length: 255 }).notNull(),
+		description: text('description'),
+		questions: jsonb('questions').$type<QuizQuestions>().notNull(),
+		total_points: integer('total_points').notNull(),
+		created_at: timestamp('created_at').defaultNow().notNull(),
+		updated_at: timestamp('updated_at').defaultNow().notNull(),
+	},
+	(table) => ({
+		userIdIdx: index('quizzes_user_id_idx').on(table.user_id),
+		createdAtIdx: index('quizzes_created_at_idx').on(table.created_at),
+		nameIdx: index('quizzes_name_idx').on(table.name),
+	})
+);
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
 	chatSessions: many(chatSessions),
+	quizzes: many(quizzes),
 }));
 
 export const chatSessionsRelations = relations(
@@ -89,6 +116,13 @@ export const messagesRelations = relations(messages, ({ one }) => ({
 	}),
 }));
 
+export const quizzesRelations = relations(quizzes, ({ one }) => ({
+	user: one(users, {
+		fields: [quizzes.user_id],
+		references: [users.id],
+	}),
+}));
+
 // Types
 export type UserProfile = typeof users.$inferSelect;
 export type NewUserProfile = typeof users.$inferInsert;
@@ -98,6 +132,9 @@ export type NewChatSession = typeof chatSessions.$inferInsert;
 
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+
+export type Quiz = typeof quizzes.$inferSelect;
+export type NewQuiz = typeof quizzes.$inferInsert;
 
 // Constants
 export const USER_IMAGE_STORAGE_BUCKET = 'my-next';
