@@ -82,6 +82,7 @@ export const quizzes = pgTable(
 		description: text('description').notNull(),
 		questions: jsonb('questions').$type<QuizQuestions>().notNull(),
 		total_points: integer('total_points').notNull(),
+		total_time: integer('total_time').notNull(), // 新增字段：总时间（秒）
 		created_at: timestamp('created_at').defaultNow().notNull(),
 		updated_at: timestamp('updated_at').defaultNow().notNull(),
 	},

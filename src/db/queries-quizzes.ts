@@ -106,6 +106,8 @@ export async function createNewQuiz(
 	quizData: Omit<Quiz, 'id' | 'user_id' | 'created_at' | 'updated_at'>
 ): Promise<Quiz> {
 	try {
+		console.log(quizData);
+
 		const [newQuiz] = await db
 			.insert(quizzes)
 			.values({

@@ -53,24 +53,31 @@ export async function POST(req: NextRequest) {
 		}
 
 		const prompt = `
-        Given the text which is a summary of the document, generate an engaging and comprehensive quiz based on the content. The quiz should follow this structure:
+    Given the text which is a summary of the document, generate an engaging and comprehensive quiz based on the content. The quiz should follow this structure:
 
-        1. Create a quiz object with fields: name, description, and questions.
+    1. Create a quiz object with fields: name, description, and questions.
 
-        2. Generate exactly ${questionCount} questions. The questions should be a mix of multiple-choice (with 4 options) and single-choice questions. Each question should have:
-           - The question text
-           - Question type ('MultipleChoice' or 'SingleChoice')
-           - Difficulty level ('Easy', 'Medium', or 'Hard')
-           - An explanation of the correct answer
-           - 4 possible answers for both multiple-choice and single-choice questions
-           - At least one hint (maximum 3 hints)
+    2. Generate exactly ${questionCount} questions. The questions should be a mix of multiple-choice (with 4 options) and single-choice questions. Each question should have:
+       - The question text
+       - Question type ('MultipleChoice' or 'SingleChoice')
+       - Difficulty level ('Easy', 'Medium', or 'Hard')
+       - An explanation of the correct answer
+       - 4 possible answers for both multiple-choice and single-choice questions
+       - At least one hint (maximum 3 hints)
+       - A suggested time to answer the question (in seconds)
 
-        3. Ensure that the questions cover a range of topics from the text and vary in difficulty.
+    3. Ensure that the questions cover a range of topics from the text and vary in difficulty.
 
-        4. Make the quiz engaging by using a mix of straightforward and thought-provoking questions.
+    4. Make the quiz engaging by using a mix of straightforward and thought-provoking questions.
 
-        Return the result as a JSON object.
-        `;
+    5. Provide a suggested time for each question based on its difficulty and type:
+       - Easy questions: 30-60 seconds
+       - Medium questions: 60-90 seconds
+       - Hard questions: 90-120 seconds
+       - Multiple choice questions should have slightly less time than single choice of the same difficulty
+
+    Return the result as a JSON object.
+`;
 
 		if (!process.env.OPENAI_API_KEY) {
 			return NextResponse.json(
@@ -173,6 +180,13 @@ export async function POST(req: NextRequest) {
 
 		// 分配分数
 		const questions = result.quiz.questions;
+
+		// 在处理 AI 返回的结果时，计算总时间
+		let totalTime = 0;
+		questions.forEach((question) => {
+			totalTime += question.suggestedTime;
+		});
+
 		const difficultyCount = {
 			Easy: questions.filter((q) => q.difficulty === 'Easy').length,
 			Medium: questions.filter((q) => q.difficulty === 'Medium').length,
@@ -222,13 +236,8 @@ export async function POST(req: NextRequest) {
 			description: result.quiz.description,
 			questions: result.quiz.questions,
 			total_points: 100, // 总分始终为100
+			total_time: totalTime,
 		};
-
-		// 将 quiz 插入数据库
-		// const [insertedQuiz] = await db
-		// .insert(quizzes)
-		// .values(newQuiz)
-		// .returning();
 
 		const insertedQuiz = await createNewQuiz(userId, newQuiz);
 
