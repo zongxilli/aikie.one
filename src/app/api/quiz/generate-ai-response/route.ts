@@ -4,6 +4,9 @@ import { ChatOpenAI } from '@langchain/openai';
 import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { db } from '@/db/index'; // 导入您的 Drizzle 数据库实例
+import { quizzes, NewQuiz } from '@/db/schema'; // 导入 quizzes 表和 NewQuiz 类型
+
 export const config = {
 	api: {
 		bodyParser: false,
@@ -13,11 +16,19 @@ export const config = {
 export async function POST(req: NextRequest) {
 	const body = await req.formData();
 	const file = body.get('file');
-	const questionCount = parseInt(body.get('questionCount') as string) || 10; // 默认生成10道题
+	const questionCount = parseInt(body.get('questionCount') as string) || 10;
+	const userId = body.get('userId') as string;
 
 	if (!file || !(file instanceof Blob)) {
 		return NextResponse.json(
 			{ error: 'No file uploaded' },
+			{ status: 400 }
+		);
+	}
+
+	if (!userId) {
+		return NextResponse.json(
+			{ error: 'User ID is required' },
 			{ status: 400 }
 		);
 	}
@@ -168,7 +179,6 @@ export async function POST(req: NextRequest) {
 			Hard: questions.filter((q) => q.difficulty === 'Hard').length,
 		};
 
-		const totalQuestions = questions.length;
 		const baseScore = {
 			Easy: 5,
 			Medium: 8,
@@ -205,11 +215,33 @@ export async function POST(req: NextRequest) {
 			questions[questions.length - 1].points += diff;
 		}
 
-		console.log(result);
+		// 准备要插入数据库的 quiz 数据
+		const newQuiz: NewQuiz = {
+			user_id: userId,
+			name: result.quiz.name,
+			description: result.quiz.description,
+			questions: result.quiz.questions,
+			total_points: 100, // 总分始终为100
+		};
 
-		return NextResponse.json(result, { status: 200 });
+		// 将 quiz 插入数据库
+		const [insertedQuiz] = await db
+			.insert(quizzes)
+			.values(newQuiz)
+			.returning();
+
+		// 返回生成的 quiz 和数据库 ID
+		return NextResponse.json(
+			{
+				quiz: result.quiz,
+				dbId: insertedQuiz.id,
+			},
+			{ status: 200 }
+		);
 	} catch (e: any) {
-		console.error('Error generating quiz:', e);
+		// eslint-disable-next-line no-console
+		console.error('Error generating or saving quiz:', e);
+		// eslint-disable-next-line no-console
 		console.error('Error stack:', e.stack);
 		return NextResponse.json(
 			{ error: e.message, stack: e.stack },

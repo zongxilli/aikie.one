@@ -1,13 +1,17 @@
 import { FileUpload } from '@/components/shared';
+import { useUserStore } from '@/providers/user';
 
 const UploadSection = () => {
+	const { user, isLoading, error } = useUserStore((state) => state);
+
 	const renderUploadInput = () => {
-		const handleFilesSelect = async (files: File[]) => {
+		const handleGenerateQuiz = async (files: File[]) => {
 			const file = files[0];
-			if (!file) return;
+			if (!file || !user?.id) return;
 
 			const formData = new FormData();
 			formData.append('file', file);
+			formData.append('userId', user?.id);
 
 			try {
 				const response = await fetch('/api/quiz/generate-ai-response', {
@@ -29,7 +33,7 @@ const UploadSection = () => {
 
 		return (
 			<FileUpload
-				onFilesUpload={handleFilesSelect}
+				onFilesUpload={handleGenerateQuiz}
 				filesUploadLabel='Generate quiz'
 				acceptedFileTypes='.txt,.pdf'
 				maxFileSize={10 * 1024 * 1024} // 10MB
