@@ -5,6 +5,25 @@ import { desc, eq, and, like } from 'drizzle-orm';
 import { db } from '@/db/index';
 import { Quiz, quizzes } from '@/db/schema';
 
+export async function getQuizById(quizId: string): Promise<Quiz | null> {
+	try {
+		const [quiz] = await db
+			.select()
+			.from(quizzes)
+			.where(eq(quizzes.id, quizId))
+			.limit(1);
+
+		if (!quiz) {
+			throw new Error(`Quiz does not exist`);
+		}
+
+		return quiz;
+	} catch (error) {
+		console.error('Error fetching quiz by ID:', error);
+		throw new Error('Failed to fetch quiz');
+	}
+}
+
 export async function getUserQuizzes(userId: string): Promise<Quiz[]> {
 	try {
 		const userQuizzes = await db
