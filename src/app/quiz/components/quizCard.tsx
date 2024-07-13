@@ -34,9 +34,11 @@ import { useUserStore } from '@/providers/user';
 
 type Props = {
 	quiz: Quiz;
+	onClick: () => void;
+	selectedQuiz: Quiz | null;
 };
 
-const QuizCard = ({ quiz }: Props) => {
+const QuizCard = ({ quiz, onClick, selectedQuiz }: Props) => {
 	const { toast } = useToast();
 	const { user } = useUserStore((state) => state);
 
@@ -162,7 +164,11 @@ const QuizCard = ({ quiz }: Props) => {
 		<>
 			<Card
 				key={quiz.id}
-				className='w-full h-32 flex flex-col items-start gap-1'
+				className={clsx(
+					'w-full h-32 flex flex-col items-start gap-1 cursor-pointer box-border hover:border-primary',
+					{ 'border-primary': selectedQuiz?.id === quiz.id }
+				)}
+				onClick={onClick}
 			>
 				<div className='py-2 px-4 box-border w-full'>
 					<div className='flex items-center justify-between gap-2'>
