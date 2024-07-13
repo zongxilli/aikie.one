@@ -4,9 +4,8 @@ import { ChatOpenAI } from '@langchain/openai';
 import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from '@/db/index';
-import { quizzes, NewQuiz } from '@/db/schema';
 import { createNewQuiz } from '@/db/queries-quizzes';
+import { NewQuiz } from '@/db/schema';
 
 export const config = {
 	api: {
@@ -53,31 +52,31 @@ export async function POST(req: NextRequest) {
 		}
 
 		const prompt = `
-    Given the text which is a summary of the document, generate an engaging and comprehensive quiz based on the content. The quiz should follow this structure:
+        Given the text which is a summary of the document, generate an engaging and comprehensive quiz based on the content. The quiz should follow this structure:
 
-    1. Create a quiz object with fields: name, description, and questions.
+        1. Create a quiz object with fields: name, description, and questions.
 
-    2. Generate exactly ${questionCount} questions. The questions should be a mix of multiple-choice (with 4 options) and single-choice questions. Each question should have:
-       - The question text
-       - Question type ('MultipleChoice' or 'SingleChoice')
-       - Difficulty level ('Easy', 'Medium', or 'Hard')
-       - An explanation of the correct answer
-       - 4 possible answers for both multiple-choice and single-choice questions
-       - At least one hint (maximum 3 hints)
-       - A suggested time to answer the question (in seconds)
+        2. Generate exactly ${questionCount} questions. The questions should be a mix of multiple-choice (with 4 options) and single-choice questions. Each question should have:
+           - The question text
+           - Question type ('MultipleChoice' or 'SingleChoice')
+           - Difficulty level ('Easy', 'Medium', or 'Hard')
+           - An explanation of the correct answer
+           - 4 possible answers for both multiple-choice and single-choice questions
+           - At least one hint (maximum 3 hints)
+           - A suggestedTime to answer the question (in seconds)
 
-    3. Ensure that the questions cover a range of topics from the text and vary in difficulty.
+        3. Ensure that the questions cover a range of topics from the text and vary in difficulty.
 
-    4. Make the quiz engaging by using a mix of straightforward and thought-provoking questions.
+        4. Make the quiz engaging by using a mix of straightforward and thought-provoking questions.
 
-    5. Provide a suggested time for each question based on its difficulty and type:
-       - Easy questions: 30-60 seconds
-       - Medium questions: 60-90 seconds
-       - Hard questions: 90-120 seconds
-       - Multiple choice questions should have slightly less time than single choice of the same difficulty
+        5. Provide a suggestedTime for each question based on its difficulty and type:
+           - Easy questions: 30-60 seconds
+           - Medium questions: 60-90 seconds
+           - Hard questions: 90-120 seconds
+           - Multiple choice questions should have slightly less time than single choice of the same difficulty
 
-    Return the result as a JSON object.
-`;
+        Return the result as a JSON object.
+    `;
 
 		if (!process.env.OPENAI_API_KEY) {
 			return NextResponse.json(
@@ -143,6 +142,7 @@ export async function POST(req: NextRequest) {
 											minItems: 1,
 											maxItems: 3,
 										},
+										suggestedTime: { type: 'number' },
 									},
 									required: [
 										'questionText',
@@ -151,6 +151,7 @@ export async function POST(req: NextRequest) {
 										'explanation',
 										'answers',
 										'hints',
+										'suggestedTime',
 									],
 								},
 							},
@@ -184,7 +185,11 @@ export async function POST(req: NextRequest) {
 		// 在处理 AI 返回的结果时，计算总时间
 		let totalTime = 0;
 		questions.forEach((question) => {
-			totalTime += question.suggestedTime;
+			const suggestedTime =
+				typeof question.suggestedTime === 'number'
+					? question.suggestedTime
+					: 60;
+			totalTime += suggestedTime;
 		});
 
 		const difficultyCount = {
@@ -231,12 +236,11 @@ export async function POST(req: NextRequest) {
 
 		// 准备要插入数据库的 quiz 数据
 		const newQuiz: Omit<NewQuiz, 'user_id'> = {
-			// user_id: userId,
 			name: result.quiz.name,
 			description: result.quiz.description,
 			questions: result.quiz.questions,
 			total_points: 100, // 总分始终为100
-			total_time: totalTime,
+			total_time: Math.max(1, Math.round(totalTime)), // 确保总时间至少为1秒
 		};
 
 		const insertedQuiz = await createNewQuiz(userId, newQuiz);
