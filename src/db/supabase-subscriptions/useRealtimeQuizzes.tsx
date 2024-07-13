@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useUserStore } from '@/providers/user';
 
 import { createClient } from '../../../supabase/client';
-import { getUserQuizzes } from '../queries-quizzes'; // 您需要创建这个函数
+import { getUserQuizzes, getQuizById } from '../queries-quizzes';
 import { Quiz } from '../schema';
 
 const supabase = createClient();
@@ -40,27 +40,37 @@ export function useRealtimeQuizzes() {
 								table: 'quizzes',
 								filter: `user_id=eq.${user.id}`,
 							},
-							(payload) => {
+							async (payload) => {
 								if (isMounted) {
 									switch (payload.eventType) {
 										case 'INSERT':
 											console.log('监听Quizzes: INSERT');
-											setQuizzes((current) => [
-												payload.new as Quiz,
-												...current,
-											]);
+											const newQuiz = await getQuizById(
+												payload.new.id
+											);
+											if (newQuiz) {
+												setQuizzes((current) => [
+													newQuiz,
+													...current,
+												]);
+											}
 											break;
 										case 'UPDATE':
 											console.log('监听Quizzes: UPDATE');
-											setQuizzes((current) => {
-												const updatedQuiz =
-													payload.new as Quiz;
-												return current.map((quiz) =>
-													quiz.id === updatedQuiz.id
-														? updatedQuiz
-														: quiz
+											const updatedQuiz =
+												await getQuizById(
+													payload.new.id
 												);
-											});
+											if (updatedQuiz) {
+												setQuizzes((current) =>
+													current.map((quiz) =>
+														quiz.id ===
+														updatedQuiz.id
+															? updatedQuiz
+															: quiz
+													)
+												);
+											}
 											break;
 										case 'DELETE':
 											console.log('监听Quizzes: DELETE');
