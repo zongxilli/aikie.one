@@ -210,7 +210,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 	};
 
 	return (
-		<div className='w-full h-[calc(100dvh_-_8rem)] flex flex-col gap-2'>
+		<div className='w-full h-full flex flex-col gap-2'>
 			{renderHeader()}
 			{renderUploadFilePlaceholder()}
 			{renderFiles()}

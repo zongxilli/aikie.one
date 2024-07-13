@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import clsx from 'clsx';
 
 import {
@@ -7,13 +9,16 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import { useUserStore } from '@/providers/user';
+import { Quiz } from '@/db/schema';
+import { useRealtimeQuizzes } from '@/db/supabase-subscriptions/useRealtimeQuizzes';
 
-import UploadSection from './components/uploadSection';
+import ConfigSection from './components/configSection';
 import QuizzesSection from './components/quizzesSection';
 
 export default function QuizPage() {
-	const { user, isLoading, error } = useUserStore((state) => state);
+	const { quizzes, isLoading: isQuizzesLoading } = useRealtimeQuizzes();
+
+	const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
 
 	const renderResizeBar = (horizontal?: boolean) => {
 		return (
@@ -37,7 +42,12 @@ export default function QuizPage() {
 					minSize={25}
 					className='border rounded-lg bg-card min-w-[16rem]'
 				>
-					<UploadSection />
+					<ConfigSection
+						quizzes={quizzes}
+						isQuizzesLoading={isQuizzesLoading}
+						selectedQuiz={selectedQuiz}
+						setSelectedQuiz={setSelectedQuiz}
+					/>
 				</ResizablePanel>
 
 				{renderResizeBar()}
@@ -47,7 +57,12 @@ export default function QuizPage() {
 					minSize={30}
 					className='border rounded-lg bg-card min-w-[20rem]'
 				>
-					<QuizzesSection />
+					<QuizzesSection
+						quizzes={quizzes}
+						isQuizzesLoading={isQuizzesLoading}
+						selectedQuiz={selectedQuiz}
+						setSelectedQuiz={setSelectedQuiz}
+					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>

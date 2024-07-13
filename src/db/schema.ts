@@ -49,7 +49,6 @@ export const chatSessions = pgTable(
 	})
 );
 
-// Enum
 export type MessageRole = 'user' | 'assistant';
 export const messageRolePG = pgEnum('role_enum', ['user', 'assistant']);
 
@@ -70,7 +69,6 @@ export const messages = pgTable(
 	})
 );
 
-// Quiz table
 export const quizzes = pgTable(
 	'quizzes',
 	{
@@ -82,7 +80,7 @@ export const quizzes = pgTable(
 		description: text('description').notNull(),
 		questions: jsonb('questions').$type<QuizQuestions>().notNull(),
 		total_points: integer('total_points').notNull(),
-		total_time: integer('total_time').notNull(), // 新增字段：总时间（秒）
+		total_time: integer('total_time').notNull(),
 		created_at: timestamp('created_at').defaultNow().notNull(),
 		updated_at: timestamp('updated_at').defaultNow().notNull(),
 	},

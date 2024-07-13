@@ -1,7 +1,24 @@
+import { Dispatch, SetStateAction } from 'react';
+
 import { FileUpload } from '@/components/shared';
+import { Quiz } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 
-const UploadSection = () => {
+import QuizSummary from './quizSummary';
+
+type Props = {
+	quizzes: Quiz[];
+	isQuizzesLoading: boolean;
+	selectedQuiz: Quiz | null;
+	setSelectedQuiz: Dispatch<SetStateAction<Quiz | null>>;
+};
+
+const ConfigSection = ({
+	quizzes,
+	isQuizzesLoading,
+	selectedQuiz,
+	setSelectedQuiz,
+}: Props) => {
 	const { user, isLoading, error } = useUserStore((state) => state);
 
 	const renderUploadInput = () => {
@@ -12,6 +29,7 @@ const UploadSection = () => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('userId', user?.id);
+			formData.append('questionCount', '7');
 
 			try {
 				const response = await fetch('/api/quiz/generate-ai-response', {
@@ -42,11 +60,16 @@ const UploadSection = () => {
 		);
 	};
 
+	const renderQuizSummary = () => {
+		return <QuizSummary selectedQuiz={selectedQuiz} />;
+	};
+
 	return (
 		<div className='w-full h-full p-4 box-border flex flex-col'>
+			{renderQuizSummary()}
 			{renderUploadInput()}
 		</div>
 	);
 };
 
-export default UploadSection;
+export default ConfigSection;

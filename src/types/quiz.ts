@@ -14,7 +14,7 @@ export interface QuizQuestion {
 	answers: QuizAnswer[];
 	hints: string[];
 	points: number;
-	suggestedTime: number; // 以秒为单位的建议回答时间
+	suggestedTime: number;
 }
 
 export type QuizQuestions = QuizQuestion[];
@@ -24,5 +24,5 @@ export interface Quiz {
 	description: string;
 	questions: QuizQuestions;
 	totalPoints: number;
-	totalTime: number; // 整个测验的总时间（秒）
+	totalTime: number;
 }

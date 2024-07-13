@@ -1,26 +1,43 @@
-import React, { Fragment } from 'react';
+import React, { Dispatch, Fragment, SetStateAction } from 'react';
 
 import { LoadingOverlay } from '@/components/shared';
-import { useRealtimeQuizzes } from '@/db/supabase-subscriptions/useRealtimeQuizzes';
+import { Quiz } from '@/db/schema';
 
 import QuizCard from './quizCard';
 
-const QuizzesSection = () => {
-	const {
-		quizzes,
-		isLoading: isQuizzesLoading,
-		error,
-	} = useRealtimeQuizzes();
+type Props = {
+	quizzes: Quiz[];
+	isQuizzesLoading: boolean;
+	selectedQuiz: Quiz | null;
+	setSelectedQuiz: Dispatch<SetStateAction<Quiz | null>>;
+};
 
+const QuizzesSection = ({
+	quizzes,
+	isQuizzesLoading,
+	selectedQuiz,
+	setSelectedQuiz,
+}: Props) => {
 	const renderQuizzes = () => {
-		if (isQuizzesLoading)
+		if (isQuizzesLoading) {
 			return <LoadingOverlay label='Loading quizzes...' />;
+		}
+
+		const handleSelectQuiz = (quiz: Quiz) => {
+			setSelectedQuiz((prevQuiz) =>
+				prevQuiz?.id === quiz.id ? null : quiz
+			);
+		};
 
 		return (
 			<div className='w-full h-[calc(100dvh_-_12rem)] grid grid-cols-card-auto-fill-minmax gap-6 overflow-auto'>
 				{quizzes.map((quiz) => (
 					<Fragment key={quiz.id}>
-						<QuizCard quiz={quiz} />
+						<QuizCard
+							quiz={quiz}
+							selectedQuiz={selectedQuiz}
+							onClick={() => handleSelectQuiz(quiz)}
+						/>
 					</Fragment>
 				))}
 			</div>
