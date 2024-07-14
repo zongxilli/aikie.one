@@ -39,12 +39,7 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 		);
 	};
 
-	return (
-		<div>
-			<div>Counts</div>
-			{renderDifficultyCharts()}
-		</div>
-	);
+	return <div>{renderDifficultyCharts()}</div>;
 };
 
 export default QuizSummary;

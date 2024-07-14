@@ -7,6 +7,7 @@ import LoadingOverlay from './loadingOverlay';
 import LoadingWrapper from './LoadingWrapper';
 import LogInLogOutButton from './logInLogOutButton';
 import Logo from './logo';
+import Modal from './modal';
 import RenameModal from './renameModal';
 import SocialNetworkLogin from './socialNetworkLogin';
 import Switch from './switch';
@@ -24,6 +25,7 @@ export {
 	LoadingWrapper,
 	LogInLogOutButton,
 	Logo,
+	Modal,
 	RenameModal,
 	SocialNetworkLogin,
 	Switch,

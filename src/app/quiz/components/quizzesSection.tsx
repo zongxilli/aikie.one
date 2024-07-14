@@ -30,16 +30,18 @@ const QuizzesSection = ({
 		};
 
 		return (
-			<div className='w-full h-[calc(100dvh_-_12rem)] grid grid-cols-card-auto-fill-minmax gap-6 overflow-auto'>
-				{quizzes.map((quiz) => (
-					<Fragment key={quiz.id}>
-						<QuizCard
-							quiz={quiz}
-							selectedQuiz={selectedQuiz}
-							onClick={() => handleSelectQuiz(quiz)}
-						/>
-					</Fragment>
-				))}
+			<div className='w-full h-[calc(100dvh_-_8rem)] overflow-auto'>
+				<div className='grid grid-cols-card-auto-fill-minmax gap-3 '>
+					{quizzes.map((quiz) => (
+						<Fragment key={quiz.id}>
+							<QuizCard
+								quiz={quiz}
+								selectedQuiz={selectedQuiz}
+								onClick={() => handleSelectQuiz(quiz)}
+							/>
+						</Fragment>
+					))}
+				</div>
 			</div>
 		);
 	};

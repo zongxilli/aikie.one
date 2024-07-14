@@ -1,6 +1,6 @@
 import React, { useState, useRef, DragEvent, ChangeEvent } from 'react';
 
-import { UploadCloud, X, AlertCircle } from 'lucide-react';
+import { UploadCloud, X, AlertCircle, Loader2 } from 'lucide-react';
 import { PiFilePdfLight, PiFileTxtLight, PiFile } from 'react-icons/pi';
 
 import { Button } from '../ui/button';
@@ -8,7 +8,7 @@ import { Button } from '../ui/button';
 import TooltipWrapper from './tooltipWrapper';
 
 interface FileUploadProps {
-	onFilesUpload: (files: File[]) => void;
+	onFilesUpload: (files: File[]) => Promise<void>;
 	filesUploadLabel?: string;
 	acceptedFileTypes?: string; // e.g. ".txt,.pdf"
 	maxFileSize?: number; // in bytes
@@ -29,6 +29,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 	const [isDragging, setIsDragging] = useState(false);
 	const [files, setFiles] = useState<FileWithProgress[]>([]);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [isUploading, setIsUploading] = useState(false);
 
 	const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
@@ -193,27 +194,34 @@ const FileUpload: React.FC<FileUploadProps> = ({
 		);
 	};
 
-	const renderHeader = () => {
+	const renderGenerateButton = () => {
+		const handleFileUpload = async () => {
+			setIsUploading(true);
+
+			await onFilesUpload(files.filter((file) => !file.error));
+
+			setIsUploading(false);
+		};
+
 		return (
-			<div className='w-full mb-4 flex items-center justify-between'>
-				<div className='text-lg'>Upload files</div>
-				<Button
-					onClick={() => {
-						onFilesUpload(files.filter((file) => !file.error));
-					}}
-					disabled={files.length === 0}
-				>
-					{filesUploadLabel}
-				</Button>
-			</div>
+			<Button
+				className='w-full mt-4'
+				onClick={handleFileUpload}
+				disabled={files.length === 0 || isUploading}
+			>
+				{isUploading && (
+					<Loader2 className='w-4 h-4 mr-2 animate-spin' />
+				)}
+				{!isUploading && filesUploadLabel}
+			</Button>
 		);
 	};
 
 	return (
 		<div className='w-full h-full flex flex-col gap-2'>
-			{renderHeader()}
 			{renderUploadFilePlaceholder()}
 			{renderFiles()}
+			{renderGenerateButton()}
 		</div>
 	);
 };
