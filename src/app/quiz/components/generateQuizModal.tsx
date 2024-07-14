@@ -54,7 +54,12 @@ const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
 	const renderModalFooter = () => {
 		return (
 			<div className='flex items-center gap-1'>
-				<Button onClick={() => setIsModalOpen(false)}>Close</Button>
+				<Button
+					variant='secondary'
+					onClick={() => setIsModalOpen(false)}
+				>
+					Close
+				</Button>
 			</div>
 		);
 	};
