@@ -1,9 +1,16 @@
-import React, { Dispatch, Fragment, SetStateAction } from 'react';
+import React, {
+	Dispatch,
+	Fragment,
+	SetStateAction,
+	useMemo,
+	useState,
+} from 'react';
 
-import { LoadingOverlay } from '@/components/shared';
+import { LoadingOverlay, SearchBar } from '@/components/shared';
 import { Quiz } from '@/db/schema';
 
 import QuizCard from './quizCard';
+import { useDebouncedState } from '@/hooks';
 
 type Props = {
 	quizzes: Quiz[];
@@ -18,6 +25,26 @@ const QuizzesSection = ({
 	selectedQuiz,
 	setSelectedQuiz,
 }: Props) => {
+	const [searchQuery, setSearchQuery] = useState('');
+
+	const debouncedSearchQuery = useDebouncedState(searchQuery);
+
+	const filteredQuizzes = useMemo(() => {
+		if (debouncedSearchQuery === '') return quizzes;
+
+		return quizzes.filter((quiz) =>
+			quiz.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+		);
+	}, [quizzes, debouncedSearchQuery]);
+
+	const renderSearchBar = () => {
+		return (
+			<div className='w-full h-[5rem] flex-shrink-0 flex items-center justify-center'>
+				<SearchBar setSearchQuery={setSearchQuery} />
+			</div>
+		);
+	};
+
 	const renderQuizzes = () => {
 		if (isQuizzesLoading) {
 			return <LoadingOverlay label='Loading quizzes...' />;
@@ -30,9 +57,9 @@ const QuizzesSection = ({
 		};
 
 		return (
-			<div className='w-full h-[calc(100dvh_-_8rem)] overflow-auto'>
+			<div className='w-full flex-grow overflow-auto'>
 				<div className='grid grid-cols-card-auto-fill-minmax gap-3 '>
-					{quizzes.map((quiz) => (
+					{filteredQuizzes.map((quiz) => (
 						<Fragment key={quiz.id}>
 							<QuizCard
 								quiz={quiz}
@@ -47,7 +74,8 @@ const QuizzesSection = ({
 	};
 
 	return (
-		<div className='w-full h-full p-4 box-border relative flex flex-col items-center justify-start'>
+		<div className='w-full h-full outline p-4 box-border relative flex flex-col items-center gap-2'>
+			{renderSearchBar()}
 			{renderQuizzes()}
 		</div>
 	);

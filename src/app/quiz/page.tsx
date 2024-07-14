@@ -23,11 +23,13 @@ export default function QuizPage() {
 	const renderResizeBar = (horizontal?: boolean) => {
 		return (
 			<ResizableHandle
+				disabled
 				className={clsx(
 					'bg-transparent rounded-full hover:bg-primary/30 flex items-center justify-center',
 					{
 						'min-h-[0.3rem] my-[0.15rem]': horizontal,
 						'min-w-[0.3rem] mx-[0.15rem]': !horizontal,
+						'pointer-events-none': true, // disabled for now
 					}
 				)}
 			/>
@@ -39,8 +41,8 @@ export default function QuizPage() {
 			<ResizablePanelGroup direction='horizontal'>
 				<ResizablePanel
 					defaultSize={35}
-					minSize={25}
-					className='border rounded-lg bg-card min-w-[16rem]'
+					// minSize={25}
+					className='border rounded-lg bg-card min-w-[30rem] h-[calc(100dvh_-_6rem)]'
 				>
 					<ConfigSection
 						quizzes={quizzes}
@@ -54,8 +56,8 @@ export default function QuizPage() {
 
 				<ResizablePanel
 					defaultSize={65}
-					minSize={30}
-					className='border rounded-lg bg-card min-w-[20rem]'
+					// minSize={30}
+					className='border rounded-lg bg-card min-w-[35rem] h-[calc(100dvh_-_6rem)]'
 				>
 					<QuizzesSection
 						quizzes={quizzes}

@@ -9,6 +9,7 @@ import LogInLogOutButton from './logInLogOutButton';
 import Logo from './logo';
 import Modal from './modal';
 import RenameModal from './renameModal';
+import SearchBar from './searchBar';
 import SocialNetworkLogin from './socialNetworkLogin';
 import Switch from './switch';
 import ThemeToggle from './themeToggle';
@@ -27,6 +28,7 @@ export {
 	Logo,
 	Modal,
 	RenameModal,
+	SearchBar,
 	SocialNetworkLogin,
 	Switch,
 	ThemeToggle,

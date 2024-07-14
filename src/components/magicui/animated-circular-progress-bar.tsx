@@ -1,8 +1,10 @@
+import clsx from 'clsx';
+
 import { cn } from '@/lib/utils';
 
 export enum CircleProgressBarSize {
 	small = 28,
-	medium = 32,
+	medium = '8rem',
 	large = 40,
 }
 
@@ -33,9 +35,13 @@ export default function AnimatedCircularProgressBar({
 
 	return (
 		<div
-			className={cn(
-				`relative size-${size} text-2xl font-semibold`,
-				className
+			className={clsx(
+				cn('relative size-32 text-2xl font-semibold', className),
+				{
+					'size-28': size === CircleProgressBarSize.small,
+					'size-32': size === CircleProgressBarSize.medium,
+					'size-40': size === CircleProgressBarSize.large,
+				}
 			)}
 			style={
 				{

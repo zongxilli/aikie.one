@@ -268,7 +268,7 @@ const ChatSessions = ({
 		};
 
 		return (
-			<div className='w-full h-[calc(100dvh_-_8rem)] flex flex-col gap-4'>
+			<div className='w-full h-full flex flex-col gap-4'>
 				{renderTopBar()}
 				{renderModelConfigs()}
 				{renderSessions()}
