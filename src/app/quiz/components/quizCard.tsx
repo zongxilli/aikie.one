@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 import {
@@ -40,9 +40,9 @@ type Props = {
 	selected: boolean;
 };
 
-const QuizCard = ({ quiz, onClick, selected }: Props) => {
+const QuizCard: React.FC<Props> = React.memo(({ quiz, onClick, selected }) => {
 	const { toast } = useToast();
-	const { user } = useUserStore((state) => state);
+	const user = useUserStore((state) => state.user);
 
 	const [showRenameQuizModal, setShowRenameQuizModal] = useState(false);
 	const [showDeleteQuizModal, setShowDeleteQuizModal] = useState(false);
@@ -52,38 +52,40 @@ const QuizCard = ({ quiz, onClick, selected }: Props) => {
 		[quiz]
 	);
 
-	const handleDeleteQuiz = () => {
-		if (user?.id) deleteQuiz(quiz.id, user.id);
+	const handleDeleteQuiz = useCallback(() => {
+		if (user?.id) {
+			deleteQuiz(quiz.id, user.id);
+			toast({
+				variant: 'destructive',
+				title: 'Quiz deleted',
+				description: 'This quiz has been deleted permanently',
+			});
+		}
+	}, [user?.id, quiz.id, toast]);
 
-		toast({
-			variant: 'destructive',
-			title: 'Quiz deleted',
-			description: 'This quiz has been deleted permanently',
-		});
-	};
+	const handleRename = useCallback(
+		async (newName: string) => {
+			if (!user?.id) return;
+			await updateQuizName(quiz.id, user.id, newName);
+			toast({
+				variant: 'success',
+				title: 'Quiz renamed',
+				description: 'This quiz has been successfully renamed',
+			});
+		},
+		[user?.id, quiz.id, toast]
+	);
 
-	const handleRename = async (newName: string) => {
-		if (!user?.id) return;
-
-		await updateQuizName(quiz.id, user.id, newName);
-
-		toast({
-			variant: 'success',
-			title: 'Quiz renamed',
-			description: 'This quiz has been successfully renamed',
-		});
-	};
-
-	const renderDropdownMenuItem = (
-		Icon: LucideIcon,
-		label: string,
-		onClickHandler: () => void,
-		warning?: boolean
-	) => {
-		return (
+	const renderDropdownMenuItem = useCallback(
+		(
+			Icon: LucideIcon,
+			label: string,
+			onClickHandler: () => void,
+			warning?: boolean
+		) => (
 			<DropdownMenuItem
 				className={clsx('flex items-center gap-2 cursor-pointer', {
-					' text-red-600': warning,
+					'text-red-600': warning,
 				})}
 				onClick={onClickHandler}
 				key={label}
@@ -91,16 +93,17 @@ const QuizCard = ({ quiz, onClick, selected }: Props) => {
 				<Icon className='w-3 h-3' />
 				{label}
 			</DropdownMenuItem>
-		);
-	};
+		),
+		[]
+	);
 
-	const renderDropdownMenuItems = () => {
-		return (
+	const renderDropdownMenuItems = useCallback(
+		() => (
 			<>
 				{renderDropdownMenuItem(
 					SquareArrowOutUpRight,
 					'Start quiz',
-					() => {},
+					onClick,
 					false
 				)}
 				{renderDropdownMenuItem(
@@ -116,22 +119,24 @@ const QuizCard = ({ quiz, onClick, selected }: Props) => {
 					true
 				)}
 			</>
-		);
-	};
+		),
+		[onClick, renderDropdownMenuItem]
+	);
 
-	const renderRenameQuizModal = () => {
-		return (
+	const renderRenameQuizModal = useCallback(
+		() => (
 			<RenameModal
 				showModal={showRenameQuizModal}
 				setShowModal={setShowRenameQuizModal}
 				onConfirm={handleRename}
 				initialValue={quiz.name}
 			/>
-		);
-	};
+		),
+		[showRenameQuizModal, handleRename, quiz.name]
+	);
 
-	const renderDeleteQuizModal = () => {
-		return (
+	const renderDeleteQuizModal = useCallback(
+		() => (
 			<AlertDialog
 				open={showDeleteQuizModal}
 				onOpenChange={setShowDeleteQuizModal}
@@ -151,23 +156,11 @@ const QuizCard = ({ quiz, onClick, selected }: Props) => {
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
-		);
-	};
+		),
+		[showDeleteQuizModal, handleDeleteQuiz]
+	);
 
-	const renderDropdownMenu = () => {
-		return (
-			<DropdownMenu>
-				<DropdownMenuTrigger>
-					<EllipsisVerticalIcon size={20} />
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					{renderDropdownMenuItems()}
-				</DropdownMenuContent>
-			</DropdownMenu>
-		);
-	};
-
-	const renderDetailsProgressBar = () => {
+	const renderDetailsProgressBar = useMemo(() => {
 		const { easy, medium, hard, total } = difficultyCounts;
 		const easyWidth = (easy / total) * 100;
 		const mediumWidth = (medium / total) * 100;
@@ -189,7 +182,7 @@ const QuizCard = ({ quiz, onClick, selected }: Props) => {
 				/>
 			</div>
 		);
-	};
+	}, [difficultyCounts]);
 
 	return (
 		<>
@@ -204,15 +197,24 @@ const QuizCard = ({ quiz, onClick, selected }: Props) => {
 				<div className='py-2 px-4 box-border w-full'>
 					<div className='flex items-center justify-between gap-2'>
 						<div className='text-md text-one-line'>{quiz.name}</div>
-						{renderDropdownMenu()}
+						<DropdownMenu>
+							<DropdownMenuTrigger>
+								<EllipsisVerticalIcon size={20} />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent>
+								{renderDropdownMenuItems()}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				</div>
-				{renderDetailsProgressBar()}
+				{renderDetailsProgressBar}
 			</Card>
 			{renderRenameQuizModal()}
 			{renderDeleteQuizModal()}
 		</>
 	);
-};
+});
+
+QuizCard.displayName = 'QuizCard';
 
 export default QuizCard;
