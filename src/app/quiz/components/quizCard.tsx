@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 import {
@@ -32,18 +32,25 @@ import { deleteQuiz, updateQuizName } from '@/db/queries-quizzes';
 import { Quiz } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 
+import { quizUtils } from '../../../../utils/quiz';
+
 type Props = {
 	quiz: Quiz;
 	onClick: () => void;
-	selectedQuiz: Quiz | null;
+	selected: boolean;
 };
 
-const QuizCard = ({ quiz, onClick, selectedQuiz }: Props) => {
+const QuizCard = ({ quiz, onClick, selected }: Props) => {
 	const { toast } = useToast();
 	const { user } = useUserStore((state) => state);
 
 	const [showRenameQuizModal, setShowRenameQuizModal] = useState(false);
 	const [showDeleteQuizModal, setShowDeleteQuizModal] = useState(false);
+
+	const difficultyCounts = useMemo(
+		() => quizUtils.getQuizDifficultyCounts(quiz),
+		[quiz]
+	);
 
 	const handleDeleteQuiz = () => {
 		if (user?.id) deleteQuiz(quiz.id, user.id);
@@ -160,13 +167,37 @@ const QuizCard = ({ quiz, onClick, selectedQuiz }: Props) => {
 		);
 	};
 
+	const renderDetailsProgressBar = () => {
+		const { easy, medium, hard, total } = difficultyCounts;
+		const easyWidth = (easy / total) * 100;
+		const mediumWidth = (medium / total) * 100;
+		const hardWidth = (hard / total) * 100;
+
+		return (
+			<div className='w-full h-[0.15rem] flex absolute left-0 bottom-0'>
+				<div
+					style={{ width: `${easyWidth}%` }}
+					className='h-full bg-green-500'
+				/>
+				<div
+					style={{ width: `${mediumWidth}%` }}
+					className='h-full bg-yellow-500'
+				/>
+				<div
+					style={{ width: `${hardWidth}%` }}
+					className='h-full bg-red-500'
+				/>
+			</div>
+		);
+	};
+
 	return (
 		<>
 			<Card
 				key={quiz.id}
 				className={clsx(
-					'w-full h-32 flex flex-col items-start gap-1 cursor-pointer box-border hover:border-primary',
-					{ 'border-primary': selectedQuiz?.id === quiz.id }
+					'w-full h-32 flex flex-col items-start gap-1 cursor-pointer box-border hover:border-primary relative overflow-hidden',
+					{ 'border-primary': selected }
 				)}
 				onClick={onClick}
 			>
@@ -176,6 +207,7 @@ const QuizCard = ({ quiz, onClick, selectedQuiz }: Props) => {
 						{renderDropdownMenu()}
 					</div>
 				</div>
+				{renderDetailsProgressBar()}
 			</Card>
 			{renderRenameQuizModal()}
 			{renderDeleteQuizModal()}

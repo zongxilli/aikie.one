@@ -8,9 +8,9 @@ import React, {
 
 import { LoadingOverlay, SearchBar } from '@/components/shared';
 import { Quiz } from '@/db/schema';
+import { useDebouncedState } from '@/hooks';
 
 import QuizCard from './quizCard';
-import { useDebouncedState } from '@/hooks';
 
 type Props = {
 	quizzes: Quiz[];
@@ -63,7 +63,7 @@ const QuizzesSection = ({
 						<Fragment key={quiz.id}>
 							<QuizCard
 								quiz={quiz}
-								selectedQuiz={selectedQuiz}
+								selected={selectedQuiz?.id === quiz.id}
 								onClick={() => handleSelectQuiz(quiz)}
 							/>
 						</Fragment>
