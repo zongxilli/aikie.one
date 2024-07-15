@@ -33,6 +33,7 @@ import { Quiz } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 
 import { quizUtils } from '../../../../utils/quiz';
+import { formatUtils } from '../../../../utils/format';
 
 type Props = {
 	quiz: Quiz;
@@ -167,7 +168,7 @@ const QuizCard: React.FC<Props> = React.memo(({ quiz, onClick, selected }) => {
 		const hardWidth = (hard / total) * 100;
 
 		return (
-			<div className='w-full h-[0.15rem] flex absolute left-0 bottom-0'>
+			<div className='w-full h-1 flex absolute left-0 bottom-0'>
 				<div
 					style={{ width: `${easyWidth}%` }}
 					className='h-full bg-green-500'
@@ -189,13 +190,13 @@ const QuizCard: React.FC<Props> = React.memo(({ quiz, onClick, selected }) => {
 			<Card
 				key={quiz.id}
 				className={clsx(
-					'w-full h-32 flex flex-col items-start gap-1 cursor-pointer box-border hover:border-primary relative overflow-hidden',
+					'w-full h-32 flex flex-col items-start gap-1 cursor-pointer box-border border-2 hover:border-primary relative overflow-hidden',
 					{ 'border-primary': selected }
 				)}
 				onClick={onClick}
 			>
-				<div className='py-2 px-4 box-border w-full'>
-					<div className='flex items-center justify-between gap-2'>
+				<div className='py-2 px-4 box-border w-full h-full flex flex-col justify-between items-start'>
+					<div className='w-full flex items-center justify-between gap-2'>
 						<div className='text-md text-one-line'>{quiz.name}</div>
 						<DropdownMenu>
 							<DropdownMenuTrigger>
@@ -205,6 +206,10 @@ const QuizCard: React.FC<Props> = React.memo(({ quiz, onClick, selected }) => {
 								{renderDropdownMenuItems()}
 							</DropdownMenuContent>
 						</DropdownMenu>
+					</div>
+
+					<div className='text-sm text-foreground/70 mb-1'>
+						Create at {formatUtils.formatDate(quiz.created_at)}
 					</div>
 				</div>
 				{renderDetailsProgressBar}

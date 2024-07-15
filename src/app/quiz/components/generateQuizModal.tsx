@@ -1,8 +1,9 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { FileUpload, Modal } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { useUserStore } from '@/providers/user';
+import { Slider } from '@/components/ui/slider';
 
 type Props = {
 	isModalOpen: boolean;
@@ -12,6 +13,8 @@ type Props = {
 const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
 	const { user, isLoading, error } = useUserStore((state) => state);
 
+	const [questionCount, setQuestionCount] = useState(10);
+
 	const renderUploadInput = () => {
 		const handleGenerateQuiz = async (files: File[]) => {
 			const file = files[0];
@@ -20,7 +23,7 @@ const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('userId', user?.id);
-			formData.append('questionCount', '7');
+			formData.append('questionCount', questionCount.toString());
 
 			try {
 				const response = await fetch('/api/quiz/generate-ai-response', {
@@ -64,6 +67,25 @@ const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
 		);
 	};
 
+	const renderQuizCountSlider = () => {
+		return (
+			<div className='w-full flex items-center justify-between mb-4 gap-20'>
+				<div className='text-base flex-shrink-0 w-24 text-end'>
+					{questionCount} Questions
+				</div>
+				<Slider
+					id='temperature-slider'
+					min={0}
+					max={20}
+					step={1}
+					value={[questionCount]}
+					onValueChange={(value) => setQuestionCount(value[0])}
+					className='cursor-pointer'
+				/>
+			</div>
+		);
+	};
+
 	return (
 		<Modal
 			isOpen={isModalOpen}
@@ -71,6 +93,7 @@ const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
 			title='Generate quiz'
 			footer={renderModalFooter()}
 		>
+			{renderQuizCountSlider()}
 			{renderUploadInput()}
 		</Modal>
 	);

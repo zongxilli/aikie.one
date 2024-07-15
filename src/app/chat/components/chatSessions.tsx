@@ -16,13 +16,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
 import {
 	deleteChatSession,
 	updateChatSessionName,
 } from '@/db/queries-chat-sessions';
 import { ChatSession } from '@/db/schema';
-import { useUserStore } from '@/providers/user';
 import { AIProvider, getAIModel } from '@/types/AI';
 
 import { ModelConfig } from '../page';
@@ -48,9 +46,6 @@ const ChatSessions = ({
 	modelConfig,
 	setModelConfig,
 }: Props) => {
-	const { toast } = useToast();
-	const { user } = useUserStore((state) => state);
-
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [editingName, setEditingName] = useState('');
 

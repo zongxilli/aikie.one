@@ -16,7 +16,8 @@ export const config = {
 export async function POST(req: NextRequest) {
 	const body = await req.formData();
 	const file = body.get('file');
-	const questionCount = parseInt(body.get('questionCount') as string) || 7;
+	const questionCount = parseInt(body.get('questionCount') as string) || 10;
+	console.log({ questionCount });
 	const userId = body.get('userId') as string;
 
 	if (!file || !(file instanceof Blob)) {
