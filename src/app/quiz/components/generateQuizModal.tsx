@@ -6,6 +6,7 @@ import { Slider } from '@/components/ui/slider';
 import { Quiz } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 
+import GeneratingPlaceholder from './generatingPlaceholder';
 import GeneratedQuestions from './tooltips/generateQuestions';
 
 type Props = {
@@ -22,36 +23,43 @@ const GenerateQuizModal = ({
 	const { user } = useUserStore((state) => state);
 
 	const [questionCount, setQuestionCount] = useState(10);
+	const [isGenerating, setIsGenerating] = useState(false);
+
+	const handleGenerateQuiz = async (files: File[]) => {
+		const file = files[0];
+		if (!file || !user?.id) return;
+
+		const formData = new FormData();
+		formData.append('file', file);
+		formData.append('userId', user?.id);
+		formData.append('questionCount', questionCount.toString());
+
+		try {
+			setIsGenerating(true);
+
+			const response = await fetch('/api/quiz/generate-ai-response', {
+				method: 'POST',
+				body: formData,
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const res = await response.json();
+			setIsGenerating(false);
+
+			if (res.quiz) {
+				setSelectedQuiz(res.quiz);
+				setIsModalOpen(false);
+			}
+		} catch (error) {
+			console.error('Error generating quiz:', error);
+		}
+	};
 
 	const renderUploadInput = () => {
-		const handleGenerateQuiz = async (files: File[]) => {
-			const file = files[0];
-			if (!file || !user?.id) return;
-
-			const formData = new FormData();
-			formData.append('file', file);
-			formData.append('userId', user?.id);
-			formData.append('questionCount', questionCount.toString());
-
-			try {
-				const response = await fetch('/api/quiz/generate-ai-response', {
-					method: 'POST',
-					body: formData,
-				});
-
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-
-				const res = await response.json();
-				if (res.quiz) {
-					setSelectedQuiz(res.quiz);
-					setIsModalOpen(false);
-				}
-			} catch (error) {
-				console.error('Error generating quiz:', error);
-			}
-		};
+		if (isGenerating) return <GeneratingPlaceholder />;
 
 		return (
 			<FileUpload
@@ -78,6 +86,8 @@ const GenerateQuizModal = ({
 	};
 
 	const renderQuizCountSlider = () => {
+		if (isGenerating) return null;
+
 		return (
 			<div className='w-full flex items-center justify-between mb-4 gap-20'>
 				<div className='text-base flex-shrink-0 w-24 text-end'>
