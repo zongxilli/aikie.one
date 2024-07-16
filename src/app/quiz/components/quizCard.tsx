@@ -209,7 +209,10 @@ const QuizCard: React.FC<Props> = React.memo(({ quiz, onClick, selected }) => {
 					</div>
 
 					<div className='text-sm text-foreground/70 mb-1'>
-						Create at {formatUtils.formatDate(quiz.created_at)}
+						Create at{' '}
+						{formatUtils.formatDateTime(quiz.created_at, {
+							includeTime: false,
+						})}
 					</div>
 				</div>
 				{renderDetailsProgressBar}

@@ -186,10 +186,21 @@ export async function POST(req: NextRequest) {
 
 		const result = (await runnable.invoke([message])) as { quiz: NewQuiz };
 
-		// 分配分数
-		const questions = result.quiz.questions;
+		// 在处理 AI 返回的结果时，override题目类型,确保正确
+		const questions = result.quiz.questions.map((question) => {
+			// 检查答案中是否只有一个正确答案
+			const correctAnswersCount = question.answers.filter(
+				(a) => a.isCorrect
+			).length;
 
-		// 在处理 AI 返回的结果时，计算总时间
+			return {
+				...question,
+				type:
+					correctAnswersCount > 1 ? 'MultipleChoice' : 'SingleChoice',
+			};
+		});
+
+		// 在处理 AI 返回的结果时，override题目时间和总时间，确保正确
 		let totalTime = 0;
 		questions.forEach((question) => {
 			const suggestedTime =

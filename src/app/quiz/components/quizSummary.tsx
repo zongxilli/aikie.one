@@ -1,8 +1,16 @@
+import { useCallback, useMemo } from 'react';
+
+import clsx from 'clsx';
+
 import AnimatedCircularProgressBar, {
 	CircleProgressBarSize,
 } from '@/components/magicui/animated-circular-progress-bar';
+import { CollapsiblePanels } from '@/components/shared';
+import { Badge } from '@/components/ui/badge';
 import { Quiz } from '@/db/schema';
+import { QuizQuestion } from '@/types/quiz';
 
+import { formatUtils } from '../../../../utils/format';
 import { quizUtils } from '../../../../utils/quiz';
 
 type Props = {
@@ -10,16 +18,19 @@ type Props = {
 };
 
 const QuizSummary = ({ selectedQuiz }: Props) => {
-	const { easy, medium, hard, total } =
-		quizUtils.getQuizDifficultyCounts(selectedQuiz);
+	const { easy, medium, hard, total } = useMemo(
+		() => quizUtils.getQuizDifficultyCounts(selectedQuiz),
+		[selectedQuiz]
+	);
 
-	const renderDifficultyCharts = () => {
+	const renderDifficultyCharts = useCallback(() => {
 		const renderChart = (
 			color: string,
 			label: string,
 			value: number = 0
 		) => (
 			<AnimatedCircularProgressBar
+				key={label}
 				max={selectedQuiz !== null ? total : 100}
 				min={0}
 				value={value}
@@ -37,9 +48,92 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 				{renderChart('#E11D48', 'Hard', hard)}
 			</div>
 		);
-	};
+	}, [selectedQuiz, total, easy, medium, hard]);
 
-	return <div>{renderDifficultyCharts()}</div>;
+	const renderQuizInfo = useCallback(() => {
+		if (!selectedQuiz) return null;
+
+		const renderQuestionTitle = (question: QuizQuestion) => {
+			return (
+				<div className='text-sm text-foreground/60 w-full text-start'>
+					{question.questionText}
+					{question.type === 'MultipleChoice' && (
+						<Badge className='ml-2 font-extralight'>Multiple</Badge>
+					)}
+				</div>
+			);
+		};
+
+		const renderQuestionContent = (question: QuizQuestion) => {
+			return (
+				<div>
+					{question.answers.map((a) => (
+						<div
+							className={clsx('', {
+								'text-foreground/80': !a.isCorrect,
+								'text-green-500': a.isCorrect,
+							})}
+							key={a.answerText}
+						>
+							{a.answerText}
+						</div>
+					))}
+				</div>
+			);
+		};
+
+		return (
+			<div className='w-full flex flex-col gap-6'>
+				<div className='w-full flex items-start justify-between'>
+					<div>Name</div>
+					<div className='text-foreground/60'>
+						{selectedQuiz.name}
+					</div>
+				</div>
+
+				<div className='w-full flex items-start justify-between'>
+					<div>Total questions</div>
+					<div className='text-foreground/60'>
+						{selectedQuiz.questions.length}
+					</div>
+				</div>
+
+				<div className='w-full flex items-start justify-between'>
+					<div className=''>Created at</div>
+					<div className='text-foreground/60'>
+						{formatUtils.formatDateTime(selectedQuiz?.created_at)}
+					</div>
+				</div>
+
+				<div className='w-full flex items-start justify-between gap-20'>
+					<div>Description</div>
+					<div className='text-foreground/60'>
+						{selectedQuiz.description}
+					</div>
+				</div>
+
+				<div className='w-full'>
+					<div>Questions</div>
+					<div>
+						<CollapsiblePanels
+							items={selectedQuiz.questions.map((q) => ({
+								key: q.questionText,
+								title: renderQuestionTitle(q),
+								content: renderQuestionContent(q),
+							}))}
+						/>
+					</div>
+				</div>
+			</div>
+		);
+	}, [selectedQuiz]);
+
+	return (
+		<div className=''>
+			{renderDifficultyCharts()}
+			{renderQuizInfo()}
+		</div>
+	);
 };
 
 export default QuizSummary;

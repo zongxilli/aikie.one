@@ -50,7 +50,11 @@ const ConfigSection = ({
 	);
 
 	const renderQuizSummary = () => {
-		return <QuizSummary selectedQuiz={selectedQuiz} />;
+		return (
+			<div className='flex-grow p-6 min-h-0 overflow-scroll'>
+				<QuizSummary selectedQuiz={selectedQuiz} />
+			</div>
+		);
 	};
 
 	return (

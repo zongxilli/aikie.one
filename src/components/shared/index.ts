@@ -1,10 +1,11 @@
 import AIResponseRenderer from './AIResponseRenderer';
+import CollapsiblePanels from './collapsiblePanels';
 import Dashboard from './dashboard';
 import Dashboard2 from './dashboard2';
 import FileUpload from './fileUpload';
 import Header from './header';
 import LoadingOverlay from './loadingOverlay';
-import LoadingWrapper from './LoadingWrapper';
+import LoadingWrapper from './loadingWrapper';
 import LogInLogOutButton from './logInLogOutButton';
 import Logo from './logo';
 import Modal from './modal';
@@ -18,6 +19,7 @@ import UserProfileButton from './userProfileButton';
 
 export {
 	AIResponseRenderer,
+	CollapsiblePanels,
 	Dashboard,
 	Dashboard2,
 	FileUpload,
