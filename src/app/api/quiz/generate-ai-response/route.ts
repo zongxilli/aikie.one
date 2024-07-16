@@ -249,8 +249,7 @@ export async function POST(req: NextRequest) {
 		// 返回生成的 quiz 和数据库 ID
 		return NextResponse.json(
 			{
-				quiz: result.quiz,
-				dbId: insertedQuiz.id,
+				quiz: insertedQuiz,
 			},
 			{ status: 200 }
 		);

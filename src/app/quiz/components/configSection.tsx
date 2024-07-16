@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { FileUpload } from '@/components/shared';
+import { Plus } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import { Quiz } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 
-import QuizSummary from './quizSummary';
-import { Button } from '@/components/ui/button';
 import GenerateQuizModal from './generateQuizModal';
-import { Plus } from 'lucide-react';
+import QuizSummary from './quizSummary';
 
 type Props = {
 	quizzes: Quiz[];
@@ -45,6 +45,7 @@ const ConfigSection = ({
 		<GenerateQuizModal
 			isModalOpen={showGenerateQuizModal}
 			setIsModalOpen={setShowGenerateQuizModal}
+			setSelectedQuiz={setSelectedQuiz}
 		/>
 	);
 

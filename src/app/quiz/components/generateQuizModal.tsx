@@ -2,15 +2,21 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { FileUpload, Modal } from '@/components/shared';
 import { Button } from '@/components/ui/button';
-import { useUserStore } from '@/providers/user';
 import { Slider } from '@/components/ui/slider';
+import { Quiz } from '@/db/schema';
+import { useUserStore } from '@/providers/user';
 
 type Props = {
 	isModalOpen: boolean;
 	setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+	setSelectedQuiz: Dispatch<SetStateAction<Quiz | null>>;
 };
 
-const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
+const GenerateQuizModal = ({
+	isModalOpen,
+	setIsModalOpen,
+	setSelectedQuiz,
+}: Props) => {
 	const { user, isLoading, error } = useUserStore((state) => state);
 
 	const [questionCount, setQuestionCount] = useState(10);
@@ -35,8 +41,12 @@ const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 
-				const result = await response.json();
-				console.log('Generated quiz:', result);
+				const res = await response.json();
+				if (res.quiz) {
+					setSelectedQuiz(res.quiz);
+					setIsModalOpen(false);
+				}
+				console.log('Generated quiz:', res.quiz);
 				// 处理生成的测验数据...
 			} catch (error) {
 				console.error('Error generating quiz:', error);
@@ -49,7 +59,7 @@ const GenerateQuizModal = ({ isModalOpen, setIsModalOpen }: Props) => {
 				filesUploadLabel='Generate'
 				acceptedFileTypes='.txt,.pdf'
 				maxFileSize={10 * 1024 * 1024} // 10MB
-				maxFiles={5}
+				maxFiles={1}
 			/>
 		);
 	};
