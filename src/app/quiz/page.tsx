@@ -12,7 +12,7 @@ import {
 import { Quiz } from '@/db/schema';
 import { useRealtimeQuizzes } from '@/db/supabase-subscriptions/useRealtimeQuizzes';
 
-import ConfigSection from './components/configSection';
+import InfoSection from './components/infoSection';
 import QuizzesSection from './components/quizzesSection';
 
 export default function QuizPage() {
@@ -44,7 +44,7 @@ export default function QuizPage() {
 					// minSize={25}
 					className='border rounded-lg bg-card min-w-[30rem] h-[calc(100dvh_-_6rem)]'
 				>
-					<ConfigSection
+					<InfoSection
 						quizzes={quizzes}
 						isQuizzesLoading={isQuizzesLoading}
 						selectedQuiz={selectedQuiz}

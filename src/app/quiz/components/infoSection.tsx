@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { Plus } from 'lucide-react';
 
@@ -16,15 +16,25 @@ type Props = {
 	setSelectedQuiz: Dispatch<SetStateAction<Quiz | null>>;
 };
 
-const ConfigSection = ({
+const InfoSection = ({
 	quizzes,
 	isQuizzesLoading,
 	selectedQuiz,
 	setSelectedQuiz,
 }: Props) => {
 	const { user, isLoading, error } = useUserStore((state) => state);
+	const summarySectionRef = useRef<HTMLDivElement>(null);
 
 	const [showGenerateQuizModal, setShowGenerateQuizModal] = useState(false);
+
+	useEffect(() => {
+		if (selectedQuiz && summarySectionRef.current) {
+			summarySectionRef.current.scrollTo({
+				top: 0,
+				behavior: 'smooth',
+			});
+		}
+	}, [selectedQuiz]);
 
 	const renderSectionHeader = () => {
 		return (
@@ -51,7 +61,10 @@ const ConfigSection = ({
 
 	const renderQuizSummary = () => {
 		return (
-			<div className='flex-grow p-6 min-h-0 overflow-scroll'>
+			<div
+				className='flex-grow p-6 min-h-0 overflow-scroll'
+				ref={summarySectionRef}
+			>
 				<QuizSummary selectedQuiz={selectedQuiz} />
 			</div>
 		);
@@ -66,4 +79,4 @@ const ConfigSection = ({
 	);
 };
 
-export default ConfigSection;
+export default InfoSection;
