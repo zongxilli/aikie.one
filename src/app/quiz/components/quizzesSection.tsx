@@ -6,11 +6,26 @@ import React, {
 	useState,
 } from 'react';
 
+import {
+	ArrowDownNarrowWide,
+	ArrowDownUp,
+	ArrowDownWideNarrow,
+	ArrowUpDown,
+	MoveDown,
+	MoveUp,
+} from 'lucide-react';
+
 import { LoadingOverlay, SearchBar } from '@/components/shared';
+import { Button } from '@/components/ui/button';
 import { Quiz } from '@/db/schema';
 import { useDebouncedState } from '@/hooks';
 
 import QuizCard from './quizCard';
+
+enum SortDirection {
+	asc,
+	desc,
+}
 
 type Props = {
 	quizzes: Quiz[];
@@ -26,21 +41,52 @@ const QuizzesSection = ({
 	setSelectedQuiz,
 }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [sortDirection, setSortDirection] = useState<SortDirection>(
+		SortDirection.asc
+	);
 
 	const debouncedSearchQuery = useDebouncedState(searchQuery);
 
 	const filteredQuizzes = useMemo(() => {
-		if (debouncedSearchQuery === '') return quizzes;
+		const sortedQuizzes = quizzes.sort((a, b) => {
+			const dateA = new Date(a.created_at).getTime();
+			const dateB = new Date(b.created_at).getTime();
+			return sortDirection === SortDirection.asc
+				? dateA - dateB
+				: dateB - dateA;
+		});
 
-		return quizzes.filter((quiz) =>
+		if (debouncedSearchQuery === '') return sortedQuizzes;
+
+		return sortedQuizzes.filter((quiz) =>
 			quiz.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
 		);
-	}, [quizzes, debouncedSearchQuery]);
+	}, [quizzes, debouncedSearchQuery, sortDirection]);
 
 	const renderSearchBar = () => {
+		const handleSortDirectionChange = () => {
+			setSortDirection((state) =>
+				state === SortDirection.asc
+					? SortDirection.desc
+					: SortDirection.asc
+			);
+		};
+
+		const DirectionIcon =
+			sortDirection === SortDirection.asc ? ArrowUpDown : ArrowDownUp;
+
 		return (
-			<div className='w-full h-[5rem] flex-shrink-0 flex items-center justify-center'>
-				<SearchBar setSearchQuery={setSearchQuery} />
+			<div className='w-full h-[5rem] flex-shrink-0 flex items-center justify-center gap-4'>
+				<SearchBar value={searchQuery} setValue={setSearchQuery} />
+
+				<Button
+					variant='config'
+					size='config'
+					onClick={handleSortDirectionChange}
+				>
+					<p className='text-sm'>Date created</p>
+					<DirectionIcon className='w-4 h-4 ml-2' />
+				</Button>
 			</div>
 		);
 	};

@@ -2,64 +2,39 @@
 
 import { Dispatch, SetStateAction } from 'react';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { Search } from 'lucide-react';
 
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-
-const formSchema = z.object({
-	query: z.string().min(0).max(200),
-});
+import { cn } from '@/lib/utils';
 
 type SearchBarProps = {
-	setSearchQuery: Dispatch<SetStateAction<string>>;
+	value: string;
+	setValue: Dispatch<SetStateAction<string>>;
+	placeholder?: string;
 
 	disabled?: boolean;
+	className?: string;
 };
 
 const SearchBar = ({
-	setSearchQuery,
+	value,
+	setValue,
+	placeholder = 'Search...',
 
 	disabled,
+	className,
 }: SearchBarProps) => {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			query: '',
-		},
-	});
-
-	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		setSearchQuery(values.query);
-	};
-
 	return (
-		<Form {...form}>
-			<form onChange={form.handleSubmit(onSubmit)}>
-				<FormField
-					control={form.control}
-					name='query'
-					render={({ field }) => (
-						<FormItem className='relative w-[30rem]'>
-							<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-								<SearchIcon className='h-5 w-5 text-gray-500' />
-							</div>
-							<FormControl>
-								<Input
-									{...field}
-									disabled={disabled}
-									placeholder='Search quiz'
-									className='pl-10 rounded-full'
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-			</form>
-		</Form>
+		<div className={cn('h-10 w-80 relative', className)}>
+			<Search className='h-4 w-4 absolute top-0 bottom-0 left-4 m-auto' />
+			<Input
+				disabled={disabled}
+				className='w-full h-full pl-10 rounded-full'
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
+				placeholder={placeholder}
+			/>
+		</div>
 	);
 };
 

@@ -17,9 +17,9 @@ import TooltipWrapper from './tooltipWrapper';
 import UserProfileButton from './userProfileButton';
 
 export {
+	AIResponseRenderer,
 	Dashboard,
 	Dashboard2,
-	AIResponseRenderer,
 	FileUpload,
 	Header,
 	LoadingOverlay,
