@@ -32,8 +32,8 @@ import { deleteQuiz, updateQuizName } from '@/db/queries-quizzes';
 import { Quiz } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 
-import { quizUtils } from '../../../../utils/quiz';
 import { formatUtils } from '../../../../utils/format';
+import { quizUtils } from '../../../../utils/quiz';
 
 type Props = {
 	quiz: Quiz;
