@@ -53,31 +53,37 @@ export async function POST(req: NextRequest) {
 		}
 
 		const prompt = `
-        Given the text which is a summary of the document, generate an engaging and comprehensive quiz based on the content. The quiz should follow this structure:
-
-        1. Create a quiz object with fields: name, description, and questions.
-
-        2. Generate exactly ${questionCount} questions. The questions should be a mix of multiple-choice (with 4 options) and single-choice questions. Each question should have:
-           - The question text
-           - Question type ('MultipleChoice' or 'SingleChoice')
-           - Difficulty level ('Easy', 'Medium', or 'Hard')
-           - An explanation of the correct answer
-           - 4 possible answers for both multiple-choice and single-choice questions
-           - At least one hint (maximum 3 hints)
-           - A suggestedTime to answer the question (in seconds)
-
-        3. Ensure that the questions cover a range of topics from the text and vary in difficulty.
-
-        4. Make the quiz engaging by using a mix of straightforward and thought-provoking questions.
-
-        5. Provide a suggestedTime for each question based on its difficulty and type:
-           - Easy questions: 30-60 seconds
-           - Medium questions: 60-90 seconds
-           - Hard questions: 90-120 seconds
-           - Multiple choice questions should have slightly less time than single choice of the same difficulty
-
-        Return the result as a JSON object.
-    `;
+		IMPORTANT: Generate EXACTLY ${questionCount} questions for this quiz. No more, no less.
+		
+		Given the text which is a summary of the document, generate an engaging and comprehensive quiz based on the content. The quiz should follow this structure:
+		
+		1. Create a quiz object with fields: name, description, and questions.
+		
+		2. Generate EXACTLY ${questionCount} questions. This is crucial. The questions should be a mix of multiple-choice (with 4 options) and single-choice questions. Each question MUST have:
+			 - The question text
+			 - Question type ('MultipleChoice' or 'SingleChoice')
+			 - Difficulty level ('Easy', 'Medium', or 'Hard')
+			 - An explanation of the correct answer
+			 - 4 possible answers for both multiple-choice and single-choice questions
+			 - At least one hint (maximum 3 hints)
+			 - A suggestedTime to answer the question (in seconds)
+		
+		3. Ensure that the questions cover a range of topics from the text and vary in difficulty.
+		
+		4. Make the quiz engaging by using a mix of straightforward and thought-provoking questions.
+		
+		5. Provide a suggestedTime for each question based on its difficulty and type:
+			 - Easy questions: 30-60 seconds
+			 - Medium questions: 60-90 seconds
+			 - Hard questions: 90-120 seconds
+			 - Multiple choice questions should have slightly less time than single choice of the same difficulty
+		
+		6. VERIFICATION STEP: Before finalizing the output, count the number of questions generated. If it's not EXACTLY ${questionCount}, adjust the quiz to meet this requirement.
+		
+		Return the result as a JSON object.
+		
+		FINAL REMINDER: The quiz MUST contain EXACTLY ${questionCount} questions. This is a critical requirement.
+		`;
 
 		if (!process.env.OPENAI_API_KEY) {
 			return NextResponse.json(

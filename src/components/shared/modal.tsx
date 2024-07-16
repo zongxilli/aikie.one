@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
 
+import { CircleHelp } from 'lucide-react';
+
 import {
 	Dialog,
 	DialogContent,
@@ -9,12 +11,15 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog';
 
+import TooltipWrapper from './tooltipWrapper';
+
 interface ModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	title?: string;
+	title: string;
 	description?: string;
 	footer: ReactNode;
+	titleTooltip?: ReactNode;
 	children: ReactNode;
 	className?: string;
 }
@@ -25,6 +30,7 @@ const Modal: React.FC<ModalProps> = ({
 	title,
 	description,
 	footer,
+	titleTooltip,
 	children,
 	className = '',
 }) => {
@@ -32,7 +38,16 @@ const Modal: React.FC<ModalProps> = ({
 		<Dialog open={isOpen} onOpenChange={onClose}>
 			<DialogContent className={`${className}`}>
 				<DialogHeader>
-					{title && <DialogTitle>{title}</DialogTitle>}
+					<DialogTitle>
+						<div className='flex items-center'>
+							{title}
+							{titleTooltip && (
+								<TooltipWrapper tooltip={titleTooltip}>
+									<CircleHelp className='w-4 h-4 ml-2 cursor-pointer' />
+								</TooltipWrapper>
+							)}
+						</div>
+					</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>{description}</DialogDescription>
 				<div className='my-4'>{children}</div>

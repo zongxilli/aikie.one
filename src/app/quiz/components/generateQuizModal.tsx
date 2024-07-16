@@ -6,6 +6,8 @@ import { Slider } from '@/components/ui/slider';
 import { Quiz } from '@/db/schema';
 import { useUserStore } from '@/providers/user';
 
+import GeneratedQuestions from './tooltips/generateQuestions';
+
 type Props = {
 	isModalOpen: boolean;
 	setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -17,7 +19,7 @@ const GenerateQuizModal = ({
 	setIsModalOpen,
 	setSelectedQuiz,
 }: Props) => {
-	const { user, isLoading, error } = useUserStore((state) => state);
+	const { user } = useUserStore((state) => state);
 
 	const [questionCount, setQuestionCount] = useState(10);
 
@@ -46,8 +48,6 @@ const GenerateQuizModal = ({
 					setSelectedQuiz(res.quiz);
 					setIsModalOpen(false);
 				}
-				console.log('Generated quiz:', res.quiz);
-				// 处理生成的测验数据...
 			} catch (error) {
 				console.error('Error generating quiz:', error);
 			}
@@ -102,6 +102,7 @@ const GenerateQuizModal = ({
 			onClose={() => setIsModalOpen(false)}
 			title='Generate quiz'
 			footer={renderModalFooter()}
+			titleTooltip={<GeneratedQuestions />}
 		>
 			{renderQuizCountSlider()}
 			{renderUploadInput()}
