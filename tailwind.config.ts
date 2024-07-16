@@ -50,6 +50,19 @@ const config = {
 					DEFAULT: 'hsl(var(--card))', // 卡片组件的背景颜色
 					foreground: 'hsl(var(--card-foreground))', // 卡片组件的文字颜色
 				},
+
+				google: {
+					extraLightBlue: 'hsl(216,55.56%,98.24%)',
+					lightBlue: 'hsl(216.92,41.94%,93.92%)',
+					white: 'hsl(0,0%,100%)',
+					blue: 'hsl(203.61,100%,88.04%)',
+				},
+
+				difficulty: {
+					easy: '#8B5CF6', // Violet-500 (更深的紫色)
+					medium: '#3B82F6', // Blue-500 (保持不变，因为这个蓝色已经很好)
+					hard: '#E11D48', // Rose-600 (深粉红色，接近红色)
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)', // 大的圆角半径

@@ -32,9 +32,9 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 
 		return (
 			<div className='w-full my-4 flex justify-around items-center'>
-				{renderChart('#22c55e', 'Easy', easy)}
-				{renderChart('#eab308', 'Medium', medium)}
-				{renderChart('#ef4444', 'Hard', hard)}
+				{renderChart('#8B5CF6', 'Easy', easy)}
+				{renderChart('#3B82F6', 'Medium', medium)}
+				{renderChart('#E11D48', 'Hard', hard)}
 			</div>
 		);
 	};

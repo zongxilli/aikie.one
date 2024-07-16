@@ -171,15 +171,15 @@ const QuizCard: React.FC<Props> = React.memo(({ quiz, onClick, selected }) => {
 			<div className='w-full h-1 flex absolute left-0 bottom-0'>
 				<div
 					style={{ width: `${easyWidth}%` }}
-					className='h-full bg-green-500'
+					className='h-full bg-difficulty-easy'
 				/>
 				<div
 					style={{ width: `${mediumWidth}%` }}
-					className='h-full bg-yellow-500'
+					className='h-full bg-difficulty-medium'
 				/>
 				<div
 					style={{ width: `${hardWidth}%` }}
-					className='h-full bg-red-500'
+					className='h-full bg-difficulty-hard'
 				/>
 			</div>
 		);
@@ -190,8 +190,8 @@ const QuizCard: React.FC<Props> = React.memo(({ quiz, onClick, selected }) => {
 			<Card
 				key={quiz.id}
 				className={clsx(
-					'w-full h-32 flex flex-col items-start gap-1 cursor-pointer box-border border-2 hover:border-primary relative overflow-hidden',
-					{ 'border-primary': selected }
+					'w-full h-32 flex flex-col items-start gap-1 cursor-pointer box-border border hover:bg-google-blue dark:hover:bg-google-blue/30 relative overflow-hidden',
+					{ 'bg-google-blue dark:bg-google-blue/30': selected }
 				)}
 				onClick={onClick}
 			>
