@@ -6,14 +6,7 @@ import React, {
 	useState,
 } from 'react';
 
-import {
-	ArrowDownNarrowWide,
-	ArrowDownUp,
-	ArrowDownWideNarrow,
-	ArrowUpDown,
-	MoveDown,
-	MoveUp,
-} from 'lucide-react';
+import { ArrowDownUp, ArrowUpDown } from 'lucide-react';
 
 import { LoadingOverlay, SearchBar } from '@/components/shared';
 import { Button } from '@/components/ui/button';
@@ -51,7 +44,7 @@ const QuizzesSection = ({
 		const sortedQuizzes = quizzes.sort((a, b) => {
 			const dateA = new Date(a.created_at).getTime();
 			const dateB = new Date(b.created_at).getTime();
-			return sortDirection === SortDirection.asc
+			return sortDirection === SortDirection.desc
 				? dateA - dateB
 				: dateB - dateA;
 		});
