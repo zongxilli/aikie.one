@@ -91,28 +91,28 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 			<div className='w-full flex flex-col gap-6'>
 				<div className='w-full flex items-start justify-between'>
 					<div>Name</div>
-					<div className='text-foreground/60'>
+					<div className='text-base text-foreground/60'>
 						{selectedQuiz.name}
 					</div>
 				</div>
 
 				<div className='w-full flex items-start justify-between'>
 					<div>Total questions</div>
-					<div className='text-foreground/60'>
+					<div className='text-base text-foreground/60'>
 						{selectedQuiz.questions.length}
 					</div>
 				</div>
 
 				<div className='w-full flex items-start justify-between'>
 					<div className=''>Created at</div>
-					<div className='text-foreground/60'>
+					<div className='text-base text-foreground/60'>
 						{formatUtils.formatDateTime(selectedQuiz?.created_at)}
 					</div>
 				</div>
 
 				<div className='w-full flex items-start justify-between gap-20'>
 					<div>Description</div>
-					<div className='text-foreground/60'>
+					<div className='text-base text-foreground/60'>
 						{selectedQuiz.description}
 					</div>
 				</div>
