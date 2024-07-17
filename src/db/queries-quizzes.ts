@@ -14,7 +14,7 @@ export async function getQuizById(quizId: string): Promise<Quiz | null> {
 			.limit(1);
 
 		if (!quiz) {
-			throw new Error(`Quiz does not exist`);
+			throw new Error(`Quiz with id ${quizId} does not exist in database`);
 		}
 
 		return quiz;

@@ -14,6 +14,7 @@ import { Quiz } from '@/db/schema';
 import { useDebouncedState } from '@/hooks';
 
 import QuizCard from './quizCard';
+import { useRouter } from 'next/navigation';
 
 enum SortDirection {
 	asc,
@@ -33,6 +34,8 @@ const QuizzesSection = ({
 	selectedQuiz,
 	setSelectedQuiz,
 }: Props) => {
+	const router = useRouter();
+
 	const [searchQuery, setSearchQuery] = useState('');
 	const [sortDirection, setSortDirection] = useState<SortDirection>(
 		SortDirection.asc
@@ -104,6 +107,9 @@ const QuizzesSection = ({
 								quiz={quiz}
 								selected={selectedQuiz?.id === quiz.id}
 								onClick={() => handleSelectQuiz(quiz)}
+								onDoubleClick={() =>
+									router.push(`/quiz/${quiz.id}`)
+								}
 							/>
 						</Fragment>
 					))}

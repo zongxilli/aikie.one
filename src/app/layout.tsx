@@ -11,6 +11,7 @@ import { UserStoreProvider } from '@/providers/user';
 
 import { createClient } from '../../supabase/server';
 
+import ErrorBoundary from './errorboundary';
 import { ThemeProvider } from './themeProvider';
 
 const font = Noto_Sans_SC({ weight: ['500'], subsets: ['latin'] });
@@ -34,21 +35,23 @@ export default async function RootLayout({
 	return (
 		<html lang='en' suppressHydrationWarning>
 			<body className={font.className} suppressHydrationWarning>
-				<UserStoreProvider userId={user?.id}>
-					<TooltipProvider delayDuration={200}>
-						<ThemeProvider
-							attribute='class'
-							defaultTheme='system'
-							enableSystem
-							disableTransitionOnChange
-						>
-							<SpeedInsights />
-							<Analytics />
-							<Toaster />
-							{children}
-						</ThemeProvider>
-					</TooltipProvider>
-				</UserStoreProvider>
+				<ErrorBoundary fallback={<div>Something went wrong</div>}>
+					<UserStoreProvider userId={user?.id}>
+						<TooltipProvider delayDuration={200}>
+							<ThemeProvider
+								attribute='class'
+								defaultTheme='system'
+								enableSystem
+								disableTransitionOnChange
+							>
+								<SpeedInsights />
+								<Analytics />
+								<Toaster />
+								{children}
+							</ThemeProvider>
+						</TooltipProvider>
+					</UserStoreProvider>
+				</ErrorBoundary>
 			</body>
 		</html>
 	);
