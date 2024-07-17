@@ -4,7 +4,6 @@ import { Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Quiz } from '@/db/schema';
-import { useUserStore } from '@/providers/user';
 
 import GenerateQuizModal from './generateQuizModal';
 import QuizSummary from './quizSummary';
@@ -22,7 +21,6 @@ const InfoSection = ({
 	selectedQuiz,
 	setSelectedQuiz,
 }: Props) => {
-	const { user, isLoading, error } = useUserStore((state) => state);
 	const summarySectionRef = useRef<HTMLDivElement>(null);
 
 	const [showGenerateQuizModal, setShowGenerateQuizModal] = useState(false);
@@ -39,7 +37,7 @@ const InfoSection = ({
 	const renderSectionHeader = () => {
 		return (
 			<div className='w-full flex items-center justify-between'>
-				<div>Summary</div>
+				Quiz information
 				<Button
 					className=''
 					onClick={() => setShowGenerateQuizModal(true)}
