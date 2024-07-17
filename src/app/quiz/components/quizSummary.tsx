@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -7,6 +7,7 @@ import AnimatedCircularProgressBar, {
 } from '@/components/magicui/animated-circular-progress-bar';
 import { CollapsiblePanels } from '@/components/shared';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Quiz } from '@/db/schema';
 import { QuizQuestion } from '@/types/quiz';
 
@@ -18,6 +19,8 @@ type Props = {
 };
 
 const QuizSummary = ({ selectedQuiz }: Props) => {
+	const [showAnswers, setShowAnswers] = useState(false);
+
 	const { easy, medium, hard, total } = useMemo(
 		() => quizUtils.getQuizDifficultyCounts(selectedQuiz),
 		[selectedQuiz]
@@ -70,8 +73,10 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 					{question.answers.map((a) => (
 						<div
 							className={clsx('', {
-								'text-foreground/80': !a.isCorrect,
-								'text-green-500': a.isCorrect,
+								'text-foreground/80': !(
+									a.isCorrect && showAnswers
+								),
+								'text-green-500': a.isCorrect && showAnswers,
 							})}
 							key={a.answerText}
 						>
@@ -113,7 +118,25 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 				</div>
 
 				<div className='w-full'>
-					<div>Questions</div>
+					<div className='w-full flex items-center justify-between'>
+						Questions
+						<div className='flex items-center space-x-2'>
+							<Checkbox
+								id='show answers'
+								className='rounded'
+								checked={showAnswers}
+								onCheckedChange={(value: boolean) => {
+									setShowAnswers(value);
+								}}
+							/>
+							<label
+								htmlFor='show answers'
+								className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+							>
+								Show correct answers
+							</label>
+						</div>
+					</div>
 					<div>
 						<CollapsiblePanels
 							items={selectedQuiz.questions.map((q) => ({
@@ -126,7 +149,7 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 				</div>
 			</div>
 		);
-	}, [selectedQuiz]);
+	}, [selectedQuiz, showAnswers]);
 
 	return (
 		<div className=''>
