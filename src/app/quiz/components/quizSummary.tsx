@@ -131,7 +131,7 @@ const QuizSummary = ({ selectedQuiz }: Props) => {
 							/>
 							<label
 								htmlFor='show answers'
-								className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+								className='cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 							>
 								Show correct answers
 							</label>
