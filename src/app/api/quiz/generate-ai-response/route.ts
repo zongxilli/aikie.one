@@ -7,12 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createNewQuiz } from '@/db/queries-quizzes';
 import { NewQuiz } from '@/db/schema';
 
-export const config = {
-	api: {
-		bodyParser: false,
-	},
-};
-
 export const maxDuration = 60; // 设置最大持续时间为 60 秒
 export const dynamic = 'force-dynamic'; // 确保路由是动态的
 
