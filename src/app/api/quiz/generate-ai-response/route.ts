@@ -13,6 +13,9 @@ export const config = {
 	},
 };
 
+export const maxDuration = 60; // 设置最大持续时间为 60 秒
+export const dynamic = 'force-dynamic'; // 确保路由是动态的
+
 export async function POST(req: NextRequest) {
 	const body = await req.formData();
 	const file = body.get('file');
